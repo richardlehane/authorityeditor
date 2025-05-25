@@ -3,7 +3,7 @@ import 'dart:ui';
 //import 'package:flutter/foundation.dart' as foundation;
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:authority/home/view/home.dart';
+import 'package:authorityeditor/home/view/home.dart';
 
 const String siplicityServer = 'siplicityServer';
 

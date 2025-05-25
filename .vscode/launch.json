@@ -12,18 +12,18 @@
             "webRoot": "${workspaceFolder}"
         },
         {
-            "name": "authority",
+            "name": "authority editor",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "authority (profile mode)",
+            "name": "authority editor (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "authority (release mode)",
+            "name": "authority editor (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

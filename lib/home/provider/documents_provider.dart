@@ -1,5 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:authority/home/models/document_model.dart';
+import 'package:authorityeditor/home/models/document_model.dart';
 import 'package:file_picker/file_picker.dart';
 
 part 'documents_provider.g.dart';

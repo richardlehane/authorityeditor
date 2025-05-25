@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:authority/home/provider/documents_provider.dart';
-import 'package:authority/edit/widgets/document_tree.dart';
+import 'package:authorityeditor/home/provider/documents_provider.dart';
+import 'package:authorityeditor/edit/widgets/document_tree.dart';
 
 class EditPage extends ConsumerWidget {
   const EditPage({super.key});

@@ -1,6 +1,6 @@
 {
-    "name": "authority",
-    "short_name": "authority",
+    "name": "authorityeditor",
+    "short_name": "authorityeditor",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

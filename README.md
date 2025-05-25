@@ -1,4 +1,4 @@
-# authority
+# authorityeditor
 
 A new Flutter project.
 

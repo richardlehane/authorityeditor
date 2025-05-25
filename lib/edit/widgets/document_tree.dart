@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:authority/home/provider/documents_provider.dart';
+import 'package:authorityeditor/home/provider/documents_provider.dart';
 
 class DocumentTree extends ConsumerWidget {
   const DocumentTree({super.key});
@@ -8,23 +8,21 @@ class DocumentTree extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final documents = ref.watch(documentsProvider);
-    return Expanded(
-      child: Container(
-        color: Colors.white,
-        padding: const EdgeInsets.only(top: 8.0),
-        alignment: Alignment.topLeft,
-        child: SingleChildScrollView(
-          child: TreeView(
-            items: documents.documents[documents.current].treeItems ?? [],
-            selectionMode: TreeViewSelectionMode.single,
-            onItemInvoked: (item, reason) async {
-              // Get the flat index of the item
-              //final index = _findItemIndex(documents[index].treeItems, item);
-              //if (index != -1) {
-              //  widget.onSelectItem(index);
-              //}
-            },
-          ),
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.only(top: 8.0),
+      alignment: Alignment.topLeft,
+      child: SingleChildScrollView(
+        child: TreeView(
+          items: documents.documents[documents.current].treeItems ?? [],
+          selectionMode: TreeViewSelectionMode.single,
+          onItemInvoked: (item, reason) async {
+            // Get the flat index of the item
+            //final index = _findItemIndex(documents[index].treeItems, item);
+            //if (index != -1) {
+            //  widget.onSelectItem(index);
+            //}
+          },
         ),
       ),
     );

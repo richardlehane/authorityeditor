@@ -1,7 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:authority/home/provider/documents_provider.dart';
+import 'package:authorityeditor/home/provider/documents_provider.dart';
 
 final class AuthorityCommand extends ConsumerWidget {
   const AuthorityCommand({super.key});
