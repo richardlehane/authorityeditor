@@ -1,0 +1,90 @@
+import 'package:fluent_ui/fluent_ui.dart';
+import 'package:xml/xml.dart';
+import 'package:file_picker/file_picker.dart';
+//import 'package:path/path.dart' as p;
+
+/// Model representing a document and its structure
+class DocumentModel {
+  String title;
+  String path;
+  List<TreeViewItem>? treeItems;
+  int selectedItemIndex;
+  XmlDocument? document;
+
+  DocumentModel({
+    required this.title,
+    this.path = "",
+    this.treeItems,
+    this.selectedItemIndex = 0,
+  });
+
+  /// Create a new empty document model with default structure
+  factory DocumentModel.empty({String title = 'Untitled'}) {
+    return DocumentModel(
+      title: title,
+      treeItems: [
+        TreeViewItem(
+          content: const Text('Term 1'),
+          children: [
+            TreeViewItem(
+              content: const Text('Term 2'),
+              children: [TreeViewItem(content: const Text('Class 1'))],
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  factory DocumentModel.load(PlatformFile f) {
+    DocumentModel doc = DocumentModel.empty(title: f.name);
+    if (f.bytes == null) {
+      return doc;
+    }
+    doc.document = XmlDocument.parse(String.fromCharCodes(f.bytes!));
+    if (doc.document != null) {
+      doc.treeItems = addChildren(termsClasses(doc.document!.rootElement));
+    }
+    return doc;
+  }
+}
+
+List<TreeViewItem> addChildren(List<XmlElement> list) {
+  return list
+      .map(
+        (item) => TreeViewItem(
+          leading:
+              (item.name.toString() == 'Term')
+                  ? Icon(FluentIcons.fabric_folder)
+                  : Icon(FluentIcons.page),
+          content: Text(title(item)),
+          children: addChildren(termsClasses(item)),
+        ),
+      )
+      .toList();
+}
+
+String title(XmlElement el) {
+  String? itemno = el.getAttribute("itemno");
+  XmlElement? t =
+      (el.name.toString() == 'Class')
+          ? el.getElement('ClassTitle')
+          : el.getElement('TermTitle');
+  return (itemno != null)
+      ? (t != null)
+          ? "$itemno ${t.innerText}"
+          : itemno
+      : (t != null)
+      ? t.innerText
+      : '';
+}
+
+List<XmlElement> termsClasses(XmlElement el) {
+  if (el.name.toString() == 'Class') {
+    return [];
+  }
+  return el.children
+      .whereType<XmlElement>()
+      .where((e) => e.name.toString() == 'Term' || e.name.toString() == 'Class')
+      .toList();
+}
