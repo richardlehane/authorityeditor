@@ -1,16 +1,13 @@
 # authorityeditor
 
-A new Flutter project.
+Authority Editor, on a modern stack.
 
-## Getting Started
+## Build for web
 
-This project is a starting point for a Flutter application.
+In build/web folder (assumes it has been wiped and rebuilt):
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+git init
+git add .
+git commit -m "fresh build"
+git remote add origin git@github.com:richardlehane/authorityweb.git
+git push --force origin main
