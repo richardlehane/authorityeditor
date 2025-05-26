@@ -1,13 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:authorityeditor/home/provider/documents_provider.dart';
 
 class TermView extends ConsumerWidget {
   const TermView({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final documents = ref.watch(documentsProvider);
     return Container(
       color: Colors.white,
       child: Column(
@@ -28,7 +26,12 @@ class TermView extends ConsumerWidget {
                   padding: EdgeInsets.all(10.0),
                   child: InfoLabel(
                     label: 'Term name',
-                    child: const TextBox(placeholder: 'Name'),
+                    child: TextBox(
+                      placeholder: 'Name',
+                      controller: TextEditingController.fromValue(
+                        TextEditingValue(text: ""),
+                      ),
+                    ),
                   ),
                 ),
               ),

@@ -1,24 +1,24 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'documents_provider.dart';
+part of 'node_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$documentsHash() => r'9f47b4b3a3fca96ef0791867794733459332ab69';
+String _$nodeHash() => r'67f12b902c53519288307c59730b1f0062670f6b';
 
-/// See also [Documents].
-@ProviderFor(Documents)
-final documentsProvider = NotifierProvider<Documents, DocState>.internal(
-  Documents.new,
-  name: r'documentsProvider',
+/// See also [Node].
+@ProviderFor(Node)
+final nodeProvider = AutoDisposeNotifierProvider<Node, CurrNode>.internal(
+  Node.new,
+  name: r'nodeProvider',
   debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$documentsHash,
+      const bool.fromEnvironment('dart.vm.product') ? null : _$nodeHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$Documents = Notifier<DocState>;
+typedef _$Node = AutoDisposeNotifier<CurrNode>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

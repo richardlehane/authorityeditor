@@ -43,13 +43,24 @@ class DocumentModel {
     }
     doc.document = XmlDocument.parse(String.fromCharCodes(f.bytes!));
     if (doc.document != null) {
-      doc.treeItems = addChildren(termsClasses(doc.document!.rootElement));
+      doc.treeItems = addChildren(
+        termsClasses(doc.document!.rootElement),
+        Counter(),
+      );
     }
     return doc;
   }
 }
 
-List<TreeViewItem> addChildren(List<XmlElement> list) {
+class Counter {
+  int count = -1;
+  int next() {
+    count++;
+    return count;
+  }
+}
+
+List<TreeViewItem> addChildren(List<XmlElement> list, Counter ctr) {
   return list
       .map(
         (item) => TreeViewItem(
@@ -58,7 +69,8 @@ List<TreeViewItem> addChildren(List<XmlElement> list) {
                   ? Icon(FluentIcons.fabric_folder)
                   : Icon(FluentIcons.page),
           content: Text(title(item)),
-          children: addChildren(termsClasses(item)),
+          value: ctr.next(),
+          children: addChildren(termsClasses(item), ctr),
         ),
       )
       .toList();
