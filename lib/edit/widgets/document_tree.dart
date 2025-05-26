@@ -17,11 +17,7 @@ class DocumentTree extends ConsumerWidget {
           items: documents.documents[documents.current].treeItems ?? [],
           selectionMode: TreeViewSelectionMode.single,
           onItemInvoked: (item, reason) async {
-            // Get the flat index of the item
-            //final index = _findItemIndex(documents[index].treeItems, item);
-            //if (index != -1) {
-            //  widget.onSelectItem(index);
-            //}
+            ref.read(documentsProvider.notifier).selectionChanged(item.value);
           },
         ),
       ),

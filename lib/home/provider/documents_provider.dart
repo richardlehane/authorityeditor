@@ -44,4 +44,9 @@ class Documents extends _$Documents {
     state.current = pane;
     ref.notifyListeners();
   }
+
+  void selectionChanged(int index) {
+    state.documents[state.current].selectedItemIndex = index;
+    ref.notifyListeners();
+  }
 }

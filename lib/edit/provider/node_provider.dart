@@ -19,6 +19,7 @@ class Node extends _$Node {
   CurrNode build() {
     //documents.documents[documents.current].
     final documents = ref.watch(documentsProvider);
+
     return CurrNode(NodeType.classType, null);
   }
 }

@@ -25,10 +25,14 @@ class DocumentModel {
       treeItems: [
         TreeViewItem(
           content: const Text('Term 1'),
+          value: 0,
           children: [
             TreeViewItem(
               content: const Text('Term 2'),
-              children: [TreeViewItem(content: const Text('Class 1'))],
+              value: 1,
+              children: [
+                TreeViewItem(content: const Text('Class 1'), value: 2),
+              ],
             ),
           ],
         ),
@@ -99,4 +103,11 @@ List<XmlElement> termsClasses(XmlElement el) {
       .whereType<XmlElement>()
       .where((e) => e.name.toString() == 'Term' || e.name.toString() == 'Class')
       .toList();
+}
+
+XmlElement? nth(XmlDocument doc, int n) {
+  int idx = 0;
+  XmlElement el = doc.rootElement;
+  while (idx < n) {}
+  XmlElement? descend(XmlElement el) {}
 }
