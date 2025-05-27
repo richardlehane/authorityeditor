@@ -11,6 +11,21 @@ class CurrNode {
   XmlElement? el;
 
   CurrNode(this.typ, this.el);
+  String title() {
+    if (el == null) {
+      return "";
+    }
+    XmlElement? t;
+    if (typ == NodeType.classType) {
+      t = el!.getElement('ClassTitle');
+    } else {
+      t = el!.getElement('TermTitle');
+    }
+    if (t != null) {
+      return t.innerText;
+    }
+    return "";
+  }
 }
 
 @riverpod
