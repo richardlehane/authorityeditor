@@ -17,9 +17,15 @@ class CurrNode {
 class Node extends _$Node {
   @override
   CurrNode build() {
-    //documents.documents[documents.current].
     final documents = ref.watch(documentsProvider);
-
-    return CurrNode(NodeType.classType, null);
+    XmlElement? curr = documents.documents[documents.current].currentNode();
+    NodeType nt = NodeType.classType;
+    if (curr != null) {
+      if (curr.name.toString() == "Term") {
+        nt = NodeType.termType;
+      }
+      return CurrNode(NodeType.classType, curr);
+    }
+    return CurrNode(nt, null);
   }
 }

@@ -11,6 +11,10 @@ class DocumentModel {
   int selectedItemIndex;
   XmlDocument? document;
 
+  XmlElement? currentNode() {
+    return nth(document, selectedItemIndex);
+  }
+
   DocumentModel({
     required this.title,
     this.path = "",
@@ -105,9 +109,28 @@ List<XmlElement> termsClasses(XmlElement el) {
       .toList();
 }
 
-XmlElement? nth(XmlDocument doc, int n) {
-  int idx = 0;
-  XmlElement el = doc.rootElement;
-  while (idx < n) {}
-  XmlElement? descend(XmlElement el) {}
+XmlElement? nth(XmlDocument? doc, int n) {
+  int idx = -1;
+  XmlElement? descend(XmlElement el) {
+    for (XmlElement child in el.children.whereType<XmlElement>().where(
+      (e) => e.name.toString() == 'Term' || e.name.toString() == 'Class',
+    )) {
+      idx++;
+      if (idx == n) {
+        return child;
+      }
+      if (child.name.toString() == 'Term') {
+        var ret = descend(child);
+        if (ret != null) {
+          return ret;
+        }
+      }
+    }
+    return null;
+  }
+
+  if (doc == null) {
+    return null;
+  }
+  return descend(doc.rootElement);
 }
