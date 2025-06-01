@@ -9,6 +9,7 @@ final class AuthorityCommand extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final documents = ref.watch(documentsProvider);
     return MenuBar(
       items: [
         MenuBarItem(
@@ -51,35 +52,30 @@ final class AuthorityCommand extends ConsumerWidget {
             MenuFlyoutItem(text: const Text('Output'), onPressed: () {}),
             const MenuFlyoutSeparator(),
             RadioMenuFlyoutItem<String>(
-              text: const Text('Landscape'),
-              value: 'landscape',
-              groupValue: 'landscape',
-              onChanged: (value) {},
+              text: const Text('Edit view'),
+              value: 'edit',
+              groupValue:
+                  ref
+                      .watch(documentsProvider)
+                      .documents[documents.current]
+                      .view
+                      .toString(),
+              onChanged:
+                  (value) =>
+                      ref.read(documentsProvider.notifier).viewChanged(value),
             ),
             RadioMenuFlyoutItem<String>(
-              text: const Text('Portrait'),
-              value: 'portrait',
-              groupValue: 'landscape',
-              onChanged: (value) {},
-            ),
-            const MenuFlyoutSeparator(),
-            RadioMenuFlyoutItem<String>(
-              text: const Text('Small icons'),
-              value: 'small_icons',
-              groupValue: 'medium_icons',
-              onChanged: (value) {},
-            ),
-            RadioMenuFlyoutItem<String>(
-              text: const Text('Medium icons'),
-              value: 'medium_icons',
-              groupValue: 'medium_icons',
-              onChanged: (value) {},
-            ),
-            RadioMenuFlyoutItem<String>(
-              text: const Text('Large icons'),
-              value: 'large_icons',
-              groupValue: 'medium_icons',
-              onChanged: (value) {},
+              text: const Text('Source view'),
+              value: 'source',
+              groupValue:
+                  ref
+                      .watch(documentsProvider)
+                      .documents[documents.current]
+                      .view
+                      .toString(),
+              onChanged:
+                  (value) =>
+                      ref.read(documentsProvider.notifier).viewChanged(value),
             ),
           ],
         ),

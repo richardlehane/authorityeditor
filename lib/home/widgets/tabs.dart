@@ -1,6 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
+
+import 'package:authorityeditor/home/view/source.dart';
 import 'package:authorityeditor/edit/view/edit.dart';
 
 final class DocumentTabs extends ConsumerWidget {
@@ -25,7 +27,10 @@ final class DocumentTabs extends ConsumerWidget {
           onClosed: () {
             ref.read(documentsProvider.notifier).drop(index);
           },
-          body: EditPage(),
+          body: switch (documents.documents[index].view) {
+            DocumentView.editView => EditPage(),
+            DocumentView.sourceView => SourcePage(),
+          },
         );
       }),
     );

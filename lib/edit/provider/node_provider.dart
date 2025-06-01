@@ -4,8 +4,6 @@ import 'package:xml/xml.dart';
 
 part 'node_provider.g.dart';
 
-enum NodeType { classType, termType }
-
 class CurrNode {
   NodeType typ;
   XmlElement? el;
@@ -36,10 +34,10 @@ class Node extends _$Node {
     XmlElement? curr = documents.documents[documents.current].currentNode();
     NodeType nt = NodeType.classType;
     if (curr != null) {
-      if (curr.name.toString() == "Term") {
+      if (curr.name.local == "Term") {
         nt = NodeType.termType;
       }
-      return CurrNode(NodeType.classType, curr);
+      return CurrNode(nt, curr);
     }
     return CurrNode(nt, null);
   }

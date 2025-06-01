@@ -30,8 +30,8 @@ class TermView extends ConsumerWidget {
                     label: 'Term name',
                     child: TextBox(
                       placeholder: 'Name',
-                      controller: TextEditingController.fromValue(
-                        TextEditingValue(text: currentNode.title()),
+                      controller: TextEditingController(
+                        text: currentNode.title(),
                       ),
                     ),
                   ),
