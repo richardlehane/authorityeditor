@@ -4,8 +4,15 @@ Authority Editor, on a modern stack.
 
 ## Build for web
 
-In build/web folder (assumes it has been wiped and rebuilt):
+In build/web folder::
 
+flutter build web
+git add .
+git commit -m "fresh build"
+git push origin main
+
+
+If wiped:
 git init
 git add .
 git commit -m "fresh build"
