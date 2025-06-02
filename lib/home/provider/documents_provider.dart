@@ -99,6 +99,11 @@ class DocumentModel {
     el.children.add(
       XmlElement(XmlName((nt == NodeType.termType) ? "Term" : "Class")),
     );
+    // update selectedItemIndex by walking the treemenu
+    final TreeViewItem? it = treeNth(n);
+    if (it != null) {
+	selectedItemIndex = n + treeDescendants(it) + 1;
+    }
     refreshTree();
   }
 }
@@ -121,19 +126,42 @@ class Counter {
 
 List<TreeViewItem> addChildren(List<XmlElement> list, Counter ctr) {
   return list.map((item) {
-    NodeType nt =
+    final NodeType nt =
         (item.name.local == 'Term') ? NodeType.termType : NodeType.classType;
+    final int index = ctr.next();
+    final bool selected = ctr.selected();
     return TreeViewItem(
       leading:
           (nt == NodeType.termType)
               ? Icon(FluentIcons.fabric_folder)
               : Icon(FluentIcons.page),
       content: Text(title(item)),
-      value: (nt, ctr.next()),
+      value: (nt, index),
       children: addChildren(termsClasses(item), ctr),
-      selected: ctr.isSelected(),
+      selected: selected,
     );
   }).toList();
+}
+
+TreeViewItem? treeNth(int n, List<TreeViewItem> list) {
+	for (final element in list) {
+    		if (element.value.$2 == n) {
+			return element;
+		}
+		el = treeNth(n, element.children);
+		if (el != null) {
+			return el;
+		}
+  	}
+	return null;
+}
+
+int treeDescendants(TreeViewItem item) {
+	int tally = item.children.length;
+	for (final element in item.children) {
+		tally += treeDescendants(element);
+	}
+	return tally;
 }
 
 String title(XmlElement el) {
