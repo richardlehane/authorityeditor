@@ -1,14 +1,18 @@
 //import 'dart:io';
 import 'dart:ui';
-//import 'package:flutter/foundation.dart' as foundation;
+import 'package:flutter/foundation.dart' as foundation;
+import "package:flutter/services.dart";
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/home/view/home.dart';
 
-const String siplicityServer = 'siplicityServer';
-
 void main() {
   //if (foundation.kReleaseMode) Process.run('siplicityServer', []);
+  WidgetsFlutterBinding.ensureInitialized();
+  if (foundation.kIsWeb) {
+    BrowserContextMenu.disableContextMenu();
+  }
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
