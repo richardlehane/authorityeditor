@@ -37,20 +37,18 @@ final class AuthorityCommand extends ConsumerWidget {
             MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
           ],
         ),
-        MenuBarItem(
-          title: 'Edit',
-          items: [
-            MenuFlyoutItem(text: const Text('Undo'), onPressed: () {}),
-            MenuFlyoutItem(text: const Text('Cut'), onPressed: () {}),
-            MenuFlyoutItem(text: const Text('Copy'), onPressed: () {}),
-            MenuFlyoutItem(text: const Text('Paste'), onPressed: () {}),
-          ],
-        ),
+        // MenuBarItem(
+        //   title: 'Edit',
+        //   items: [
+        //     MenuFlyoutItem(text: const Text('Undo'), onPressed: () {}),
+        //     MenuFlyoutItem(text: const Text('Cut'), onPressed: () {}),
+        //     MenuFlyoutItem(text: const Text('Copy'), onPressed: () {}),
+        //     MenuFlyoutItem(text: const Text('Paste'), onPressed: () {}),
+        //   ],
+        // ),
         MenuBarItem(
           title: 'View',
           items: [
-            MenuFlyoutItem(text: const Text('Output'), onPressed: () {}),
-            const MenuFlyoutSeparator(),
             RadioMenuFlyoutItem<String>(
               text: const Text('Edit view'),
               value: 'edit',
@@ -79,10 +77,10 @@ final class AuthorityCommand extends ConsumerWidget {
             ),
           ],
         ),
-        MenuBarItem(
-          title: 'Help',
-          items: [MenuFlyoutItem(text: const Text('About'), onPressed: () {})],
-        ),
+        // MenuBarItem(
+        //   title: 'Help',
+        //   items: [MenuFlyoutItem(text: const Text('About'), onPressed: () {})],
+        // ),
       ],
     );
   }

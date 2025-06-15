@@ -49,27 +49,4 @@ class DocumentTree extends ConsumerWidget {
       ),
     );
   }
-
-  /// Find the index of an item in the flattened tree structure
-  int _findItemIndex(List<TreeViewItem> items, TreeViewItem target) {
-    final flattenedItems = _flattenTreeItems(items);
-    return flattenedItems.indexOf(target);
-  }
-
-  /// Convert the hierarchical tree structure to a flat list
-  List<TreeViewItem> _flattenTreeItems(List<TreeViewItem> items) {
-    final List<TreeViewItem> result = [];
-
-    void flatten(List<TreeViewItem> currentItems) {
-      for (final item in currentItems) {
-        result.add(item);
-        if (item.children.isNotEmpty) {
-          flatten(item.children);
-        }
-      }
-    }
-
-    flatten(items);
-    return result;
-  }
 }

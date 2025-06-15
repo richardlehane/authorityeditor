@@ -7,12 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/home/view/home.dart';
 
 void main() {
-  //if (foundation.kReleaseMode) Process.run('siplicityServer', []);
-  WidgetsFlutterBinding.ensureInitialized();
   if (foundation.kIsWeb) {
+    WidgetsFlutterBinding.ensureInitialized();
     BrowserContextMenu.disableContextMenu();
   }
-
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -30,13 +28,6 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
     _listener = AppLifecycleListener(
       onExitRequested: () async {
-        //if (foundation.kReleaseMode) {
-        //   ShutdownResponse response =
-        //       await siplicityServiceClient.shutdown(ShutdownRequest());
-        //   if (!response.success) {
-        //     return AppExitResponse.cancel;
-        //   }
-        //  }
         return AppExitResponse.exit;
       },
     );
@@ -48,11 +39,10 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.dispose();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return FluentApp(
-      title: 'Authority',
+      title: 'Authority Editor',
       home: const HomePage(),
       theme: FluentThemeData(
         brightness: Brightness.light,

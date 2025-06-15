@@ -28,7 +28,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addChild(value.$2, NodeType.termType);
+              .addSibling(value.$2, NodeType.termType);
         },
       ),
     );
@@ -50,7 +50,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addChild(value.$2, NodeType.classType);
+              .addSibling(value.$2, NodeType.classType);
         },
       ),
     );
@@ -62,7 +62,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addChild(value.$2, NodeType.classType);
+              .addSibling(value.$2, NodeType.classType);
         },
       ),
     );
@@ -72,9 +72,7 @@ Widget Function(BuildContext) contextBuilder(
       leading: const Icon(FluentIcons.delete),
       text: const Text('Delete'),
       onPressed: () {
-        ref
-            .read(documentsProvider.notifier)
-            .addChild(value.$2, NodeType.classType);
+        ref.read(documentsProvider.notifier).dropElement(value.$2);
       },
     ),
   );

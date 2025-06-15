@@ -42,10 +42,6 @@ class DocumentModel {
   DocumentView view = DocumentView.editView;
   XmlDocument? document;
 
-  XmlElement? currentNode() {
-    return nth(document, selectedItemIndex);
-  }
-
   DocumentModel({
     required this.title,
     this.path = "",
@@ -91,6 +87,21 @@ class DocumentModel {
     );
   }
 
+  XmlElement? currentNode() {
+    return nth(document, selectedItemIndex);
+  }
+
+  void drop(int n) {
+    XmlElement? el = nth(document, n);
+    if (el == null) {
+      return;
+    }
+    el.remove();
+    n = (n == 0) ? 0 : n - 1;
+    selectedItemIndex = n;
+    refreshTree();
+  }
+
   void addChild(int n, NodeType nt) {
     XmlElement? el = nth(document, n);
     if (el == null) {
@@ -99,6 +110,24 @@ class DocumentModel {
     el.children.add(
       XmlElement(XmlName((nt == NodeType.termType) ? "Term" : "Class")),
     );
+    // update selectedItemIndex by walking the treemenu
+    final TreeViewItem? it = treeNth(n, treeItems);
+    if (it != null) {
+      selectedItemIndex = n + treeDescendants(it) + 1;
+    }
+    refreshTree();
+  }
+
+  void addSibling(int n, NodeType nt) {
+    XmlElement? el = nth(document, n);
+    if (el == null) {
+      return;
+    }
+    el.parentElement!.children.insert(
+      pos(el) + 1,
+      XmlElement(XmlName((nt == NodeType.termType) ? "Term" : "Class")),
+    );
+
     // update selectedItemIndex by walking the treemenu
     final TreeViewItem? it = treeNth(n, treeItems);
     if (it != null) {
@@ -147,14 +176,22 @@ TreeViewItem? treeNth(int n, List<TreeViewItem>? list) {
   if (list == null) {
     return null;
   }
+  TreeViewItem? prev;
   for (final element in list) {
     if (element.value.$2 == n) {
       return element;
     }
-    final TreeViewItem? el = treeNth(n, element.children);
-    if (el != null) {
-      return el;
+    if (element.value.$2 > n) {
+      if (prev != null) {
+        final TreeViewItem? el = treeNth(n, prev.children);
+        if (el != null) {
+          return el;
+        }
+      } else {
+        return null;
+      }
     }
+    prev = element;
   }
   return null;
 }
@@ -215,6 +252,15 @@ XmlElement? nth(XmlDocument? doc, int n) {
     return null;
   }
   return descend(doc.rootElement);
+}
+
+int pos(XmlNode el) {
+  int ret = 0;
+  while (el.previousSibling != null) {
+    ret++;
+    el = el.previousSibling!;
+  }
+  return ret;
 }
 
 class DocState {
@@ -279,6 +325,21 @@ class Documents extends _$Documents {
 
   void addChild(int n, NodeType nt) {
     state.documents[state.current].addChild(n, nt);
+    ref.notifyListeners();
+  }
+
+  void addSibling(int n, NodeType nt) {
+    state.documents[state.current].addSibling(n, nt);
+    ref.notifyListeners();
+  }
+
+  void dropElement(int n) {
+    state.documents[state.current].drop(n);
+    ref.notifyListeners();
+  }
+
+  void refresh() {
+    state.documents[state.current].refreshTree();
     ref.notifyListeners();
   }
 }
