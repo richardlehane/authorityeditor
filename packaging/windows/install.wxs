@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+    <Package Name="Authority Editor"
+             Version="0.0.0.1"
+             Manufacturer="Richard Lehane"
+             UpgradeCode="8DBBBD78-6F99-41C7-8155-EEE3ECCCF5A5">
+        <MediaTemplate EmbedCab="yes" />
+        <Files Include="files\**" />
+        <StandardDirectory Id="ProgramMenuFolder">
+            <Component Id="ApplicationShortcutStartMenu"
+                       Guid="8DBBBD78-6F99-41C7-8155-EEE3ECCCF5A5">
+                <Shortcut Id="ApplicationShortcutStartMenu"
+                          Name="Authority Editor"
+                          Description="Edit records retention authorities in XML"
+                          Target="[INSTALLFOLDER]authorityeditor.exe"
+                          WorkingDirectory="INSTALLFOLDER" />
+                <RemoveFolder Id="ProgramMenuFolder"
+                              On="uninstall" />
+                <RegistryValue Root="HKCU"
+                               Key="Software\AuthorityEditor\AuthorityEditor"
+                               Name="installed"
+                               Type="integer"
+                               Value="1"
+                               KeyPath="yes" />
+            </Component>
+        </StandardDirectory>
+        <WixVariable Id="WixUILicenseRtf"
+                     Value="authorityeditor.rtf" />
+        <WixVariable Id="WixUIDialogBmp"
+                     Value="authorityeditor.bmp" />
+        <ui:WixUI Id="WixUI_Minimal" />
+    </Package>
+</Wix>
