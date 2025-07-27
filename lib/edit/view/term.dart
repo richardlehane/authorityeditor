@@ -40,16 +40,14 @@ class TermView extends ConsumerWidget {
                 child: InfoLabel(
                   label: 'Type',
                   child: ComboBox<String>(
-                    value: currentNode.getAttribute("type"),
+                    value: currentNode.get("type"),
                     items:
                         termTypes.map((e) {
                           return ComboBoxItem(value: e, child: Text(e));
                         }).toList(),
                     onChanged:
-                        (String? val) => currentNode.setAttribute(
-                          "type",
-                          (val == null) ? "" : val,
-                        ),
+                        (String? val) =>
+                            currentNode.set("type", (val == null) ? "" : val),
                   ),
                 ),
               ),

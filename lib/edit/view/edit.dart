@@ -1,10 +1,11 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/edit/provider/node_provider.dart';
-import 'package:authorityeditor/home/provider/documents_provider.dart';
 import 'package:authorityeditor/edit/widgets/document_tree.dart';
 import 'package:authorityeditor/edit/view/term.dart';
 import 'package:authorityeditor/edit/view/class.dart';
+
+import 'package:authority/authority.dart' show NodeType;
 
 class EditPage extends ConsumerWidget {
   const EditPage({super.key});
@@ -24,7 +25,7 @@ class EditPage extends ConsumerWidget {
         // Right column with content
         Expanded(
           child:
-              (currentnode.typ == NodeType.classType)
+              (currentnode.typ() == NodeType.classType)
                   ? ClassView()
                   : TermView(),
         ),

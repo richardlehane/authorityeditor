@@ -5,6 +5,8 @@ import 'package:authorityeditor/home/provider/documents_provider.dart';
 import 'package:authorityeditor/home/view/source.dart';
 import 'package:authorityeditor/edit/view/edit.dart';
 
+import 'package:authority/authority.dart' as authority show View;
+
 final class DocumentTabs extends ConsumerWidget {
   const DocumentTabs({super.key});
 
@@ -28,8 +30,8 @@ final class DocumentTabs extends ConsumerWidget {
             ref.read(documentsProvider.notifier).drop(index);
           },
           body: switch (documents.documents[index].view) {
-            DocumentView.editView => EditPage(),
-            DocumentView.sourceView => SourcePage(),
+            authority.View.edit => EditPage(),
+            authority.View.source => SourcePage(),
           },
         );
       }),

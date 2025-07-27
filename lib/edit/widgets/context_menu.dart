@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 
+import 'package:authority/authority.dart' show NodeType;
+
 Widget Function(BuildContext) contextBuilder(
   (NodeType, int) value,
   //(NodeType, int) parent,

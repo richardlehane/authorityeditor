@@ -20,17 +20,10 @@ class SimpleText extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final TextEditingController controller = TextEditingController();
-    controller.text =
-        (element)
-            ? ref.read(nodeProvider).getElement(name)
-            : ref.read(nodeProvider).getAttribute(name);
+    controller.text = ref.read(nodeProvider).get(name);
     return TapRegion(
       onTapOutside: (PointerDownEvent ev) {
-        if (element) {
-          ref.read(nodeProvider).setElement(name, controller.text);
-        } else {
-          ref.read(nodeProvider).setAttribute(name, controller.text);
-        }
+        ref.read(nodeProvider).set(name, controller.text);
       },
       child: InfoLabel(
         label: label,
