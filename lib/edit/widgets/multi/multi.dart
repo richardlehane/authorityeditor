@@ -11,11 +11,13 @@ class Multi extends ConsumerWidget {
   final String label;
   final String element;
   final String tok;
+  final bool blank;
   const Multi({
     super.key,
     required this.label,
     required this.element,
     this.tok = "",
+    this.blank = false,
   });
 
   Widget Function(BuildContext, WidgetRef) makeForm(int idx) {
@@ -52,6 +54,12 @@ class Multi extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int l = ref.watch(nodeProvider).mLen(element);
+    bool defaultForm = false;
+    if (blank && l == 0) {
+      ref.read(nodeProvider).mAdd(element, tok);
+      l = 1;
+      defaultForm = true;
+    }
     return InfoLabel(
       label: label,
       child: ListView.builder(
@@ -68,7 +76,11 @@ class Multi extends ConsumerWidget {
                   () => ref.read(nodeProvider.notifier).multiAdd(element, tok),
             );
           }
-          return MultiEntry(formFn: makeForm(index), viewFn: makeView(index));
+          return MultiEntry(
+            formDef: defaultForm,
+            formFn: makeForm(index),
+            viewFn: makeView(index),
+          );
         },
       ),
     );

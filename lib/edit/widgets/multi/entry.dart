@@ -2,11 +2,13 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MultiEntry extends ConsumerStatefulWidget {
+  final bool formDef;
   final Widget Function(BuildContext context, WidgetRef ref) formFn;
   final Widget Function(BuildContext context, WidgetRef ref) viewFn;
 
   const MultiEntry({
     super.key,
+    this.formDef = false,
     required this.formFn,
     required this.viewFn,
   }); //, this.elements});
@@ -16,7 +18,13 @@ class MultiEntry extends ConsumerStatefulWidget {
 }
 
 class _MultiEntryState extends ConsumerState<MultiEntry> {
-  bool checked = false;
+  late bool checked;
+
+  @override
+  void initState() {
+    checked = widget.formDef;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

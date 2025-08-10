@@ -4,7 +4,8 @@ import '../../provider/node_provider.dart';
 import 'multi.dart';
 
 class Disposal extends Multi {
-  const Disposal({super.key}) : super(label: "Disposal", element: "Disposal");
+  const Disposal({super.key})
+    : super(label: "Disposal", element: "Disposal", blank: true);
 
   @override
   Widget Function(BuildContext, WidgetRef) makeForm(int idx) {
@@ -22,7 +23,7 @@ class Disposal extends Multi {
                 labelStyle: FluentTheme.of(context).typography.caption!,
                 child: SizedBox(
                   height: 38.0,
-                  width: 255.0,
+                  width: 300.0,
                   child: EditableComboBox<String>(
                     value: ref
                         .watch(nodeProvider)
@@ -61,8 +62,15 @@ class Disposal extends Multi {
                         child: Text("expiry or termination of licence"),
                       ),
                     ],
-                    onChanged: (size) {},
+                    onChanged: (text) {
+                      ref
+                          .read(nodeProvider.notifier)
+                          .multiSet(element, idx, "DisposalTrigger", text!);
+                    },
                     onFieldSubmitted: (text) {
+                      ref
+                          .read(nodeProvider.notifier)
+                          .multiSet(element, idx, "DisposalTrigger", text);
                       return text;
                     },
                   ),
@@ -86,7 +94,17 @@ class Disposal extends Multi {
                               .watch(nodeProvider)
                               .mGet(element, idx, "RetentionPeriod"),
                         ),
-                        onChanged: (n) {},
+                        onChanged: (n) {
+                          if (n == null) return;
+                          ref
+                              .read(nodeProvider.notifier)
+                              .multiSet(
+                                element,
+                                idx,
+                                "RetentionPeriod",
+                                n.toString(),
+                              );
+                        },
                         mode: SpinButtonPlacementMode.none,
                       ),
                     ),
@@ -102,8 +120,8 @@ class Disposal extends Multi {
                         ],
                         onChanged: (u) {
                           ref
-                              .watch(nodeProvider)
-                              .mSet(element, idx, "unit", u!);
+                              .read(nodeProvider.notifier)
+                              .multiSet(element, idx, "unit", u!);
                         },
                         //placeholder: const Text('Select a cat breed'),
                       ),
@@ -125,6 +143,7 @@ class Disposal extends Multi {
                         .watch(nodeProvider)
                         .mGet(element, idx, "DisposalAction"),
                     items: [
+                      ComboBoxItem(value: "", child: Text("")),
                       ComboBoxItem(
                         value: "Required as State archives",
                         child: Text("Required as State archives"),
@@ -138,8 +157,8 @@ class Disposal extends Multi {
                     ],
                     onChanged: (d) {
                       ref
-                          .watch(nodeProvider)
-                          .mSet(element, idx, "DisposalAction", d!);
+                          .read(nodeProvider.notifier)
+                          .multiSet(element, idx, "DisposalAction", d!);
                     },
                   ),
                 ),
@@ -164,16 +183,30 @@ class Disposal extends Multi {
 
         child: Row(
           children: [
-            RichText(
-              text: TextSpan(
-                style: DefaultTextStyle.of(context).style,
-                children: d.$1,
+            Padding(
+              padding: EdgeInsetsGeometry.all(5.0),
+              child: InfoLabel(
+                label: "Action",
+                labelStyle: FluentTheme.of(context).typography.caption!,
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: d.$1,
+                  ),
+                ),
               ),
             ),
-            RichText(
-              text: TextSpan(
-                style: DefaultTextStyle.of(context).style,
-                children: d.$2,
+            Padding(
+              padding: EdgeInsetsGeometry.all(5.0),
+              child: InfoLabel(
+                label: "Custody",
+                labelStyle: FluentTheme.of(context).typography.caption!,
+                child: RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: d.$2,
+                  ),
+                ),
               ),
             ),
           ],

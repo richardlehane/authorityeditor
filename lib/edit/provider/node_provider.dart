@@ -16,4 +16,9 @@ class Node extends _$Node {
     state.mAdd(element, tok);
     ref.notifyListeners();
   }
+
+  void multiSet(String element, int index, String tok, String val) {
+    state.mSet(element, index, tok, val);
+    ref.notifyListeners();
+  }
 }
