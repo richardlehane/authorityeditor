@@ -3,6 +3,7 @@ import 'package:authorityeditor/edit/widgets/markup/markup.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/edit/widgets/simple.dart';
+import '../widgets/multi/disposal.dart';
 
 class ClassView extends ConsumerWidget {
   const ClassView({super.key});
@@ -50,6 +51,10 @@ class ClassView extends ConsumerWidget {
                         .setParagraphs("ClassDescription", paras),
               ),
             ),
+          ),
+          SizedBox(
+            height: 150.0,
+            child: Padding(padding: EdgeInsets.all(10.0), child: Disposal()),
           ),
           Padding(
             padding: EdgeInsets.all(10.0),

@@ -11,4 +11,9 @@ class Node extends _$Node {
     final documents = ref.watch(documentsProvider);
     return documents.documents[documents.current].current();
   }
+
+  void multiAdd(String element, String tok) {
+    state.mAdd(element, tok);
+    ref.notifyListeners();
+  }
 }
