@@ -8,12 +8,14 @@ class MarkupToolbar extends StatelessWidget {
     required this.listButtonState,
     required this.updateToggleButtonsStateOnButtonPressed,
     required this.updateListButtonStateOnButtonPressed,
+    this.compact = false,
   });
   final ToggleButtonsState toggleButtonsState;
   final bool listButtonState;
   final void Function(ToggleButtonsState, {String? url})
   updateToggleButtonsStateOnButtonPressed;
   final ValueChanged<bool> updateListButtonStateOnButtonPressed;
+  final bool compact;
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +30,7 @@ class MarkupToolbar extends StatelessWidget {
                 ToggleButtonsState.emphasis,
               );
             },
-            child: SizedBox(
-              width: 75.0,
-              child: Row(
-                children: [
-                  const Icon(FluentIcons.bold, size: 12.0),
-                  Expanded(child: const Text("Emphasis")),
-                ],
-              ),
-            ),
+            child: MarkupButton("Emphasis", FluentIcons.bold),
           ),
         ),
         Padding(
@@ -48,15 +42,7 @@ class MarkupToolbar extends StatelessWidget {
                 ToggleButtonsState.source,
               );
             },
-            child: SizedBox(
-              width: 75.0,
-              child: Row(
-                children: [
-                  const Icon(FluentIcons.italic, size: 12.0),
-                  Expanded(child: const Text("Source")),
-                ],
-              ),
-            ),
+            child: MarkupButton("Source", FluentIcons.italic),
           ),
         ),
         Padding(
@@ -73,15 +59,7 @@ class MarkupToolbar extends StatelessWidget {
                 );
               }
             },
-            child: SizedBox(
-              width: 75.0,
-              child: Row(
-                children: [
-                  const Icon(FluentIcons.link, size: 12.0),
-                  Expanded(child: const Text("Link")),
-                ],
-              ),
-            ),
+            child: MarkupButton("Link", FluentIcons.link),
           ),
         ),
         Padding(
@@ -91,15 +69,7 @@ class MarkupToolbar extends StatelessWidget {
             onChanged: (v) {
               updateListButtonStateOnButtonPressed(v);
             },
-            child: SizedBox(
-              width: 75.0,
-              child: Row(
-                children: [
-                  const Icon(FluentIcons.bulleted_list, size: 12.0),
-                  Expanded(child: const Text("List")),
-                ],
-              ),
-            ),
+            child: MarkupButton("List", FluentIcons.bulleted_list),
           ),
         ),
       ],
@@ -132,5 +102,26 @@ class MarkupToolbar extends StatelessWidget {
     );
     urlController.dispose();
     return url;
+  }
+}
+
+class MarkupButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final bool compact;
+
+  const MarkupButton(this.label, this.icon, {super.key, this.compact = false});
+
+  @override
+  Widget build(BuildContext context) {
+    if (compact) {
+      return SizedBox(width: 25.0, child: Icon(icon, size: 12.0));
+    }
+    return SizedBox(
+      width: 75.0,
+      child: Row(
+        children: [Icon(icon, size: 12.0), Expanded(child: Text(label))],
+      ),
+    );
   }
 }

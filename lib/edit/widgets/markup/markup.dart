@@ -7,7 +7,8 @@ import 'togglebutton.dart';
 class Markup extends StatefulWidget {
   final List<XmlElement>? paras;
   final Function(List<XmlElement>)? cb;
-  const Markup({super.key, this.paras, this.cb});
+  final bool compact;
+  const Markup({super.key, this.paras, this.cb, this.compact = false});
 
   @override
   State<Markup> createState() => _MarkupState();
@@ -86,9 +87,10 @@ class _MarkupState extends State<Markup> {
                 updateToggleButtonsStateOnButtonPressed,
             updateListButtonStateOnButtonPressed:
                 updateListButtonStateOnButtonPressed,
+            compact: widget.compact,
           ),
           SizedBox(
-            height: 200.0,
+            height: (widget.compact) ? 50.0 : 200.0,
             child: TextBox(
               focusNode: focusNode,
               maxLines: null,

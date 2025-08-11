@@ -4,9 +4,9 @@ Authority Editor, on a modern stack.
 
 ## Build for web
 
-flutter build web
+flutter build web --base-href "/nsw/"
 
-In build/web folder:
+Copy build/web folder to sites/authorityeditor.com/nsw
 
 git add .
 git commit -m "fresh build"
