@@ -25,7 +25,7 @@ class DocumentTree extends ConsumerWidget {
             onItemInvoked: (item, reason) async {
               ref
                   .read(documentsProvider.notifier)
-                  .selectionChanged(item.value.$2);
+                  .selectionChanged(item.value.$2, item.value.$1);
             },
             onSecondaryTap: (item, details) async {
               //if (item.value == 2) return;

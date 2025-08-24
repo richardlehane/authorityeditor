@@ -53,6 +53,23 @@ class _MultiEntryState extends ConsumerState<MultiEntry> {
             ),
           ),
         ),
+        Container(
+          alignment: Alignment.topRight,
+          padding: EdgeInsets.fromLTRB(5.0, 5.0, 5.0, 5.0),
+          child: Column(
+            children: [
+              IconButton(icon: Icon(FluentIcons.chevron_up), onPressed: () {}),
+              IconButton(
+                icon: Icon(FluentIcons.chevron_down),
+                onPressed: () {},
+              ),
+              IconButton(
+                icon: Icon(FluentIcons.chrome_close),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

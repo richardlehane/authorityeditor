@@ -12,13 +12,13 @@ class Node extends _$Node {
     return documents.documents[documents.current].current();
   }
 
-  void multiAdd(String element, String tok) {
-    state.mAdd(element, tok);
+  void multiAdd(String element, String? sub) {
+    state.multiAdd(element, sub);
     ref.notifyListeners();
   }
 
-  void multiSet(String element, int index, String tok, String val) {
-    state.mSet(element, index, tok, val);
+  void multiSet(String element, int index, String? sub, String? val) {
+    state.multiSet(element, index, sub, val);
     ref.notifyListeners();
   }
 }

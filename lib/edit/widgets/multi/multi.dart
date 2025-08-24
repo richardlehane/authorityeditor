@@ -27,7 +27,7 @@ class Multi extends ConsumerWidget {
         width: 100.0,
         child: TextBox(
           controller: TextEditingController(
-            text: ref.watch(nodeProvider).mGet(element, idx, tok),
+            text: ref.watch(nodeProvider).multiGet(element, idx, tok),
           ),
         ),
       );
@@ -42,7 +42,7 @@ class Multi extends ConsumerWidget {
         height: 40.0,
         width: 100.0,
         child: TextBox(
-          placeholder: ref.watch(nodeProvider).mGet(element, idx, tok),
+          placeholder: ref.watch(nodeProvider).multiGet(element, idx, tok),
           readOnly: true,
         ),
       );
@@ -53,10 +53,10 @@ class Multi extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    int l = ref.watch(nodeProvider).mLen(element);
+    int l = ref.watch(nodeProvider).multiLen(element);
     bool defaultForm = false;
     if (blank && l == 0) {
-      ref.read(nodeProvider).mAdd(element, tok);
+      ref.read(nodeProvider).multiAdd(element, tok);
       l = 1;
       defaultForm = true;
     }

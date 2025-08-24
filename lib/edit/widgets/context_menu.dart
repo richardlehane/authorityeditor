@@ -74,7 +74,7 @@ Widget Function(BuildContext) contextBuilder(
       leading: const Icon(FluentIcons.delete),
       text: const Text('Delete'),
       onPressed: () {
-        ref.read(documentsProvider.notifier).dropElement(value.$2);
+        ref.read(documentsProvider.notifier).dropElement(value.$2, value.$1);
       },
     ),
   );

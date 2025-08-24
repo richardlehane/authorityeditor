@@ -27,7 +27,7 @@ class Disposal extends Multi {
                   child: EditableComboBox<String>(
                     value: ref
                         .watch(nodeProvider)
-                        .mGet(element, idx, "DisposalTrigger"),
+                        .multiGet(element, idx, "DisposalTrigger"),
                     items: [
                       ComboBoxItem<String>(
                         value: "action completed",
@@ -91,18 +91,18 @@ class Disposal extends Multi {
                       child: NumberBox(
                         value: int.tryParse(
                           ref
-                              .watch(nodeProvider)
-                              .mGet(element, idx, "RetentionPeriod"),
+                                  .watch(nodeProvider)
+                                  .multiGet(element, idx, "RetentionPeriod") ??
+                              "",
                         ),
                         onChanged: (n) {
-                          if (n == null) return;
                           ref
                               .read(nodeProvider.notifier)
                               .multiSet(
                                 element,
                                 idx,
                                 "RetentionPeriod",
-                                n.toString(),
+                                n?.toString(),
                               );
                         },
                         mode: SpinButtonPlacementMode.none,
@@ -113,7 +113,7 @@ class Disposal extends Multi {
                       child: ComboBox<String>(
                         value: ref
                             .watch(nodeProvider)
-                            .mGet(element, idx, "unit"),
+                            .multiGet(element, idx, "unit"),
                         items: [
                           ComboBoxItem(value: "years", child: Text("years")),
                           ComboBoxItem(value: "months", child: Text("months")),
@@ -141,7 +141,7 @@ class Disposal extends Multi {
                   child: ComboBox<String>(
                     value: ref
                         .watch(nodeProvider)
-                        .mGet(element, idx, "DisposalAction"),
+                        .multiGet(element, idx, "DisposalAction"),
                     items: [
                       ComboBoxItem(value: "", child: Text("")),
                       ComboBoxItem(

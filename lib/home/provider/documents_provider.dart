@@ -47,8 +47,8 @@ class Documents extends _$Documents {
     ref.notifyListeners();
   }
 
-  void selectionChanged(int index) {
-    state.documents[state.current].setCurrent(index);
+  void selectionChanged(int index, authority.NodeType nt) {
+    state.documents[state.current].setCurrent(index, nt);
     ref.notifyListeners();
   }
 
@@ -72,8 +72,8 @@ class Documents extends _$Documents {
     ref.notifyListeners();
   }
 
-  void dropElement(int n) {
-    state.documents[state.current].drop(n);
+  void dropElement(int n, authority.NodeType nt) {
+    state.documents[state.current].dropNode(n, nt);
     ref.notifyListeners();
   }
 

@@ -90,7 +90,7 @@ class _MarkupState extends State<Markup> {
             compact: widget.compact,
           ),
           SizedBox(
-            height: (widget.compact) ? 50.0 : 200.0,
+            height: (widget.compact) ? 50.0 : 150.0,
             child: TextBox(
               focusNode: focusNode,
               maxLines: null,
