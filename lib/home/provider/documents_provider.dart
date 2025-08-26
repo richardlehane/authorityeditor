@@ -48,6 +48,7 @@ class Documents extends _$Documents {
   }
 
   void selectionChanged(int index, authority.NodeType nt) {
+    if (nt == authority.NodeType.none) return;
     state.documents[state.current].setCurrent(index, nt);
     ref.notifyListeners();
   }
@@ -59,6 +60,11 @@ class Documents extends _$Documents {
       default:
         state.documents[state.current].view = authority.View.edit;
     }
+    ref.notifyListeners();
+  }
+
+  void addContext([int? n]) {
+    state.documents[state.current].addContext(n);
     ref.notifyListeners();
   }
 

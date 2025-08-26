@@ -2,7 +2,11 @@
 
 Authority Editor, on a modern stack.
 
+dart run build_runner build
+
 ## Build for web
+
+
 
 flutter build web --base-href "/nsw/"
 

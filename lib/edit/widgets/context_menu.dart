@@ -69,6 +69,17 @@ Widget Function(BuildContext) contextBuilder(
       ),
     );
   }
+  if (value.$1 == NodeType.none) {
+    items.add(
+      MenuFlyoutItem(
+        leading: const Icon(FluentIcons.page_add),
+        text: const Text('Add Context'),
+        onPressed: () {
+          ref.read(documentsProvider.notifier).addContext();
+        },
+      ),
+    );
+  }
   items.add(
     MenuFlyoutItem(
       leading: const Icon(FluentIcons.delete),

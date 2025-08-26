@@ -4,6 +4,8 @@ import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/edit/widgets/document_tree.dart';
 import 'package:authorityeditor/edit/view/term.dart';
 import 'package:authorityeditor/edit/view/class.dart';
+import 'package:authorityeditor/edit/view/context.dart';
+import 'package:authorityeditor/edit/view/details.dart';
 
 import 'package:authority/authority.dart' show NodeType;
 
@@ -24,10 +26,12 @@ class EditPage extends ConsumerWidget {
         ),
         // Right column with content
         Expanded(
-          child:
-              (currentnode.typ() == NodeType.classType)
-                  ? ClassView()
-                  : TermView(),
+          child: switch (currentnode.typ()) {
+            NodeType.classType => ClassView(),
+            NodeType.termType => TermView(),
+            NodeType.contextType => ContextView(),
+            _ => DetailsView(),
+          },
         ),
       ],
     );
