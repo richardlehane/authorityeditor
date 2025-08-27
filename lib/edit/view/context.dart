@@ -4,15 +4,7 @@ import 'package:authorityeditor/edit/widgets/simple.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const termTypes = [
-  "",
-  "function",
-  "activity",
-  "subfunction",
-  "subactivity",
-  "series",
-  "subject",
-];
+const contextTypes = ["", "supporting documentation"];
 
 class ContextView extends ConsumerWidget {
   const ContextView({super.key});
@@ -42,7 +34,7 @@ class ContextView extends ConsumerWidget {
                   child: ComboBox<String>(
                     value: currentNode.get("type"),
                     items:
-                        termTypes.map((e) {
+                        contextTypes.map((e) {
                           return ComboBoxItem(value: e, child: Text(e));
                         }).toList(),
                     onChanged:
@@ -52,24 +44,13 @@ class ContextView extends ConsumerWidget {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                  child: SimpleText(
-                    element: false,
-                    label: "Number",
-                    name: "itemno",
-                    placeholder: "0.0.0",
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 3,
+                flex: 2,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
                   child: SimpleText(
                     element: true,
-                    label: "Title",
-                    name: "TermTitle",
+                    label: "Context Title",
+                    name: "ContextTitle",
                     placeholder: "",
                   ),
                 ),
@@ -82,18 +63,12 @@ class ContextView extends ConsumerWidget {
               label: 'Description',
               child: Markup(
                 key: ValueKey(currentNode.reference),
-                paras: currentNode.getParagraphs("TermDescription"),
+                height: 300.0,
+                paras: currentNode.getParagraphs("ContextDescription"),
                 cb:
                     (paras) =>
-                        currentNode.setParagraphs("TermDescription", paras),
+                        currentNode.setParagraphs("ContextDescription", paras),
               ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Expander(
-              header: Text('Additional fields'),
-              content: Text('Private fields here'),
             ),
           ),
         ],
