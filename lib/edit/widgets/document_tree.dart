@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 import 'package:authorityeditor/edit/widgets/context_menu.dart';
+import 'dart:io';
 
 class DocumentTree extends ConsumerWidget {
   DocumentTree({super.key});
@@ -23,9 +24,8 @@ class DocumentTree extends ConsumerWidget {
             items: documents.documents[documents.current].treeItems ?? [],
             selectionMode: TreeViewSelectionMode.single,
             onItemInvoked: (item, reason) async {
-              ref
-                  .read(documentsProvider.notifier)
-                  .selectionChanged(item.value.$2, item.value.$1);
+              ref.read(documentsProvider.notifier).selectionChanged(item.value);
+              print(item.value);
             },
             onSecondaryTap: (item, details) async {
               //if (item.value == 2) return;

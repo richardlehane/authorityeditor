@@ -19,18 +19,19 @@ class SimpleText extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final TextEditingController controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
     controller.text = ref.read(nodeProvider).get(name) ?? "";
     return TapRegion(
       onTapOutside: (PointerDownEvent ev) {
-        ref.read(nodeProvider).set(name, controller.text);
+        // ref.read(nodeProvider).set(name, controller.text);
       },
       child: InfoLabel(
         label: label,
         child: TextBox(
           placeholder: placeholder,
           controller: controller,
-          onChanged: (value) => ref.read(nodeProvider).mark(name),
+          //onChanged: (value) => ref.read(nodeProvider).mark(name),//
+          onChanged: (value) => ref.read(nodeProvider).set(name, value),
         ),
       ),
     );

@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:authority/authority.dart'
     as authority
-    show Document, View, NodeType;
+    show Document, View, NodeType, Ref;
 
 part 'documents_provider.g.dart';
 
@@ -47,9 +47,9 @@ class Documents extends _$Documents {
     ref.notifyListeners();
   }
 
-  void selectionChanged(int index, authority.NodeType nt) {
-    if (nt == authority.NodeType.none) return;
-    state.documents[state.current].setCurrent(index, nt);
+  void selectionChanged(authority.Ref aref) {
+    if (aref.$1 == authority.NodeType.none) return;
+    state.documents[state.current].setCurrent(aref);
     ref.notifyListeners();
   }
 
@@ -63,23 +63,18 @@ class Documents extends _$Documents {
     ref.notifyListeners();
   }
 
-  void addContext([int? n]) {
-    state.documents[state.current].addContext(n);
+  void addChild(authority.Ref aref, authority.NodeType nt) {
+    state.documents[state.current].addChild(aref, nt);
     ref.notifyListeners();
   }
 
-  void addChild(int n, authority.NodeType nt) {
-    state.documents[state.current].addChild(n, nt);
+  void addSibling(authority.Ref aref, authority.NodeType nt) {
+    state.documents[state.current].addSibling(aref, nt);
     ref.notifyListeners();
   }
 
-  void addSibling(int n, authority.NodeType nt) {
-    state.documents[state.current].addSibling(n, nt);
-    ref.notifyListeners();
-  }
-
-  void dropElement(int n, authority.NodeType nt) {
-    state.documents[state.current].dropNode(n, nt);
+  void dropNode(authority.Ref aref) {
+    state.documents[state.current].dropNode(aref);
     ref.notifyListeners();
   }
 

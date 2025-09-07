@@ -4,7 +4,7 @@ import 'package:authorityeditor/edit/widgets/simple.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-const contextTypes = ["", "supporting documentation"];
+const contextTypes = ["appraisal report", "background", "issue"];
 
 class ContextView extends ConsumerWidget {
   const ContextView({super.key});
@@ -12,66 +12,74 @@ class ContextView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentNode = ref.watch(nodeProvider);
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-              child: Text(
-                "Context",
-                style: FluentTheme.of(context).typography.subtitle,
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Padding(
-                padding: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 10.0),
-                child: InfoLabel(
-                  label: 'Type',
-                  child: ComboBox<String>(
-                    value: currentNode.get("type"),
-                    items:
-                        contextTypes.map((e) {
-                          return ComboBoxItem(value: e, child: Text(e));
-                        }).toList(),
-                    onChanged:
-                        (String? val) =>
-                            currentNode.set("type", (val == null) ? "" : val),
-                  ),
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                child: Text(
+                  "Context",
+                  style: FluentTheme.of(context).typography.subtitle,
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                  child: SimpleText(
-                    element: true,
-                    label: "Context Title",
-                    name: "ContextTitle",
-                    placeholder: "",
+            ),
+            Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 10.0),
+                    child: InfoLabel(
+                      label: 'Type',
+                      child: EditableComboBox<String>(
+                        value: currentNode.get("type") ?? "",
+                        items:
+                            contextTypes.map((e) {
+                              return ComboBoxItem(value: e, child: Text(e));
+                            }).toList(),
+                        onChanged:
+                            (String? val) => currentNode.set("type", val),
+                        onFieldSubmitted: (text) {
+                          currentNode.set("type", text);
+                          return text;
+                        },
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: InfoLabel(
-              label: 'Description',
-              child: Markup(
-                key: ValueKey(currentNode.reference),
-                height: 300.0,
-                paras: currentNode.getParagraphs("ContextDescription"),
-                cb:
-                    (paras) =>
-                        currentNode.setParagraphs("ContextDescription", paras),
+                Expanded(
+                  flex: 3,
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
+                    child: SimpleText(
+                      element: true,
+                      label: "Context Title",
+                      name: "ContextTitle",
+                      placeholder: "",
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: InfoLabel(
+                label: 'Description',
+                child: Markup(
+                  key: ValueKey(currentNode.ref),
+                  height: 400.0,
+                  paras: currentNode.getParagraphs("ContextContent"),
+                  cb:
+                      (paras) =>
+                          currentNode.setParagraphs("ContextContent", paras),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -19,7 +19,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addChild(value.$2, NodeType.termType);
+              .addChild(value, NodeType.termType);
         },
       ),
     );
@@ -30,7 +30,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addSibling(value.$2, NodeType.termType);
+              .addSibling(value, NodeType.termType);
         },
       ),
     );
@@ -41,7 +41,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addChild(value.$2, NodeType.classType);
+              .addChild(value, NodeType.classType);
         },
       ),
     );
@@ -52,7 +52,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addSibling(value.$2, NodeType.classType);
+              .addSibling(value, NodeType.classType);
         },
       ),
     );
@@ -64,7 +64,7 @@ Widget Function(BuildContext) contextBuilder(
         onPressed: () {
           ref
               .read(documentsProvider.notifier)
-              .addSibling(value.$2, NodeType.classType);
+              .addSibling(value, NodeType.classType);
         },
       ),
     );
@@ -75,7 +75,10 @@ Widget Function(BuildContext) contextBuilder(
         leading: const Icon(FluentIcons.page_add),
         text: const Text('Add Context'),
         onPressed: () {
-          ref.read(documentsProvider.notifier).addContext();
+          ref.read(documentsProvider.notifier).addChild((
+            NodeType.rootType,
+            0,
+          ), NodeType.contextType);
         },
       ),
     );
@@ -85,7 +88,7 @@ Widget Function(BuildContext) contextBuilder(
       leading: const Icon(FluentIcons.delete),
       text: const Text('Delete'),
       onPressed: () {
-        ref.read(documentsProvider.notifier).dropElement(value.$2, value.$1);
+        ref.read(documentsProvider.notifier).dropNode(value);
       },
     ),
   );

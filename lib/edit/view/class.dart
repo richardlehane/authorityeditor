@@ -10,92 +10,96 @@ class ClassView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Center(
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                "Class",
-                style: FluentTheme.of(context).typography.subtitle,
-              ),
-            ),
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: SimpleText(
-                    element: false,
-                    label: "Number",
-                    name: "itemno",
-                    placeholder: "0.0.0",
-                  ),
+    return SingleChildScrollView(
+      child: Container(
+        color: Colors.white,
+        child: Column(
+          children: [
+            Center(
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Text(
+                  "Class",
+                  style: FluentTheme.of(context).typography.subtitle,
                 ),
               ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: InfoLabel(
-              label: 'Description',
-              child: Markup(
-                key: ValueKey(ref.read(nodeProvider).reference),
-                paras: ref.read(nodeProvider).getParagraphs("ClassDescription"),
-                cb:
-                    (paras) => ref
-                        .read(nodeProvider)
-                        .setParagraphs("ClassDescription", paras),
-              ),
             ),
-          ),
-          SizedBox(
-            height: 180.0,
-            child: Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Disposal(key: ValueKey(ref.read(nodeProvider).reference)),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: InfoLabel(
-              label: 'Justification',
-              child: Markup(
-                key: ValueKey(ref.read(nodeProvider).reference),
-                paras: ref.read(nodeProvider).getParagraphs("Justification"),
-                cb:
-                    (paras) => ref
-                        .read(nodeProvider)
-                        .setParagraphs("Justification", paras),
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Expander(
-              header: Text('Additional fields'),
-              content: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: SimpleText(
-                          element: true,
-                          label: "Title",
-                          name: "ClassTitle",
-                          placeholder: "Not recommended for classes",
-                        ),
-                      ),
-                    ],
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: SimpleText(
+                      element: false,
+                      label: "Number",
+                      name: "itemno",
+                      placeholder: "0.0.0",
+                    ),
                   ),
-                ],
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: InfoLabel(
+                label: 'Description',
+                child: Markup(
+                  key: ValueKey(ref.read(nodeProvider).ref),
+                  paras: ref
+                      .read(nodeProvider)
+                      .getParagraphs("ClassDescription"),
+                  cb:
+                      (paras) => ref
+                          .read(nodeProvider)
+                          .setParagraphs("ClassDescription", paras),
+                ),
               ),
             ),
-          ),
-        ],
+            SizedBox(
+              height: 180.0,
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Disposal(key: ValueKey(ref.read(nodeProvider).ref)),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: InfoLabel(
+                label: 'Justification',
+                child: Markup(
+                  key: ValueKey(ref.read(nodeProvider).ref),
+                  paras: ref.read(nodeProvider).getParagraphs("Justification"),
+                  cb:
+                      (paras) => ref
+                          .read(nodeProvider)
+                          .setParagraphs("Justification", paras),
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Expander(
+                header: Text('Additional fields'),
+                content: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: SimpleText(
+                            element: true,
+                            label: "Title",
+                            name: "ClassTitle",
+                            placeholder: "Not recommended for classes",
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
