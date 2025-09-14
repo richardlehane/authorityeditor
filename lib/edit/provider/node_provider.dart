@@ -21,4 +21,19 @@ class Node extends _$Node {
     state.multiSet(element, index, sub, val);
     ref.notifyListeners();
   }
+
+  void multiDrop(String element, int index) {
+    state.multiDrop(element, index);
+    ref.notifyListeners();
+  }
+
+  void multiUp(String element, int index) {
+    state.multiUp(element, index);
+    ref.notifyListeners();
+  }
+
+  void multiDown(String element, int index) {
+    state.multiDown(element, index);
+    ref.notifyListeners();
+  }
 }

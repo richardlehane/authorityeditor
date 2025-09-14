@@ -30,7 +30,7 @@ class MarkupToolbar extends StatelessWidget {
                 ToggleButtonsState.emphasis,
               );
             },
-            child: MarkupButton("Emphasis", FluentIcons.bold),
+            child: MarkupButton("Emphasis", FluentIcons.bold, compact: compact),
           ),
         ),
         Padding(
@@ -42,7 +42,7 @@ class MarkupToolbar extends StatelessWidget {
                 ToggleButtonsState.source,
               );
             },
-            child: MarkupButton("Source", FluentIcons.italic),
+            child: MarkupButton("Source", FluentIcons.italic, compact: compact),
           ),
         ),
         Padding(
@@ -59,7 +59,7 @@ class MarkupToolbar extends StatelessWidget {
                 );
               }
             },
-            child: MarkupButton("Link", FluentIcons.link),
+            child: MarkupButton("Link", FluentIcons.link, compact: compact),
           ),
         ),
         Padding(
@@ -69,7 +69,11 @@ class MarkupToolbar extends StatelessWidget {
             onChanged: (v) {
               updateListButtonStateOnButtonPressed(v);
             },
-            child: MarkupButton("List", FluentIcons.bulleted_list),
+            child: MarkupButton(
+              "List",
+              FluentIcons.bulleted_list,
+              compact: compact,
+            ),
           ),
         ),
       ],

@@ -3,6 +3,8 @@ import 'package:authorityeditor/edit/widgets/markup/markup.dart';
 import 'package:authorityeditor/edit/widgets/simple.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../widgets/multi/source.dart';
+import '../widgets/multi/comments.dart';
 
 const contextTypes = ["appraisal report", "background", "issue"];
 
@@ -70,13 +72,21 @@ class ContextView extends ConsumerWidget {
                 label: 'Description',
                 child: Markup(
                   key: ValueKey(currentNode.ref),
-                  height: 400.0,
+                  height: 350.0,
                   paras: currentNode.getParagraphs("ContextContent"),
                   cb:
                       (paras) =>
                           currentNode.setParagraphs("ContextContent", paras),
                 ),
               ),
+            ),
+            SizedBox(
+              height: 350.0,
+              child: Padding(padding: EdgeInsets.all(10.0), child: Source()),
+            ),
+            SizedBox(
+              height: 350.0,
+              child: Padding(padding: EdgeInsets.all(10.0), child: Comments()),
             ),
           ],
         ),

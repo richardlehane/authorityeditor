@@ -10,24 +10,30 @@ import '../../provider/node_provider.dart';
 class Multi extends ConsumerWidget {
   final String label;
   final String element;
-  final String tok;
-  final bool blank;
+  final String? sub;
+  final bool blank; // this multi widget should add a new entry if empty
   const Multi({
     super.key,
     required this.label,
     required this.element,
-    this.tok = "",
     this.blank = false,
+    this.sub,
   });
 
-  Widget Function(BuildContext, WidgetRef) makeForm(int idx) {
-    Widget formf(BuildContext context, WidgetRef ref) {
+  Widget Function(BuildContext, WidgetRef, int flags, Function(int) cb)
+  makeForm(int idx, int len) {
+    Widget formf(
+      BuildContext context,
+      WidgetRef ref,
+      int flags,
+      Function(int) cb,
+    ) {
       return SizedBox(
         height: 40.0,
         width: 100.0,
         child: TextBox(
           controller: TextEditingController(
-            text: ref.watch(nodeProvider).multiGet(element, idx, tok),
+            text: ref.read(nodeProvider).multiGet(element, idx, sub),
           ),
         ),
       );
@@ -36,13 +42,13 @@ class Multi extends ConsumerWidget {
     return formf;
   }
 
-  Widget Function(BuildContext, WidgetRef) makeView(int idx) {
+  Widget Function(BuildContext, WidgetRef) makeView(int idx, int len) {
     Widget viewf(BuildContext context, WidgetRef ref) {
       return SizedBox(
         height: 40.0,
         width: 100.0,
         child: TextBox(
-          placeholder: ref.watch(nodeProvider).multiGet(element, idx, tok),
+          placeholder: ref.watch(nodeProvider).multiGet(element, idx, sub),
           readOnly: true,
         ),
       );
@@ -54,16 +60,14 @@ class Multi extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int l = ref.watch(nodeProvider).multiLen(element);
-    bool defaultForm = false;
     if (blank && l == 0) {
-      ref.read(nodeProvider).multiAdd(element, tok);
+      ref.read(nodeProvider).multiAdd(element, sub);
       l = 1;
-      defaultForm = true;
     }
     return InfoLabel(
       label: label,
       child: ListView.builder(
-        itemCount: l + 1,
+        itemCount: l + 1, // add one for the plus button
         itemBuilder: (BuildContext context, int index) {
           if (index >= l) {
             return IconButton(
@@ -73,13 +77,16 @@ class Multi extends ConsumerWidget {
                 color: FluentTheme.of(context).accentColor,
               ),
               onPressed:
-                  () => ref.read(nodeProvider.notifier).multiAdd(element, tok),
+                  () => ref.read(nodeProvider.notifier).multiAdd(element, sub),
             );
           }
           return MultiEntry(
-            formDef: defaultForm,
-            formFn: makeForm(index),
-            viewFn: makeView(index),
+            key: UniqueKey(),
+            element: element,
+            index: index,
+            len: l,
+            formFn: makeForm(index, l),
+            viewFn: makeView(index, l),
           );
         },
       ),

@@ -4,6 +4,9 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/edit/widgets/simple.dart';
 import '../widgets/multi/disposal.dart';
+import '../widgets/multi/id.dart';
+import '../widgets/multi/linkedto.dart';
+import '../widgets/multi/comments.dart';
 
 class ClassView extends ConsumerWidget {
   const ClassView({super.key});
@@ -79,24 +82,30 @@ class ClassView extends ConsumerWidget {
             Padding(
               padding: EdgeInsets.all(10.0),
               child: Expander(
-                header: Text('Additional fields'),
-                content: Column(
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: SimpleText(
-                            element: true,
-                            label: "Title",
-                            name: "ClassTitle",
-                            placeholder: "Not recommended for classes",
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                header: Text('ID numbers'),
+                content: SizedBox(
+                  height: 300.0,
+                  width: 380.0,
+                  child: Padding(padding: EdgeInsets.all(10.0), child: Ids()),
                 ),
               ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Expander(
+                header: Text('Linked to'),
+                content: SizedBox(
+                  height: 300.0,
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: LinkedTo(),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 350.0,
+              child: Padding(padding: EdgeInsets.all(10.0), child: Comments()),
             ),
           ],
         ),
