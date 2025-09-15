@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'node_provider.dart';
+part of 'tree_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,52 +9,51 @@ part of 'node_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Node)
-const nodeProvider = NodeProvider._();
+@ProviderFor(Tree)
+const treeProvider = TreeProvider._();
 
-final class NodeProvider
-    extends $NotifierProvider<Node, authority.CurrentNode> {
-  const NodeProvider._()
+final class TreeProvider extends $NotifierProvider<Tree, List<TreeViewItem>> {
+  const TreeProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'nodeProvider',
+        name: r'treeProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$nodeHash();
+  String debugGetCreateSourceHash() => _$treeHash();
 
   @$internal
   @override
-  Node create() => Node();
+  Tree create() => Tree();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(authority.CurrentNode value) {
+  Override overrideWithValue(List<TreeViewItem> value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<authority.CurrentNode>(value),
+      providerOverride: $SyncValueProvider<List<TreeViewItem>>(value),
     );
   }
 }
 
-String _$nodeHash() => r'43f09b58eb67e198abf7df9fd1910fd0f95b4cfd';
+String _$treeHash() => r'e2f84d43efd56842aa55514a3cfcb8ea76338733';
 
-abstract class _$Node extends $Notifier<authority.CurrentNode> {
-  authority.CurrentNode build();
+abstract class _$Tree extends $Notifier<List<TreeViewItem>> {
+  List<TreeViewItem> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<authority.CurrentNode, authority.CurrentNode>;
+    final ref = this.ref as $Ref<List<TreeViewItem>, List<TreeViewItem>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<authority.CurrentNode, authority.CurrentNode>,
-              authority.CurrentNode,
+              AnyNotifier<List<TreeViewItem>, List<TreeViewItem>>,
+              List<TreeViewItem>,
               Object?,
               Object?
             >;

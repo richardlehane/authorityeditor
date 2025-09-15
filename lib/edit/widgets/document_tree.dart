@@ -1,8 +1,8 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:authorityeditor/home/provider/documents_provider.dart';
+import 'package:authorityeditor/edit/provider/node_provider.dart';
+import 'package:authorityeditor/edit/provider/tree_provider.dart';
 import 'package:authorityeditor/edit/widgets/context_menu.dart';
-import 'dart:io';
 
 class DocumentTree extends ConsumerWidget {
   DocumentTree({super.key});
@@ -11,7 +11,7 @@ class DocumentTree extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final documents = ref.watch(documentsProvider);
+    final treeItems = ref.watch(treeProvider);
     return Container(
       color: Colors.white,
       padding: const EdgeInsets.only(top: 8.0),
@@ -21,10 +21,10 @@ class DocumentTree extends ConsumerWidget {
           controller: contextController,
           key: contextAttachKey,
           child: TreeView(
-            items: documents.documents[documents.current].treeItems ?? [],
+            items: treeItems,
             selectionMode: TreeViewSelectionMode.single,
             onItemInvoked: (item, reason) async {
-              ref.read(documentsProvider.notifier).selectionChanged(item.value);
+              ref.read(nodeProvider.notifier).selectionChanged(item.value);
             },
             onSecondaryTap: (item, details) async {
               //if (item.value == 2) return;

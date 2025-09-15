@@ -1,10 +1,8 @@
-import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/edit/widgets/multi/linkedto.dart';
 import 'package:authorityeditor/edit/widgets/simple.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/multi/id.dart';
-import '../widgets/multi/linkedto.dart';
 import '../widgets/multi/comments.dart';
 
 class DetailsView extends ConsumerWidget {
@@ -12,7 +10,6 @@ class DetailsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentNode = ref.watch(nodeProvider);
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,

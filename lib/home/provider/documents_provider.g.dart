@@ -6,6 +6,9 @@ part of 'documents_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(Documents)
 const documentsProvider = DocumentsProvider._();
 
@@ -37,7 +40,7 @@ final class DocumentsProvider extends $NotifierProvider<Documents, DocState> {
   }
 }
 
-String _$documentsHash() => r'52941cfb20fc2ea01737a67c3d696c209bbd38fd';
+String _$documentsHash() => r'098f88a4175d78027db7e60d7abe61c9da2c56ed';
 
 abstract class _$Documents extends $Notifier<DocState> {
   DocState build();
@@ -57,6 +60,3 @@ abstract class _$Documents extends $Notifier<DocState> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
