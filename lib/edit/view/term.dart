@@ -1,6 +1,6 @@
 import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/edit/widgets/markup/markup.dart';
-import 'package:authorityeditor/edit/widgets/simple.dart';
+import 'package:authorityeditor/edit/widgets/title.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/multi/comments.dart';
@@ -55,29 +55,7 @@ class TermView extends ConsumerWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-                    child: SimpleText(
-                      element: false,
-                      label: "Number",
-                      name: "itemno",
-                      placeholder: "0.0.0",
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                    child: SimpleText(
-                      element: true,
-                      label: "Title",
-                      name: "TermTitle",
-                      placeholder: "",
-                    ),
-                  ),
-                ),
+                Expanded(child: NodeTitle()),
               ],
             ),
             Padding(

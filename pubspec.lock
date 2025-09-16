@@ -54,7 +54,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "6cfe3352585a00c67d3032356ca6303363f8c805"
+      resolved-ref: "2bf6857f7f44cac9bced09a3b2f0e1101e1316f3"
       url: "https://github.com/richardlehane/authority"
     source: git
     version: "0.0.1"

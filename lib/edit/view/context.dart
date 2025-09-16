@@ -57,10 +57,8 @@ class ContextView extends ConsumerWidget {
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
                     child: SimpleText(
-                      element: true,
                       label: "Context Title",
                       name: "ContextTitle",
-                      placeholder: "",
                     ),
                   ),
                 ),

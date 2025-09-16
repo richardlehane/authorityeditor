@@ -12,6 +12,12 @@ class Node extends _$Node {
     return documents.documents[documents.current].current();
   }
 
+  void refresh() {
+    final docs = ref.read(documentsProvider);
+    if (docs.documents[docs.current].selected == state.ref) return;
+    state = docs.documents[docs.current].current();
+  }
+
   void selectionChanged(authority.Ref aref) {
     final docs = ref.read(documentsProvider);
     docs.documents[docs.current].setCurrent(aref);

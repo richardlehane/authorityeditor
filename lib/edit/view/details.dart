@@ -29,23 +29,13 @@ class DetailsView extends ConsumerWidget {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                    child: SimpleText(
-                      element: true,
-                      label: "Title",
-                      name: "AuthorityTitle",
-                      placeholder: "",
-                    ),
+                    child: SimpleText(label: "Title", name: "AuthorityTitle"),
                   ),
                 ),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                    child: SimpleText(
-                      element: true,
-                      label: "Scope",
-                      name: "Scope",
-                      placeholder: "",
-                    ),
+                    child: SimpleText(label: "Scope", name: "Scope"),
                   ),
                 ),
               ],

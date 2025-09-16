@@ -1,8 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:authority/authority.dart'
-    as authority
-    show Document, View, NodeType, Ref;
+import 'package:authority/authority.dart' as authority show Document, View;
 
 part 'documents_provider.g.dart';
 
@@ -47,12 +45,6 @@ class Documents extends _$Documents {
     ref.notifyListeners();
   }
 
-  void selectionChanged(authority.Ref aref) {
-    if (aref.$1 == authority.NodeType.none) return;
-    state.documents[state.current].setCurrent(aref);
-    ref.notifyListeners();
-  }
-
   void viewChanged(String view) {
     switch (view) {
       case "source":
@@ -60,26 +52,6 @@ class Documents extends _$Documents {
       default:
         state.documents[state.current].view = authority.View.edit;
     }
-    ref.notifyListeners();
-  }
-
-  void addChild(authority.Ref aref, authority.NodeType nt) {
-    state.documents[state.current].addChild(aref, nt);
-    ref.notifyListeners();
-  }
-
-  void addSibling(authority.Ref aref, authority.NodeType nt) {
-    state.documents[state.current].addSibling(aref, nt);
-    ref.notifyListeners();
-  }
-
-  void dropNode(authority.Ref aref) {
-    state.documents[state.current].dropNode(aref);
-    ref.notifyListeners();
-  }
-
-  void refresh() {
-    state.documents[state.current].refreshTree();
     ref.notifyListeners();
   }
 }

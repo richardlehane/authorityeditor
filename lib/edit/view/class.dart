@@ -2,7 +2,7 @@ import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/edit/widgets/markup/markup.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:authorityeditor/edit/widgets/simple.dart';
+import 'package:authorityeditor/edit/widgets/title.dart';
 import '../widgets/multi/disposal.dart';
 import '../widgets/multi/id.dart';
 import '../widgets/multi/linkedto.dart';
@@ -13,6 +13,8 @@ class ClassView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final node = ref.watch(nodeProvider);
+    final key = ValueKey(node.ref);
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
@@ -27,34 +29,15 @@ class ClassView extends ConsumerWidget {
                 ),
               ),
             ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: SimpleText(
-                      element: false,
-                      label: "Number",
-                      name: "itemno",
-                      placeholder: "0.0.0",
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            NodeTitle(key: key, term: false),
             Padding(
               padding: EdgeInsets.all(10.0),
               child: InfoLabel(
                 label: 'Description',
                 child: Markup(
-                  key: ValueKey(ref.read(nodeProvider).ref),
-                  paras: ref
-                      .read(nodeProvider)
-                      .getParagraphs("ClassDescription"),
-                  cb:
-                      (paras) => ref
-                          .read(nodeProvider)
-                          .setParagraphs("ClassDescription", paras),
+                  key: key,
+                  paras: node.getParagraphs("ClassDescription"),
+                  cb: (paras) => node.setParagraphs("ClassDescription", paras),
                 ),
               ),
             ),
@@ -62,7 +45,7 @@ class ClassView extends ConsumerWidget {
               height: 180.0,
               child: Padding(
                 padding: EdgeInsets.all(10.0),
-                child: Disposal(key: ValueKey(ref.read(nodeProvider).ref)),
+                child: Disposal(key: key),
               ),
             ),
             Padding(
@@ -70,12 +53,9 @@ class ClassView extends ConsumerWidget {
               child: InfoLabel(
                 label: 'Justification',
                 child: Markup(
-                  key: ValueKey(ref.read(nodeProvider).ref),
-                  paras: ref.read(nodeProvider).getParagraphs("Justification"),
-                  cb:
-                      (paras) => ref
-                          .read(nodeProvider)
-                          .setParagraphs("Justification", paras),
+                  key: key,
+                  paras: node.getParagraphs("Justification"),
+                  cb: (paras) => node.setParagraphs("Justification", paras),
                 ),
               ),
             ),
@@ -86,7 +66,10 @@ class ClassView extends ConsumerWidget {
                 content: SizedBox(
                   height: 300.0,
                   width: 380.0,
-                  child: Padding(padding: EdgeInsets.all(10.0), child: Ids()),
+                  child: Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Ids(key: key),
+                  ),
                 ),
               ),
             ),
@@ -98,14 +81,17 @@ class ClassView extends ConsumerWidget {
                   height: 300.0,
                   child: Padding(
                     padding: EdgeInsets.all(10.0),
-                    child: LinkedTo(),
+                    child: LinkedTo(key: key),
                   ),
                 ),
               ),
             ),
             SizedBox(
               height: 350.0,
-              child: Padding(padding: EdgeInsets.all(10.0), child: Comments()),
+              child: Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Comments(key: key),
+              ),
             ),
           ],
         ),

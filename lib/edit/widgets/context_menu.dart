@@ -1,6 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:authorityeditor/home/provider/documents_provider.dart';
+import 'package:authorityeditor/edit/provider/tree_provider.dart';
 
 import 'package:authority/authority.dart' show NodeType;
 
@@ -17,9 +17,7 @@ Widget Function(BuildContext) contextBuilder(
         leading: const Icon(FluentIcons.fabric_new_folder),
         text: const Text('Add child term'),
         onPressed: () {
-          ref
-              .read(documentsProvider.notifier)
-              .addChild(value, NodeType.termType);
+          ref.read(treeProvider.notifier).addChild(value, NodeType.termType);
         },
       ),
     );
@@ -28,9 +26,7 @@ Widget Function(BuildContext) contextBuilder(
         leading: const Icon(FluentIcons.fabric_new_folder),
         text: const Text('Add sibling term'),
         onPressed: () {
-          ref
-              .read(documentsProvider.notifier)
-              .addSibling(value, NodeType.termType);
+          ref.read(treeProvider.notifier).addSibling(value, NodeType.termType);
         },
       ),
     );
@@ -39,9 +35,7 @@ Widget Function(BuildContext) contextBuilder(
         leading: const Icon(FluentIcons.page_add),
         text: const Text('Add child class'),
         onPressed: () {
-          ref
-              .read(documentsProvider.notifier)
-              .addChild(value, NodeType.classType);
+          ref.read(treeProvider.notifier).addChild(value, NodeType.classType);
         },
       ),
     );
@@ -50,9 +44,7 @@ Widget Function(BuildContext) contextBuilder(
         leading: const Icon(FluentIcons.page_add),
         text: const Text('Add sibling class'),
         onPressed: () {
-          ref
-              .read(documentsProvider.notifier)
-              .addSibling(value, NodeType.classType);
+          ref.read(treeProvider.notifier).addSibling(value, NodeType.classType);
         },
       ),
     );
@@ -62,9 +54,7 @@ Widget Function(BuildContext) contextBuilder(
         leading: const Icon(FluentIcons.page_add),
         text: const Text('Add sibling class'),
         onPressed: () {
-          ref
-              .read(documentsProvider.notifier)
-              .addSibling(value, NodeType.classType);
+          ref.read(treeProvider.notifier).addSibling(value, NodeType.classType);
         },
       ),
     );
@@ -75,7 +65,7 @@ Widget Function(BuildContext) contextBuilder(
         leading: const Icon(FluentIcons.page_add),
         text: const Text('Add Context'),
         onPressed: () {
-          ref.read(documentsProvider.notifier).addChild((
+          ref.read(treeProvider.notifier).addChild((
             NodeType.rootType,
             0,
           ), NodeType.contextType);
@@ -88,7 +78,7 @@ Widget Function(BuildContext) contextBuilder(
       leading: const Icon(FluentIcons.delete),
       text: const Text('Delete'),
       onPressed: () {
-        ref.read(documentsProvider.notifier).dropNode(value);
+        ref.read(treeProvider.notifier).dropNode(value);
       },
     ),
   );
