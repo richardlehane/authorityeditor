@@ -1,6 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
-import 'package:authority/authority.dart' as authority show CurrentNode, Ref;
+import 'package:authority/authority.dart'
+    as authority
+    show SeeRefType, CurrentNode, Ref;
 
 part 'node_provider.g.dart';
 
@@ -26,6 +28,11 @@ class Node extends _$Node {
 
   void multiAdd(String element, String? sub) {
     state.multiAdd(element, sub);
+    ref.notifyListeners();
+  }
+
+  void seeRefAdd(authority.SeeRefType srt) {
+    state.multiSeeRefAdd(srt);
     ref.notifyListeners();
   }
 

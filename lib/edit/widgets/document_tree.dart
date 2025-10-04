@@ -25,7 +25,6 @@ class DocumentTree extends ConsumerWidget {
             selectionMode: TreeViewSelectionMode.single,
             onItemInvoked: (item, reason) async {
               if (reason != TreeViewItemInvokeReason.pressed) return;
-              print(item.value);
               ref.read(nodeProvider.notifier).selectionChanged(item.value);
             },
             onSecondaryTap: (item, details) async {

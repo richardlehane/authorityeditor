@@ -18,56 +18,43 @@ class Source extends Multi {
       int flags,
       Function(int) cb,
     ) {
-      return SizedBox(
-        height: 70.0,
-        // width: 500.0,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: EdgeInsetsGeometry.all(5.0),
-              child: InfoLabel(
-                label: "Source",
-                labelStyle: FluentTheme.of(context).typography.caption!,
-                child: SizedBox(
-                  width: 250.0,
-                  child: TextBox(
-                    controller: TextEditingController(
-                      text: ref.read(nodeProvider).multiGet(element, idx, null),
-                    ),
-                    //onChanged: (value) => ref.read(nodeProvider).mark(name),//
-                    onChanged:
-                        (value) => ref
-                            .read(nodeProvider)
-                            .multiSet(element, idx, null, value),
-                  ),
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Expanded(
+            child: InfoLabel(
+              label: "Source",
+              labelStyle: FluentTheme.of(context).typography.caption!,
+              child: TextBox(
+                controller: TextEditingController(
+                  text: ref.read(nodeProvider).multiGet(element, idx, null),
                 ),
+                onChanged:
+                    (value) => ref
+                        .read(nodeProvider)
+                        .multiSet(element, idx, null, value),
               ),
             ),
-            Padding(
-              padding: EdgeInsetsGeometry.all(5.0),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsetsGeometry.only(left: 5.0),
               child: InfoLabel(
                 label: "Web address (optional)",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: SizedBox(
-                  width: 250.0,
-                  child: TextBox(
-                    controller: TextEditingController(
-                      text: ref
-                          .read(nodeProvider)
-                          .multiGet(element, idx, "url"),
-                    ),
-                    //onChanged: (value) => ref.read(nodeProvider).mark(name),//
-                    onChanged:
-                        (value) => ref
-                            .read(nodeProvider)
-                            .multiSet(element, idx, "url", value),
+                child: TextBox(
+                  controller: TextEditingController(
+                    text: ref.read(nodeProvider).multiGet(element, idx, "url"),
                   ),
+                  onChanged:
+                      (value) => ref
+                          .read(nodeProvider)
+                          .multiSet(element, idx, "url", value),
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 
@@ -77,27 +64,19 @@ class Source extends Multi {
   @override
   Widget Function(BuildContext, WidgetRef) makeView(int idx, int len) {
     Widget viewf(BuildContext context, WidgetRef ref) {
-      return SizedBox(
-        height: 50.0,
-
-        child: Row(
-          children: [
-            Padding(
-              padding: EdgeInsetsGeometry.all(5.0),
-              child: SizedBox(
-                height: 200,
-                child: RichText(
-                  text: TextSpan(
-                    style: DefaultTextStyle.of(context).style,
-                    children: ref.read(nodeProvider).source(idx),
-                  ),
-                  maxLines: null,
-                  overflow: TextOverflow.visible,
-                ),
+      return Row(
+        children: [
+          Expanded(
+            child: RichText(
+              text: TextSpan(
+                style: DefaultTextStyle.of(context).style,
+                children: ref.read(nodeProvider).source(idx),
               ),
+              maxLines: null,
+              overflow: TextOverflow.visible,
             ),
-          ],
-        ),
+          ),
+        ],
       );
     }
 

@@ -52,6 +52,8 @@ class _NodeTitleState extends ConsumerState<NodeTitle> {
           ref
               .read(treeProvider.notifier)
               .relabel(node.ref, itemnoTxt, titleTxt);
+          itemnoChanged = false;
+          titleChanged = false;
         }
       },
       child: Row(
