@@ -137,7 +137,10 @@ class SeeReference extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int l = ref.watch(nodeProvider).multiLen(element);
-    final double height = l * viewHeight + formHeight + _addEntryHeight;
+    final double height =
+        (l == 0)
+            ? _addEntryHeight + 36.0
+            : (l - 1) * viewHeight + formHeight + _addEntryHeight;
 
     return SizedBox(
       height: height,

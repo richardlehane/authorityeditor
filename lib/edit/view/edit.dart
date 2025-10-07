@@ -15,6 +15,7 @@ class EditPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentnode = ref.watch(nodeProvider);
+    final key = ValueKey(currentnode.ref);
     return Row(
       children: [
         // Left column with tree
@@ -27,9 +28,9 @@ class EditPage extends ConsumerWidget {
         // Right column with content
         Expanded(
           child: switch (currentnode.typ()) {
-            NodeType.classType => ClassView(),
-            NodeType.termType => TermView(),
-            NodeType.contextType => ContextView(),
+            NodeType.classType => ClassView(key: key),
+            NodeType.termType => TermView(key: key),
+            NodeType.contextType => ContextView(key: key),
             _ => DetailsView(),
           },
         ),

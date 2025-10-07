@@ -6,7 +6,7 @@ import 'idwidget.dart';
 
 class Ids extends Multi {
   const Ids({super.key})
-    : super(label: "ID numbers", element: "ID", formHeight: 64.0, blank: false);
+    : super(label: "ID numbers", element: "ID", formHeight: 64.0);
 
   @override
   Widget Function(BuildContext, WidgetRef, int, Function(int)) makeForm(

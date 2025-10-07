@@ -4,6 +4,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/multi/id.dart';
 import '../widgets/multi/comments.dart';
+import '../widgets/multi/status.dart';
 
 class DetailsView extends ConsumerWidget {
   const DetailsView({super.key});
@@ -40,29 +41,11 @@ class DetailsView extends ConsumerWidget {
                 ),
               ],
             ),
-            Row(
-              children: [
-                SizedBox(
-                  height: 300.0,
-                  width: 380.0,
-                  child: Padding(padding: EdgeInsets.all(10.0), child: Ids()),
-                ),
-
-                Expanded(
-                  child: SizedBox(
-                    height: 300.0,
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: LinkedTo(),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 350.0,
-              child: Padding(padding: EdgeInsets.all(10.0), child: Comments()),
-            ),
+            Ids(),
+            Status(),
+            LinkedTo(),
+            const Divider(),
+            Comments(),
           ],
         ),
       ),

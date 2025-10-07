@@ -69,7 +69,6 @@ class ContextView extends ConsumerWidget {
               child: InfoLabel(
                 label: 'Description',
                 child: Markup(
-                  key: ValueKey(currentNode.ref),
                   height: 350.0,
                   paras: currentNode.getParagraphs("ContextContent"),
                   cb:

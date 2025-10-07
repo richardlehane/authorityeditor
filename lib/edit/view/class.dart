@@ -14,7 +14,6 @@ class ClassView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final node = ref.watch(nodeProvider);
-    final key = ValueKey(node.ref);
     return SingleChildScrollView(
       child: Container(
         color: Colors.white,
@@ -29,7 +28,7 @@ class ClassView extends ConsumerWidget {
                 ),
               ),
             ),
-            NodeTitle(key: key, term: false),
+            NodeTitle(term: false),
             Padding(
               padding: EdgeInsets.all(10.0),
               child: InfoLabel(

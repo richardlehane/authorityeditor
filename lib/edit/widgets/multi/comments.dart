@@ -9,7 +9,6 @@ class Comments extends Multi {
     : super(
         label: "Comments",
         element: "Comment",
-        blank: false,
         viewHeight: 48.0,
         formHeight: 78.0,
       );

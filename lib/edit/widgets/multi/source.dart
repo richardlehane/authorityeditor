@@ -4,8 +4,7 @@ import '../../provider/node_provider.dart';
 import 'multi.dart';
 
 class Source extends Multi {
-  const Source({super.key})
-    : super(label: "Sources", element: "Source", blank: false);
+  const Source({super.key}) : super(label: "Sources", element: "Source");
 
   @override
   Widget Function(BuildContext, WidgetRef, int, Function(int)) makeForm(

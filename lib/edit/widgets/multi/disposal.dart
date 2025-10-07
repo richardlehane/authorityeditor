@@ -38,12 +38,7 @@ const List<String> _disposalConditions = [
 
 class Disposal extends Multi {
   const Disposal({super.key})
-    : super(
-        label: "Disposal",
-        element: "Disposal",
-        blank: true,
-        formHeight: 78.0,
-      );
+    : super(label: "Disposal", element: "Disposal", formHeight: 78.0);
 
   @override
   Widget Function(BuildContext, WidgetRef, int, Function(int)) makeForm(

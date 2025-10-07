@@ -13,15 +13,13 @@ class Multi extends ConsumerWidget {
   final double formHeight;
   final String label;
   final String element;
-  final String? sub;
-  final bool blank; // this multi widget should add a new entry if empty
+  final String? sub; // this multi widget should add a new entry if empty
   const Multi({
     super.key,
     required this.label,
     required this.element,
     this.viewHeight = 30.0,
     this.formHeight = 62.0,
-    this.blank = false,
     this.sub,
   });
 
@@ -57,11 +55,10 @@ class Multi extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int l = ref.watch(nodeProvider).multiLen(element);
-    final double height = l * viewHeight + formHeight + _addEntryHeight;
-    if (blank && l == 0) {
-      ref.read(nodeProvider).multiAdd(element, sub);
-      l = 1;
-    }
+    final double height =
+        (l == 0)
+            ? _addEntryHeight + 36.0
+            : (l - 1) * viewHeight + formHeight + _addEntryHeight;
     return SizedBox(
       height: height,
       child: InfoLabel(

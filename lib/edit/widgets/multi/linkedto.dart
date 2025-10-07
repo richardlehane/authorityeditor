@@ -4,8 +4,7 @@ import '../../provider/node_provider.dart';
 import 'multi.dart';
 
 class LinkedTo extends Multi {
-  const LinkedTo({super.key})
-    : super(label: "Linked to", element: "LinkedTo", blank: false);
+  const LinkedTo({super.key}) : super(label: "Linked to", element: "LinkedTo");
 
   @override
   Widget Function(BuildContext, WidgetRef, int, Function(int)) makeForm(

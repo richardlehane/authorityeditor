@@ -63,7 +63,6 @@ class TermView extends ConsumerWidget {
               child: InfoLabel(
                 label: 'Description',
                 child: Markup(
-                  key: ValueKey(currentNode.ref),
                   paras: currentNode.getParagraphs("TermDescription"),
                   cb:
                       (paras) =>
