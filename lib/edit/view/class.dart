@@ -40,13 +40,7 @@ class ClassView extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 180.0,
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Disposal(key: key),
-              ),
-            ),
+            Padding(padding: EdgeInsets.all(10.0), child: Disposal(key: key)),
             Padding(
               padding: EdgeInsets.all(10.0),
               child: InfoLabel(

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'entry.dart';
 import '../../provider/node_provider.dart';
 
-const double _addEntryHeight = 36.0; // height of add button
+const double _addEntryHeight = 60.0; // height of add button
 // Two types:
 // An enclosing tag e.g. Status
 // Multiple of the same element as siblings, e.g. comments, source, disposal
@@ -57,7 +57,7 @@ class Multi extends ConsumerWidget {
     int l = ref.watch(nodeProvider).multiLen(element);
     final double height =
         (l == 0)
-            ? _addEntryHeight + 36.0
+            ? _addEntryHeight
             : (l - 1) * viewHeight + formHeight + _addEntryHeight;
     return SizedBox(
       height: height,

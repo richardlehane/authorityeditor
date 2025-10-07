@@ -9,7 +9,7 @@ import '../../provider/node_provider.dart';
 import 'package:authority/authority.dart' show StatusType, StatusKind;
 import 'package:intl/intl.dart' show DateFormat;
 
-const double _addEntryHeight = 36.0;
+const double _addEntryHeight = 60.0;
 // Two types:
 // An enclosing tag e.g. Status
 // Multiple of the same element as siblings, e.g. comments, source, disposal
@@ -313,7 +313,7 @@ class Status extends ConsumerWidget {
     int l = ref.watch(nodeProvider).multiLen(element);
     final double height =
         (l == 0)
-            ? _addEntryHeight + 36.0
+            ? _addEntryHeight
             : (l - 1) * viewHeight + formHeight + _addEntryHeight;
 
     return SizedBox(
