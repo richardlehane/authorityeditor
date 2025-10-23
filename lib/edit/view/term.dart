@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/multi/comments.dart';
 import '../widgets/multi/id.dart';
 import '../widgets/multi/linkedto.dart';
+import '../widgets/multi/seeref.dart';
 
 const termTypes = [
   "",
@@ -70,6 +71,7 @@ class TermView extends ConsumerWidget {
                 ),
               ),
             ),
+            Padding(padding: EdgeInsets.all(10.0), child: SeeReference()),
             Padding(
               padding: EdgeInsets.all(10.0),
               child: Expander(

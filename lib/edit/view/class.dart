@@ -1,5 +1,6 @@
 import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/edit/widgets/markup/markup.dart';
+import 'package:authorityeditor/edit/widgets/multi/seeref.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/edit/widgets/title.dart';
@@ -40,6 +41,7 @@ class ClassView extends ConsumerWidget {
                 ),
               ),
             ),
+
             Padding(padding: EdgeInsets.all(10.0), child: Disposal(key: key)),
             Padding(
               padding: EdgeInsets.all(10.0),
@@ -52,6 +54,14 @@ class ClassView extends ConsumerWidget {
                 ),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Expander(
+                header: Text('See references (not recommended for classes)'),
+                content: SeeReference(),
+              ),
+            ),
+
             Padding(
               padding: EdgeInsets.all(10.0),
               child: Expander(

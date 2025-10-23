@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/multi/id.dart';
 import '../widgets/multi/comments.dart';
 import '../widgets/multi/status.dart';
+import '../widgets/daterange.dart';
 
 class DetailsView extends ConsumerWidget {
   const DetailsView({super.key});
@@ -39,13 +40,14 @@ class DetailsView extends ConsumerWidget {
                     child: SimpleText(label: "Scope", name: "Scope"),
                   ),
                 ),
+                DateRange(),
               ],
             ),
-            Ids(),
-            Status(),
-            LinkedTo(),
+            Padding(padding: EdgeInsets.all(10.0), child: Ids()),
+            Padding(padding: EdgeInsets.all(10.0), child: Status()),
+            Padding(padding: EdgeInsets.all(10.0), child: LinkedTo()),
             const Divider(),
-            Comments(),
+            Padding(padding: EdgeInsets.all(10.0), child: Comments()),
           ],
         ),
       ),
