@@ -1,0 +1,81 @@
+Xml - https://gnome.pages.gitlab.gnome.org/libxml2/html/tree_8h.html
+
+
+xmlNode * xmlAddChild	(xmlNode *	parent, xmlNode *	cur ) - Unlink cur and append it to the children of parent. [MOVE]
+xmlNode * xmlAddChildList	(	xmlNode *	parent, xmlNode *	cur ) - Move list (for paras?)
+
+xmlNode * xmlAddNextSibling	(	xmlNode *	prev,
+xmlNode *	cur )
+
+xmlNode * xmlAddPrevSibling	(	xmlNode *	next,
+xmlNode *	cur )
+
+xmlNode * xmlAddSibling	(	xmlNode *	node,
+xmlNode *	cur )
+
+
+xmlBufNodeDump()
+size_t xmlBufNodeDump	(	xmlBuf *	buf,
+xmlDoc *	doc,
+xmlNode *	cur,
+int	level,
+int	format ) - maybe use to dump paras
+
+
+
+unsigned long xmlChildElementCount	(	xmlNode *	parent	)	
+
+
+xmlNode * xmlCopyNode	(	xmlNode *	node,
+int	extended ) If extended is 1, make a deep copy (properties, namespaces and children when applicable). Use of this function is DISCOURAGED in favor of xmlDocCopyNode. 
+
+
+xmlNode * xmlDocGetRootElement	(	const xmlDoc *	doc	)	
+
+
+xmlNode * xmlFirstElementChild	(	xmlNode *	parent	)	
+
+
+xmlNode * xmlGetLastChild	(	const xmlNode *	parent	)	
+
+xmlNode * xmlLastElementChild	(	xmlNode *	parent	)	
+
+
+long xmlGetLineNo	(	const xmlNode *	node	)	
+
+
+int xmlNodeGetAttrValue	(	const xmlNode *	node,
+const xmlChar *	name,
+const xmlChar *	nsUri,
+xmlChar **	out )
+
+
+
+
+xmlChar * xmlGetProp	(	const xmlNode *	node,
+const xmlChar *	name ) // ignores namespaces
+
+xmlNode * xmlNewDocFragment	(	xmlDoc *	doc	)	
+
+xmlNode * xmlNewDocNode	(	xmlDoc *	doc,
+xmlNs *	ns,
+const xmlChar *	name,
+const xmlChar *	content ) // create new element node
+
+xmlNodeListGetRawString()
+xmlChar * xmlNodeListGetRawString	(	const xmlDoc *	doc,
+const xmlNode *	list,
+int	inLine )
+
+
+int xmlReconciliateNs	(	xmlDoc *	doc,
+xmlNode *	tree ) This is needed for example after copy or cut and then paste operations. The subtree may still hold pointers to namespace declarations outside the subtree or invalid/masked. As much as possible the function tries to reuse the existing namespaces found in the new environment. If not possible the new namespaces are redeclared on tree at the top of the given subtree.
+
+xmlUnlinkNode()
+void xmlUnlinkNode	(	xmlNode *	cur	)	
+Unlink a node from its tree. The node is not freed. Unless it is reinserted, it must be managed manually and freed eventually by calling xmlFreeNode.
+
+
+
+
+

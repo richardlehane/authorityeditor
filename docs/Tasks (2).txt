@@ -1,0 +1,70 @@
+AUTHORITY
+
+- document.dart
+
+*cut, copy, paste: add TreeNode? copy tree field [delay]
+*search returns List<TreeNode> 
+
+- tree.dart
+
+* _relabelGenerator, relabel tree op [quick win]
+* _pasteGenerator, paste tree op
+
+- node.dart
+
+* termRefLen
+* termRefAdd
+* termRefSet
+* termRefGet
+- multiClear(String, index) [quick win]
+
+- xml_web.dart
+
+* termRefLen [quick win]
+* termRefAdd [quick win]
+* termRefSet [quick win]
+* termRefGet [quick win]
+- multiClear(String, index) [quick win]
+
+*cut, copy, paste
+* search
+
+-xml_native.dart
+IMPLEMENT once all the above complete and design finalized
+XSL transforms baby.
+
+MULTI
+
+- change up/down/delete controls to context menu that's on the viewform only
+- slimline 
+- dynamically size sized box based on length
+- comments need more space. Richtext should show when truncated.
+- disposal - empty content when switch action. Need new API command multiClear(String, index)
+
+AUTHORITY EDITOR
+- tree menu: up, down, delete [quick win]
+- keys
+- SimpleText: re-use more. Make stateful. Only update once on exit. Update can be null.
+
+Missing UI: <PRIORITIZE>
+- status
+- seereference
+- daterange
+- publish - "empty, yes, no" [quick win]
+- update - YYYY-MM-DD [just make this automatic][check AE classic for fields]
+- justification samples (copy to clipboard)
+
+- Review view
+- Source view - colourize and jump to line
+
+SEARCH DESIGN
+
+- show comments search
+- show updated since
+- content search -> title, description, linkedto, justification. Exact "" or non-exact. [check AE classic for fields] AND
+- disposal action search AND
+- retention period search (> < years months) AND
+
+Search tree - selectable and non-selectable nodes (greyed out nodes). Add a selectable bool to TreeNode.
+
+
