@@ -33,19 +33,12 @@ final class AuthorityCommand extends ConsumerWidget {
               },
             ),
             MenuFlyoutItem(text: const Text('Save'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('Save as'), onPressed: () {}),
             const MenuFlyoutSeparator(),
             MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
           ],
         ),
-        // MenuBarItem(
-        //   title: 'Edit',
-        //   items: [
-        //     MenuFlyoutItem(text: const Text('Undo'), onPressed: () {}),
-        //     MenuFlyoutItem(text: const Text('Cut'), onPressed: () {}),
-        //     MenuFlyoutItem(text: const Text('Copy'), onPressed: () {}),
-        //     MenuFlyoutItem(text: const Text('Paste'), onPressed: () {}),
-        //   ],
-        // ),
+
         MenuBarItem(
           title: 'View',
           items: [
@@ -74,6 +67,111 @@ final class AuthorityCommand extends ConsumerWidget {
               onChanged:
                   (value) =>
                       ref.read(documentsProvider.notifier).viewChanged(value),
+            ),
+          ],
+        ),
+        MenuBarItem(
+          title: 'Edit',
+          items: [
+            //  MenuFlyoutItem(text: const Text('Undo'), onPressed: () {}),
+            //  MenuFlyoutItem(text: const Text('Redo'), onPressed: () {}),
+            MenuFlyoutItem(
+              text: const Text('Capitalize functions'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Number classes'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Sort see references'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(text: const Text('Sort terms'), onPressed: () {}),
+            MenuFlyoutItem(
+              text: const Text('Clear comments (all)'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Clear comments (agency)'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              text: const Text('Clear comments (SRNSW)'),
+              onPressed: () {},
+            ),
+          ],
+        ),
+        MenuBarItem(
+          title: 'Preview',
+          items: [
+            MenuFlyoutItem(text: const Text('Authority'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('Comments'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('Broken links'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('Index'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('Linking table'), onPressed: () {}),
+            MenuFlyoutItem(
+              text: const Text('Retention order'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(text: const Text('Recent'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('Summary'), onPressed: () {}),
+            MenuFlyoutItem(text: const Text('Supporting'), onPressed: () {}),
+          ],
+        ),
+        MenuBarItem(
+          title: 'Export',
+          items: [
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.text_document),
+              text: const Text('Appraisal report'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.text_document),
+              text: const Text('Appraisal report pt 1'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.text_document),
+              text: const Text('Approved authority'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.text_document),
+              text: const Text('Draft authority'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.text_document),
+              text: const Text('Comments'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.text_document),
+              text: const Text('Consultation'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.text_document),
+              text: const Text('Index'),
+              onPressed: () {},
+            ),
+            const MenuFlyoutSeparator(),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.excel_document),
+              text: const Text('Clean agency'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.excel_document),
+              text: const Text('Clean publication'),
+              onPressed: () {},
+            ),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.excel_document),
+              text: const Text('Tab separated'),
+              onPressed: () {},
             ),
           ],
         ),

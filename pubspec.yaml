@@ -44,6 +44,7 @@ dependencies:
     git:
       url: https://github.com/richardlehane/authority
   intl: ^0.20.2
+  open_file: ^3.5.10
 
 dependency_overrides:
   math_expressions: ^3.1.0
