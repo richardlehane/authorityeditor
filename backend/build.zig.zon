@@ -1,0 +1,26 @@
+.{
+    .name = .authority,
+    .version = "0.0.0",
+    .fingerprint = 0x4af96afcfa76c2a7,
+    .minimum_zig_version = "0.15.1",
+    .dependencies = .{
+        .libxml2 = .{
+            .url = "https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.13.5/libxml2-v2.13.5.tar.gz",
+            .hash = "N-V-__8AALhJnQFEyD-r67NUdrbzKo_FzIluLJQg1-mTCpuY",
+        },
+        .libxslt = .{
+            .url = "https://gitlab.gnome.org/GNOME/libxslt/-/archive/v1.1.42/libxslt-v1.1.42.tar.gz",
+            .hash = "N-V-__8AAIZj-wABWPrhmSvU0mK8aCyZneOHJC_HJEDMgsw1",
+        },
+        .miniz = .{
+          .url = "https://github.com/richgel999/miniz/releases/download/3.0.2/miniz-3.0.2.zip",
+          .hash = "N-V-__8AAEznBgA2IJu6nHlNhEA_PuUhTFkC2d2TkLxuKGfe",
+          .lazy = false,
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+    },
+}
