@@ -1,4 +1,4 @@
-import 'xml_web.dart';
+import 'session.dart';
 import 'package:xml/xml.dart' show XmlElement;
 import 'package:intl/intl.dart' show DateFormat;
 import "render.dart";

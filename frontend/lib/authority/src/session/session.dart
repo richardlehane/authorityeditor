@@ -1,17 +1,20 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:xml/xml.dart' show XmlElement;
 import '../../authority.dart'
     show NodeType, StatusType, SeeRefType, DateType, TreeNode, Ref, Counter;
 import 'paragraph.dart';
 import 'bindings.dart';
+import 'tree.dart';
 
 class Session {
   final _bindings = Bindings();
 
   // this is a different function signature
-  int load(String path) {
-    final Pointer<Utf8> p = path.toNativeUtf8();
+  int load(PlatformFile file) {
+    if (file.path == null) return -1;
+    final Pointer<Utf8> p = file.path!.toNativeUtf8();
     final int result = _bindings.load(p);
     malloc.free(p);
     return result;
@@ -20,7 +23,8 @@ class Session {
   int empty() => _bindings.empty();
 
   List<TreeNode> tree(int index, Counter ctr) {
-    return [];
+    final payload = _bindings.tree(index);
+    return AsTree(payload.data.asTypedList(payload.length), ctr);
   }
 
   bool valid(int index) => _bindings.valid(index);
@@ -113,12 +117,13 @@ class Session {
       _bindings.setCirca(index, dt.index, value);
 
   List<XmlElement>? getParagraphs(int index, String name) {
-    final Pointer<Utf8> n = name.toNativeUtf8();
-    final payload = _bindings.getParagraphs(index, n);
-    malloc.free(n);
-    return deserialiseParagraphs(
-      payload.data.asTypedList(payload.length),
-    ); // LEAKS!!!
+    // final Pointer<Utf8> n = name.toNativeUtf8();
+    // final payload = _bindings.getParagraphs(index, n);
+    // malloc.free(n);
+    // return deserialiseParagraphs(
+    //   payload.data.asTypedList(payload.length),
+    // ); // LEAKS!!!
+    return null;
   }
 
   // todo
@@ -196,14 +201,15 @@ class Session {
     int idx,
     String? sub,
   ) {
-    final Pointer<Utf8> n = name.toNativeUtf8();
-    final Pointer<Utf8> s = (sub == null) ? nullptr : sub.toNativeUtf8();
-    final payload = _bindings.multiGetParagraphs(index, n, idx, s);
-    malloc.free(n);
-    malloc.free(s);
-    return deserialiseParagraphs(
-      payload.data.asTypedList(payload.length),
-    ); // LEAKS!!!
+    // final Pointer<Utf8> n = name.toNativeUtf8();
+    // final Pointer<Utf8> s = (sub == null) ? nullptr : sub.toNativeUtf8();
+    // final payload = _bindings.multiGetParagraphs(index, n, idx, s);
+    // malloc.free(n);
+    // malloc.free(s);
+    // return deserialiseParagraphs(
+    //   payload.data.asTypedList(payload.length),
+    // ); // LEAKS!!!
+    return null;
   }
 
   // todo

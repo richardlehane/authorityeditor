@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 
 final class AuthorityCommand extends ConsumerWidget {
@@ -25,7 +26,7 @@ final class AuthorityCommand extends ConsumerWidget {
               text: const Text('Open'),
               onPressed: () async {
                 FilePickerResult? result = await FilePicker.platform.pickFiles(
-                  withData: true,
+                  withData: kIsWeb,
                 );
                 if (result != null) {
                   ref.read(documentsProvider.notifier).load(result.files.first);

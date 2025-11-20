@@ -42,6 +42,7 @@ fn loadMem(session: *Session, bytes: []const u8, len: usize) !*Document {
         .current_nt = .Authority,
         .current_idx = 0,
     };
+    ptr.setCurrent(.Term, 0);
     return ptr;
 }
 

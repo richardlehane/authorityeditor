@@ -1,9 +1,12 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
-import 'dart:io' show Directory;
+import 'dart:io' show Platform;
 import 'package:path/path.dart' as path;
 
-final libraryPath = path.join(Directory.current.path, 'authority.dll');
+final libraryPath = path.join(
+  path.dirname(Platform.resolvedExecutable),
+  'authority.dll',
+);
 
 final class Payload extends Struct {
   @Int32()
@@ -154,80 +157,77 @@ final class Bindings {
   late TermsRefGet termsRefGet;
 
   Bindings() {
-    final DynamicLibrary _dylib = DynamicLibrary.open(libraryPath);
-    this.freeStr = _dylib.lookupFunction<FreeStrNative, FreeStr>('freeStr');
-    this.valid = _dylib.lookupFunction<ValidNative, Valid>('valid');
-    this.transform = _dylib.lookupFunction<TransformNative, Transform>(
-      'transform',
-    );
-    this.edit = _dylib.lookupFunction<EditNative, Edit>('edit');
-    this.empty = _dylib.lookupFunction<EmptyNative, Empty>('empty');
-    this.load = _dylib.lookupFunction<LoadNative, Load>('load');
-    this.asStr = _dylib.lookupFunction<AsStrNative, AsStr>('asStr');
-    this.tree = _dylib.lookupFunction<TreeNative, Tree>('tree');
-    this.setCurrent = _dylib.lookupFunction<SetCurrentNative, SetCurrent>(
+    final DynamicLibrary dylib = DynamicLibrary.open(libraryPath);
+    freeStr = dylib.lookupFunction<FreeStrNative, FreeStr>('freeStr');
+    valid = dylib.lookupFunction<ValidNative, Valid>('valid');
+    transform = dylib.lookupFunction<TransformNative, Transform>('transform');
+    edit = dylib.lookupFunction<EditNative, Edit>('edit');
+    empty = dylib.lookupFunction<EmptyNative, Empty>('empty');
+    load = dylib.lookupFunction<LoadNative, Load>('load');
+    asStr = dylib.lookupFunction<AsStrNative, AsStr>('asStr');
+    tree = dylib.lookupFunction<TreeNative, Tree>('tree');
+    setCurrent = dylib.lookupFunction<SetCurrentNative, SetCurrent>(
       'setCurrent',
     );
-    this.dropNode = _dylib.lookupFunction<DropNodeNative, DropNode>('dropNode');
-    this.addChild = _dylib.lookupFunction<AddChildNative, AddChild>('addChild');
-    this.addSibling = _dylib.lookupFunction<AddSiblingNative, AddSibling>(
+    dropNode = dylib.lookupFunction<DropNodeNative, DropNode>('dropNode');
+    addChild = dylib.lookupFunction<AddChildNative, AddChild>('addChild');
+    addSibling = dylib.lookupFunction<AddSiblingNative, AddSibling>(
       'addSibling',
     );
-    this.moveUp = _dylib.lookupFunction<MoveUpNative, MoveUp>('moveUp');
-    this.moveDown = _dylib.lookupFunction<MoveDownNative, MoveDown>('moveDown');
-    this.getType = _dylib.lookupFunction<GetTypeNative, GetType>('getType');
-    this.get = _dylib.lookupFunction<GetNative, Get>('get');
-    this.getDate = _dylib.lookupFunction<GetDateNative, GetDate>('getDate');
-    this.getCirca = _dylib.lookupFunction<GetCircaNative, GetCirca>('getCirca');
-    this.set = _dylib.lookupFunction<SetNative, Set>('set');
-    this.setDate = _dylib.lookupFunction<SetDateNative, SetDate>('setDate');
-    this.setCirca = _dylib.lookupFunction<SetCircaNative, SetCirca>('setCirca');
-    this.getParagraphs = _dylib
-        .lookupFunction<GetParagraphsNative, GetParagraphs>('getParagraphs');
-    this.setParagraphs = _dylib
-        .lookupFunction<SetParagraphsNative, SetParagraphs>('setParagraphs');
-    this.multiLen = _dylib.lookupFunction<MultiLenNative, MultiLen>('multiLen');
-    this.multiEmpty = _dylib.lookupFunction<MultiEmptyNative, MultiEmpty>(
+    moveUp = dylib.lookupFunction<MoveUpNative, MoveUp>('moveUp');
+    moveDown = dylib.lookupFunction<MoveDownNative, MoveDown>('moveDown');
+    getType = dylib.lookupFunction<GetTypeNative, GetType>('getType');
+    get = dylib.lookupFunction<GetNative, Get>('get');
+    getDate = dylib.lookupFunction<GetDateNative, GetDate>('getDate');
+    getCirca = dylib.lookupFunction<GetCircaNative, GetCirca>('getCirca');
+    set = dylib.lookupFunction<SetNative, Set>('set');
+    setDate = dylib.lookupFunction<SetDateNative, SetDate>('setDate');
+    setCirca = dylib.lookupFunction<SetCircaNative, SetCirca>('setCirca');
+    getParagraphs = dylib.lookupFunction<GetParagraphsNative, GetParagraphs>(
+      'getParagraphs',
+    );
+    setParagraphs = dylib.lookupFunction<SetParagraphsNative, SetParagraphs>(
+      'setParagraphs',
+    );
+    multiLen = dylib.lookupFunction<MultiLenNative, MultiLen>('multiLen');
+    multiEmpty = dylib.lookupFunction<MultiEmptyNative, MultiEmpty>(
       'multiEmpty',
     );
-    this.multiStatusType = _dylib
+    multiStatusType = dylib
         .lookupFunction<MultiStatusTypeNative, MultiStatusType>(
           'multiStatusType',
         );
-    this.multiSeeRefType = _dylib
+    multiSeeRefType = dylib
         .lookupFunction<MultiSeeRefTypeNative, MultiSeeRefType>(
           'multiSeeRefType',
         );
-    this.multiAdd = _dylib.lookupFunction<MultiAddNative, MultiAdd>('multiAdd');
-    this.multiAddSeeRef = _dylib
-        .lookupFunction<MultiAddSeeRefNative, MultiAddSeeRef>('multiAddSeeRef');
-    this.multiDrop = _dylib.lookupFunction<MultiDropNative, MultiDrop>(
-      'multiDrop',
+    multiAdd = dylib.lookupFunction<MultiAddNative, MultiAdd>('multiAdd');
+    multiAddSeeRef = dylib.lookupFunction<MultiAddSeeRefNative, MultiAddSeeRef>(
+      'multiAddSeeRef',
     );
-    this.multiUp = _dylib.lookupFunction<MultiUpNative, MultiUp>('multiUp');
-    this.multiDown = _dylib.lookupFunction<MultiDownNative, MultiDown>(
-      'multiDown',
-    );
-    this.multiGet = _dylib.lookupFunction<MultiGetNative, MultiGet>('multiGet');
-    this.multiSet = _dylib.lookupFunction<MultiSetNative, MultiSet>('multiSet');
-    this.multiGetParagraphs = _dylib
+    multiDrop = dylib.lookupFunction<MultiDropNative, MultiDrop>('multiDrop');
+    multiUp = dylib.lookupFunction<MultiUpNative, MultiUp>('multiUp');
+    multiDown = dylib.lookupFunction<MultiDownNative, MultiDown>('multiDown');
+    multiGet = dylib.lookupFunction<MultiGetNative, MultiGet>('multiGet');
+    multiSet = dylib.lookupFunction<MultiSetNative, MultiSet>('multiSet');
+    multiGetParagraphs = dylib
         .lookupFunction<MultiGetParagraphsNative, MultiGetParagraphs>(
           'multiGetParagraphs',
         );
-    this.multiSetParagraphs = _dylib
+    multiSetParagraphs = dylib
         .lookupFunction<MultiSetParagraphsNative, MultiSetParagraphs>(
           'multiSetParagraphs',
         );
-    this.termsRefLen = _dylib.lookupFunction<TermsRefLenNative, TermsRefLen>(
+    termsRefLen = dylib.lookupFunction<TermsRefLenNative, TermsRefLen>(
       'termsRefLen',
     );
-    this.termsRefAdd = _dylib.lookupFunction<TermsRefAddNative, TermsRefAdd>(
+    termsRefAdd = dylib.lookupFunction<TermsRefAddNative, TermsRefAdd>(
       'termsRefAdd',
     );
-    this.termsRefGet = _dylib.lookupFunction<TermsRefGetNative, TermsRefGet>(
+    termsRefGet = dylib.lookupFunction<TermsRefGetNative, TermsRefGet>(
       'termsRefGet',
     );
-    this.termsRefSet = _dylib.lookupFunction<TermsRefSetNative, TermsRefSet>(
+    termsRefSet = dylib.lookupFunction<TermsRefSetNative, TermsRefSet>(
       'termsRefSet',
     );
   }

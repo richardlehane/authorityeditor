@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart' show TreeViewItem;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
-import 'xml_web.dart' show Session;
+import 'session.dart';
 import 'node.dart' show CurrentNode, NodeType;
 import 'tree.dart';
 
@@ -32,7 +32,7 @@ class Document {
 
   Document({
     required this.title,
-    this.path = null,
+    this.path,
     this.treeItems,
     this.sessionIndex = 0,
     this.mutation = 0,
@@ -95,11 +95,12 @@ class Document {
 
   void dropNode(Ref ref) {
     Session().dropNode(sessionIndex, ref);
-    selected = (ref.$2 == 0)
-        ? (ref.$1 == NodeType.contextType)
-              ? (NodeType.rootType, 0)
-              : (ref.$1, 0)
-        : (ref.$1, ref.$2 - 1);
+    selected =
+        (ref.$2 == 0)
+            ? (ref.$1 == NodeType.contextType)
+                ? (NodeType.rootType, 0)
+                : (ref.$1, 0)
+            : (ref.$1, ref.$2 - 1);
     treeItems = mutate(treeItems!, TreeOp.drop, ref, ctr: Counter(selected));
     mutation++;
   }

@@ -1,11 +1,48 @@
 import 'dart:typed_data';
-
-import 'package:authorityeditor/authority/authority.dart';
-import 'package:authorityeditor/authority/src/bindings.dart';
-import 'package:authorityeditor/authority/src/bindings/tree.dart';
 import 'package:test/test.dart';
 import 'dart:io' show Directory;
 import 'package:path/path.dart' as path;
+import 'package:file_picker/file_picker.dart' show PlatformFile;
+
+import 'package:authorityeditor/authority/authority.dart';
+import 'package:authorityeditor/authority/src/session.dart';
+import 'package:authorityeditor/authority/src/session/tree.dart';
+
+void main() {
+  final rda = Session();
+  final examplePath = path.join(
+    Directory.current.path,
+    '..',
+    'data',
+    'SRNSW_example.xml',
+  );
+  final doc = rda.load(
+    PlatformFile(name: "SRNSW_example.xml", path: examplePath, size: 12036),
+  );
+  test('doc index', () {
+    expect(doc, 0);
+  });
+
+  test('validate the doc', () {
+    final valid = rda.valid(doc);
+    expect(valid, true);
+  });
+  test('print the doc', () {
+    final str = rda.asString(doc);
+    expect(str.length, 11022);
+  });
+  test('tree', () {
+    final tree = rda.tree(doc, Counter());
+    expect(tree.length, 3);
+  });
+  test('paragraphs', () {
+    final tree = AsTree(Uint8List.fromList(byts), Counter());
+    expect(tree.length, 3);
+  });
+  test('set current', () {
+    rda.setCurrent(doc, (NodeType.termType, 0));
+  });
+}
 
 List<int> byts = [
   0x05,
@@ -302,30 +339,3 @@ List<int> byts = [
   0x32,
   0x00,
 ];
-
-void main() async {
-  final rda = Session();
-  await rda.init();
-  final examplePath = path.join(
-    Directory.current.path,
-    'test',
-    'SRNSW_example.xml',
-  );
-  final doc = await rda.load(examplePath);
-  test('validate the doc', () async {
-    final valid = await rda.valid(doc);
-    expect(valid, true);
-  });
-  test('print the doc', () async {
-    final str = await rda.asString(doc);
-    expect(str.length, 11034);
-  });
-  test('tree', () async {
-    final tree = await rda.tree(doc);
-    expect(tree.length, 3);
-  });
-  test('paragraphs', () {
-    final tree = AsTree(Uint8List.fromList(byts), Counter());
-    expect(tree.length, 3);
-  });
-}

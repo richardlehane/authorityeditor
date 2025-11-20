@@ -23,9 +23,9 @@ List<XmlElement>? deserialiseParagraphs(Uint8List list) {
     XmlElement(XmlName("Paragraph")),
   );
   int index = 1;
-  ret.forEach((para) {
+  for (var para in ret) {
     index += deserialiseParagraph(list, index, para);
-  });
+  }
   return ret;
 }
 
@@ -47,10 +47,10 @@ int deserialiseParagraph(Uint8List list, int start, XmlElement parent) {
           XmlElement(XmlName("Item")),
         );
         ret++;
-        items.forEach((item) {
+        for (var item in items) {
           ret++; //ignore item token
           ret += deserialiseParagraph(list, start + ret, item);
-        });
+        }
         final XmlElement l = XmlElement(XmlName("List"), [], items, false);
         parent.children.add(l);
       default:
