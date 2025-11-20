@@ -228,7 +228,7 @@ test "serialise" {
         \\    </List>
         \\  </Paragraph>
         \\  <Paragraph>And a final para!</Paragraph>
-        \\  <Paragraph><Emphasis /></Paragraph>
+        \\  <Paragraph>And a bad char Office’s</Paragraph>
         \\</Test> 
     ;
     const session = try Session.init(testing.allocator);

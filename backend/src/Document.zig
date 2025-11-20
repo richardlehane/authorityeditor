@@ -671,9 +671,6 @@ test "tree" {
     defer doc.deinit();
     try doc.refreshTree();
     try testing.expectEqual(doc.tree_menu.items.len, 293);
-    const file = std.fs.cwd().createFile("tree.bin", .{}) catch unreachable;
-    defer file.close();
-    file.writeAll(doc.tree_menu.items) catch unreachable;
 }
 
 test "transform" {
@@ -684,7 +681,7 @@ test "transform" {
     doc.transform("../data/stylesheets/word_approved_authority.xsl", "word.xml");
     //const stat = try std.fs.cwd().statFile("preview.html");
     // try testing.expect(stat.size == 2025);
-    //try std.fs.cwd().deleteFile("test.html");
+    try std.fs.cwd().deleteFile("word.xml");
 }
 
 test "edit" {

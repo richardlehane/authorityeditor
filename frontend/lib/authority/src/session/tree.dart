@@ -6,23 +6,24 @@ import '../../authority.dart' show TreeNode, NodeType, Counter;
 // Each context entry is len,text
 // Each termclass entry is [node_type, itemno_len, itemno_chars, title_len, title_chars, (if term!) num_children], (if term!)children.
 
-class _index {
+class Index {
   int i;
-  _index(this.i);
-  void advance(int j) => this.i += j;
-  void increment() => this.i++;
+  Index(this.i);
+  void advance(int j) => i += j;
+  void increment() => i++;
 }
 
-List<TreeNode> AsTree(Uint8List list, Counter ctr) {
+List<TreeNode> asTree(Uint8List list, Counter ctr) {
   ctr.next(NodeType.rootType);
   final int contextCount = list[0];
   final int tcCount = list[1]; // num of terms/classes
   List<String?> contextTitles = List.filled(contextCount, null);
-  _index idx = _index(2);
+  Index idx = Index(2);
   for (var i = 0; i < contextCount; i++) {
     int l = list[idx.i];
-    if (l > 0)
+    if (l > 0) {
       contextTitles[i] = utf8.decode(list.sublist(idx.i + 1, idx.i + 1 + l));
+    }
     idx.advance(l + 1);
   }
   List<TreeNode> ret = [
@@ -50,7 +51,7 @@ List<TreeNode> AsTree(Uint8List list, Counter ctr) {
 List<TreeNode> _addTermsClasses(
   Uint8List list,
   Counter ctr,
-  _index idx,
+  Index idx,
   int len,
 ) {
   List<TreeNode> ret = [];

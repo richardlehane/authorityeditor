@@ -58,6 +58,13 @@ class Session {
     return _init(doc);
   }
 
+  // stubs - not implemented for web
+  bool valid(int index) => true;
+
+  bool edit(int index, String stylesheet) => true;
+
+  void transform(int index, String stylesheet, String outpath) {}
+
   List<TreeNode> tree(int index, Counter ctr) {
     ctr.next(NodeType.rootType);
     List<TreeNode> ret = [
@@ -98,10 +105,10 @@ class Session {
     }
     (nt == NodeType.classType)
         ? el.children.add(
-            XmlElement(XmlName(nt.toString()), [], [
-              XmlElement(XmlName("Disposal")),
-            ]),
-          )
+          XmlElement(XmlName(nt.toString()), [], [
+            XmlElement(XmlName("Disposal")),
+          ]),
+        )
         : el.children.add(XmlElement(XmlName(nt.toString())));
   }
 
@@ -112,8 +119,8 @@ class Session {
       _pos(el) + 1,
       (nt == NodeType.classType)
           ? XmlElement(XmlName(nt.toString()), [], [
-              XmlElement(XmlName("Disposal")),
-            ])
+            XmlElement(XmlName("Disposal")),
+          ])
           : XmlElement(XmlName(nt.toString())),
     );
   }
@@ -352,9 +359,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el!);
     if (el == null) return true;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx);
     if (name == "SeeReference") {
       XmlElement? ttr = el.getElement("TermTitleRef");
       if (ttr != null && ttr.children.isNotEmpty) return false;
@@ -457,9 +465,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAtOrNull(idx)
-        : el.findElements(name).elementAtOrNull(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAtOrNull(idx)
+            : el.findElements(name).elementAtOrNull(idx);
     XmlElement? prev = el?.previousElementSibling;
     if (prev == null || (mt != _MultiType.status && prev.localName != name))
       return;
@@ -473,9 +482,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAtOrNull(idx)
-        : el.findElements(name).elementAtOrNull(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAtOrNull(idx)
+            : el.findElements(name).elementAtOrNull(idx);
     XmlElement? next = el?.nextElementSibling;
     if (next == null || (mt != _MultiType.status && next.localName != name))
       return;
@@ -489,9 +499,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx); // el must exist
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx); // el must exist
     if (sub == null) {
       if (val == null) return;
       el.innerText = val;
@@ -543,9 +554,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return null;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAtOrNull(idx)
-        : el.findElements(name).elementAtOrNull(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAtOrNull(idx)
+            : el.findElements(name).elementAtOrNull(idx);
     if (el == null) return null;
     if (sub == null) return el.innerText; // handle simple case - e.g. LinkedTo
     if (_isAttr(sub)) {
@@ -569,9 +581,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return null;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx);
     if (sub != null) {
       el = el.getElement(sub);
       if (el == null) return null;
@@ -592,9 +605,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return null;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx);
     XmlElement parent = el;
     if (sub != null) {
       el = el.getElement(sub);
@@ -648,9 +662,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return 0;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx);
     return el.findElements("TermTitleRef").length;
   }
 
@@ -660,9 +675,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return null;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx);
     XmlElement e = XmlElement(XmlName("TermTitleRef"), [], [], false);
     (int, int) p = _insertPos(el, "TermTitleRef");
     el.children.insert(p.$1, e);
@@ -675,9 +691,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return null;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx);
     el = el.findElements("TermTitleRef").elementAtOrNull(tidx);
     return el?.innerText;
   }
@@ -688,9 +705,10 @@ class Session {
     final mt = _multypFromName(name);
     el = mt.parent(el);
     if (el == null) return null;
-    el = (mt == _MultiType.status)
-        ? el.childElements.elementAt(idx)
-        : el.findElements(name).elementAt(idx);
+    el =
+        (mt == _MultiType.status)
+            ? el.childElements.elementAt(idx)
+            : el.findElements(name).elementAt(idx);
     Iterable<XmlElement> list = el.findElements("TermTitleRef");
     el = list.elementAtOrNull(tidx);
     if (val == null) {
@@ -715,9 +733,8 @@ List<TreeNode> _addContext(XmlElement root, Counter ctr) {
 
 List<TreeNode> _addChildren(List<XmlElement> list, Counter ctr) {
   return list.map((item) {
-    final NodeType nt = (item.name.local == 'Term')
-        ? NodeType.termType
-        : NodeType.classType;
+    final NodeType nt =
+        (item.name.local == 'Term') ? NodeType.termType : NodeType.classType;
     final int index = ctr.next(nt);
     return TreeNode(
       (nt, index),

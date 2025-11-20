@@ -174,7 +174,7 @@ Future<SendPort> _helperIsolateSendPort = () async {
               return;
             case _TreeRequest:
               final payload = _bindings.tree(data.idx);
-              final message = AsTree(
+              final message = asTree(
                 payload.data.asTypedList(payload.length),
                 Counter(),
               );

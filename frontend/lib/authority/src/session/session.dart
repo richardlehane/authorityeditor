@@ -24,7 +24,7 @@ class Session {
 
   List<TreeNode> tree(int index, Counter ctr) {
     final payload = _bindings.tree(index);
-    return AsTree(payload.data.asTypedList(payload.length), ctr);
+    return asTree(payload.data.asTypedList(payload.length), ctr);
   }
 
   bool valid(int index) => _bindings.valid(index);
@@ -117,13 +117,13 @@ class Session {
       _bindings.setCirca(index, dt.index, value);
 
   List<XmlElement>? getParagraphs(int index, String name) {
-    // final Pointer<Utf8> n = name.toNativeUtf8();
-    // final payload = _bindings.getParagraphs(index, n);
-    // malloc.free(n);
-    // return deserialiseParagraphs(
-    //   payload.data.asTypedList(payload.length),
-    // ); // LEAKS!!!
-    return null;
+    final Pointer<Utf8> n = name.toNativeUtf8();
+    final payload = _bindings.getParagraphs(index, n);
+    malloc.free(n);
+    if (payload.length == 0) return null;
+    return deserialiseParagraphs(
+      payload.data.asTypedList(payload.length),
+    ); // LEAKS!!!
   }
 
   // todo
@@ -201,15 +201,15 @@ class Session {
     int idx,
     String? sub,
   ) {
-    // final Pointer<Utf8> n = name.toNativeUtf8();
-    // final Pointer<Utf8> s = (sub == null) ? nullptr : sub.toNativeUtf8();
-    // final payload = _bindings.multiGetParagraphs(index, n, idx, s);
-    // malloc.free(n);
-    // malloc.free(s);
-    // return deserialiseParagraphs(
-    //   payload.data.asTypedList(payload.length),
-    // ); // LEAKS!!!
-    return null;
+    final Pointer<Utf8> n = name.toNativeUtf8();
+    final Pointer<Utf8> s = (sub == null) ? nullptr : sub.toNativeUtf8();
+    final payload = _bindings.multiGetParagraphs(index, n, idx, s);
+    malloc.free(n);
+    malloc.free(s);
+    if (payload.length == 0) return null;
+    return deserialiseParagraphs(
+      payload.data.asTypedList(payload.length),
+    ); // LEAKS!!!
   }
 
   // todo

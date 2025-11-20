@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:xml/xml.dart';
+import 'tree.dart' show Index;
 
 // Byte format:
 // [Paragraph Count u8][Paragraphs..]
@@ -10,59 +11,56 @@ import 'package:xml/xml.dart';
 // [Token type U8][Paragraph (List and Item) | Text, Source, Emphasis: text | Url: text * 2]
 // Text:
 // [Text len + 1 U16][Text UTF8][Sentinel 0]
-//
-// Refs:
-// Uint8List
-// BytesBuilder
-// ByteData (has setUint16 and getUint16)
-// Reuse: widgets/markup/controller.dart
 List<XmlElement>? deserialiseParagraphs(Uint8List list) {
-  if (list[0] == 0) return null;
-  final ret = List<XmlElement>.filled(
-    list[0],
-    XmlElement(XmlName("Paragraph")),
-  );
-  int index = 1;
-  for (var para in ret) {
-    index += deserialiseParagraph(list, index, para);
+  Index idx = Index(0);
+  final paraCount = list[idx.i];
+  idx.increment();
+  if (paraCount == 0) return null;
+  final List<XmlElement> ret = [];
+  for (var i = 0; i < paraCount; i++) {
+    final XmlElement para = XmlElement(XmlName("Paragraph"), [], [], false);
+    deserialiseParagraph(list, idx, para);
+    ret.add(para);
   }
   return ret;
 }
 
-int deserialiseParagraph(Uint8List list, int start, XmlElement parent) {
-  int tokCount = list[start];
-  int ret = 1;
+void deserialiseParagraph(Uint8List list, Index idx, XmlElement parent) {
+  final tokCount = list[idx.i];
+  idx.increment();
   for (var i = 0; i < tokCount; i++) {
-    ParaToken tok = ParaToken.values[list[start + ret]];
-    ret++;
+    ParaToken tok = ParaToken.values[list[idx.i]];
+    idx.increment();
     switch (tok) {
       case ParaToken.text:
       case ParaToken.source:
       case ParaToken.emphasis:
       case ParaToken.url:
-        ret += tok.deserialise(list, start + ret, parent);
+        tok.deserialise(list, idx, parent);
       case ParaToken.list:
-        final items = List<XmlElement>.filled(
-          list[start + ret],
-          XmlElement(XmlName("Item")),
-        );
-        ret++;
-        for (var item in items) {
-          ret++; //ignore item token
-          ret += deserialiseParagraph(list, start + ret, item);
+        final itemCount = list[idx.i];
+        idx.increment();
+        final XmlElement l = XmlElement(XmlName("List"), [], [], false);
+        for (var j = 0; j < itemCount; j++) {
+          idx.increment(); //ignore item token
+          final XmlElement it = XmlElement(XmlName("Item"), [], [], false);
+          deserialiseParagraph(list, idx, it);
+          l.children.add(it);
         }
-        final XmlElement l = XmlElement(XmlName("List"), [], items, false);
         parent.children.add(l);
       default:
     }
   }
-  return ret;
 }
 
-String asText(Uint8List list) {
+String? asText(Uint8List list, Index idx) {
   final bd = ByteData.sublistView(list, 0, 2);
-  final l = bd.getUint16(0);
-  return utf8.decode(list.sublist(2, 1 + l));
+  final l = bd.getUint16(0, Endian.little);
+  idx.advance(2 + l);
+  if (l == 0) return null;
+  return utf8.decode(
+    list.sublist(2, 1 + l),
+  ); // length includes a zero terminating byte
 }
 
 enum ParaToken {
@@ -74,27 +72,24 @@ enum ParaToken {
   item,
   none;
 
-  int deserialise(Uint8List list, int start, XmlElement parent) {
+  void deserialise(Uint8List list, Index idx, XmlElement parent) {
     switch (this) {
       case ParaToken.text:
-        final txt = asText(list.sublist(start));
+        final txt = asText(list.sublist(idx.i), idx) ?? "";
         parent.children.add(XmlText(txt));
-        return 3 + txt.length;
       case ParaToken.source:
-        final txt = asText(list.sublist(start));
+        final txt = asText(list.sublist(idx.i), idx) ?? "";
         parent.children.add(
           XmlElement(XmlName("Source"), [], [XmlText(txt)], false),
         );
-        return 3 + txt.length;
       case ParaToken.emphasis:
-        final txt = asText(list.sublist(start));
+        final txt = asText(list.sublist(idx.i), idx) ?? "";
         parent.children.add(
           XmlElement(XmlName("Emphasis"), [], [XmlText(txt)], false),
         );
-        return 3 + txt.length;
       case ParaToken.url:
-        final attr = asText(list.sublist(start));
-        final txt = asText(list.sublist(start + 3 + attr.length));
+        final attr = asText(list.sublist(idx.i), idx) ?? "";
+        final txt = asText(list.sublist(idx.i), idx) ?? "";
         parent.children.add(
           XmlElement(
             XmlName("Source"),
@@ -103,9 +98,8 @@ enum ParaToken {
             false,
           ),
         );
-        return 6 + attr.length + txt.length;
       default:
-        return 0;
+        return;
     }
   }
 }
