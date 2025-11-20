@@ -5,7 +5,6 @@ import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
 
 import 'package:authorityeditor/authority/authority.dart';
-import 'package:authorityeditor/authority/src/session.dart';
 import 'package:authorityeditor/authority/src/session/paragraph.dart';
 
 void main() {
@@ -38,7 +37,6 @@ void main() {
   test('paragraphs', () {
     final paras = deserialiseParagraphs(Uint8List.fromList(paraByts));
     expect(paras!.length, 5);
-    print(paras);
   });
   test('set current', () {
     rda.setCurrent(doc, (NodeType.termType, 0));

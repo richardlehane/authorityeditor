@@ -9,7 +9,14 @@ import 'bindings.dart';
 import 'tree.dart';
 
 class Session {
-  final _bindings = Bindings();
+  late Bindings _bindings;
+
+  // singleton
+  Session._() {
+    _bindings = Bindings();
+  }
+  static final Session _instance = Session._();
+  factory Session() => _instance;
 
   // this is a different function signature
   int load(PlatformFile file) {

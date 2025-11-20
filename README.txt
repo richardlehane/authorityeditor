@@ -42,3 +42,9 @@ git push origin main
 # Developing
 
 Uses riverpod for state management. Run `dart run build_runner build` to regenerate providers.
+
+
+After rebuilding DLL, locations:
+.flutter\flutter\bin\cache\artifacts\engine\windows-x64
+C:\Users\richa\Code\polyglot\authorityeditor\frontend\build\windows\x64\runner\Release
+C:\Users\richa\Code\polyglot\authorityeditor\frontend\build\windows\x64\runner\Debug

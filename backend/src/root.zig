@@ -163,6 +163,7 @@ export fn getCirca(idx: u8, dateType: u8) bool {
 
 export fn set(idx: u8, name: [*c]const u8, value: [*c]const u8) void {
     const doc = sess.get(idx);
+    if (value == null) return doc.set(std.mem.span(name), null);
     return doc.set(std.mem.span(name), std.mem.span(value));
 }
 
