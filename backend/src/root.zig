@@ -62,6 +62,11 @@ export fn freeStr(ptr: [*c]u8) void {
     freefn.?(ptr);
 }
 
+export fn freePayload(length: i32, ptr: [*c]u8) void {
+    const l: usize = @intCast(length);
+    sess.allocator.free(ptr[0..l]);
+}
+
 export fn valid(idx: u8) bool {
     const doc = sess.get(idx);
     return doc.valid();
@@ -85,6 +90,11 @@ export fn empty() u8 {
 export fn load(path: [*c]const u8) u8 {
     const ret = sess.load(std.mem.span(path)) catch return 255;
     return @intCast(ret);
+}
+
+export fn save(idx: u8, path: [*c]const u8) bool {
+    const doc = sess.get(idx);
+    return doc.save(path);
 }
 
 // Tree data layout is [num_context, num_termclasses, contextentries, termclass entries]
@@ -300,6 +310,16 @@ test "validate" {
     defer unload();
     const idx = load(example);
     try testing.expect(valid(idx));
+}
+
+test "free payload" {
+    sess = Session.init(testing.allocator) catch unreachable;
+    has_sess = true;
+    defer unload();
+    const idx = load(example);
+    setCurrent(idx, 3, 0);
+    const payload = getParagraphs(idx, "TermDescription");
+    freePayload(payload.length, payload.data);
 }
 
 test "slices" {

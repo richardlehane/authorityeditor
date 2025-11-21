@@ -17,7 +17,7 @@ class ClassView extends ConsumerWidget {
     final node = ref.watch(nodeProvider);
     return SingleChildScrollView(
       child: Container(
-        color: Colors.white,
+        color: Colors.grey[10],
         child: Column(
           children: [
             Center(

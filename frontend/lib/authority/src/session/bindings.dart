@@ -16,6 +16,8 @@ final class Payload extends Struct {
 
 typedef FreeStrNative = Void Function(Pointer<Utf8>);
 typedef FreeStr = void Function(Pointer<Utf8>);
+typedef FreePayloadNative = Void Function(Int32, Pointer<Uint8>);
+typedef FreePayload = void Function(int, Pointer<Uint8>);
 typedef ValidNative = Bool Function(Uint8);
 typedef Valid = bool Function(int);
 typedef TransformNative = Void Function(Uint8, Pointer<Utf8>, Pointer<Utf8>);
@@ -26,6 +28,8 @@ typedef EmptyNative = Uint8 Function();
 typedef Empty = int Function();
 typedef LoadNative = Uint8 Function(Pointer<Utf8>);
 typedef Load = int Function(Pointer<Utf8>);
+typedef SaveNative = Bool Function(Uint8, Pointer<Utf8>);
+typedef Save = bool Function(int, Pointer<Utf8>);
 typedef TreeNative = Payload Function(Uint8);
 typedef Tree = Payload Function(int);
 typedef AsStrNative = Pointer<Utf8> Function(Uint8);
@@ -59,8 +63,8 @@ typedef SetCirca = void Function(int, int, bool);
 typedef GetParagraphsNative = Payload Function(Uint8, Pointer<Utf8>);
 typedef GetParagraphs = Payload Function(int, Pointer<Utf8>);
 typedef SetParagraphsNative =
-    Void Function(Uint8, Pointer<Utf8>, Uint16, Pointer<Utf8>);
-typedef SetParagraphs = void Function(int, Pointer<Utf8>, int, Pointer<Utf8>);
+    Void Function(Uint8, Pointer<Utf8>, Uint16, Pointer<Uint8>);
+typedef SetParagraphs = void Function(int, Pointer<Utf8>, int, Pointer<Uint8>);
 typedef MultiLenNative = Uint16 Function(Uint8, Pointer<Utf8>);
 typedef MultiLen = int Function(int, Pointer<Utf8>);
 typedef MultiEmptyNative = Bool Function(Uint8, Pointer<Utf8>, Uint16);
@@ -98,10 +102,10 @@ typedef MultiSetParagraphsNative =
       Uint16,
       Pointer<Utf8>,
       Uint16,
-      Pointer<Utf8>,
+      Pointer<Uint8>,
     );
 typedef MultiSetParagraphs =
-    void Function(int, Pointer<Utf8>, int, Pointer<Utf8>, int, Pointer<Utf8>);
+    void Function(int, Pointer<Utf8>, int, Pointer<Utf8>, int, Pointer<Uint8>);
 typedef TermsRefLenNative = Uint16 Function(Uint8, Pointer<Utf8>, Uint16);
 typedef TermsRefLen = int Function(int, Pointer<Utf8>, int);
 typedef TermsRefAddNative = Void Function(Uint8, Pointer<Utf8>, Uint16);
@@ -116,12 +120,14 @@ typedef TermsRefSet =
 
 final class Bindings {
   late FreeStr freeStr;
+  late FreePayload freePayload;
   late Valid valid;
   late Transform transform;
   late Edit edit;
   late AsStr asStr;
   late Empty empty;
   late Load load;
+  late Save save;
   late Tree tree;
   late SetCurrent setCurrent;
   late DropNode dropNode;
@@ -159,11 +165,15 @@ final class Bindings {
   Bindings() {
     final DynamicLibrary dylib = DynamicLibrary.open(libraryPath);
     freeStr = dylib.lookupFunction<FreeStrNative, FreeStr>('freeStr');
+    freePayload = dylib.lookupFunction<FreePayloadNative, FreePayload>(
+      'freePayload',
+    );
     valid = dylib.lookupFunction<ValidNative, Valid>('valid');
     transform = dylib.lookupFunction<TransformNative, Transform>('transform');
     edit = dylib.lookupFunction<EditNative, Edit>('edit');
     empty = dylib.lookupFunction<EmptyNative, Empty>('empty');
     load = dylib.lookupFunction<LoadNative, Load>('load');
+    save = dylib.lookupFunction<SaveNative, Save>('save');
     asStr = dylib.lookupFunction<AsStrNative, AsStr>('asStr');
     tree = dylib.lookupFunction<TreeNative, Tree>('tree');
     setCurrent = dylib.lookupFunction<SetCurrentNative, SetCurrent>(

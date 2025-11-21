@@ -54,8 +54,9 @@ mixin Render {
   List<TextSpan> linkedto(int index) {
     String? typ = multiGet("LinkedTo", index, "type");
     String? content = multiGet("LinkedTo", index, null);
-    if (typ != null && content != null)
-      return [_toSpan(1, typ), _toSpan(0, ": ${content}")];
+    if (typ != null && content != null) {
+      return [_toSpan(1, typ), _toSpan(0, ": $content")];
+    }
     if (typ != null) return [_toSpan(1, typ)];
     if (content != null) return [_toSpan(0, content)];
     return [];
@@ -64,13 +65,14 @@ mixin Render {
   List<TextSpan> source(int index) {
     String? url = multiGet("Source", index, "url");
     String? content = multiGet("Source", index, null);
-    if (url != null && content != null)
+    if (url != null && content != null) {
       return [
         _toSpan(2, content),
         _toSpan(0, " ("),
         _toSpan(3, url),
         _toSpan(0, ")"),
       ];
+    }
     if (url != null) return [_toSpan(3, url)];
     if (content != null) return [_toSpan(2, content)];
     return [];
@@ -81,7 +83,7 @@ mixin Render {
     String? author = multiGet("Comment", index, "author");
     List<XmlElement>? content = multiGetParagraphs("Comment", index, null);
 
-    if (author != null) comment.add(_toSpan(1, '${author}: '));
+    if (author != null) comment.add(_toSpan(1, '$author: '));
     if (content != null) comment.addAll(_renderParas(content));
     return comment;
   }
@@ -94,7 +96,7 @@ mixin Render {
     );
     if (id != null) seeref.add(_toSpan(0, " $id"));
     String? title = multiGet("SeeReference", index, "AuthorityTitleRef");
-    if (title != null) seeref.add(_toSpan(2, " ${title}"));
+    if (title != null) seeref.add(_toSpan(2, " $title"));
     int num = termsRefLen("SeeReference", index);
     List<String> terms = List.filled(num, "", growable: true);
     int tidx = 0;
@@ -104,9 +106,9 @@ mixin Render {
     }
     String? itemno = multiGet("SeeReference", index, "ItemNoRef");
     if (itemno != null) terms.add(itemno);
-    if (terms.length > 0) seeref.add(_toSpan(1, " ${terms.join(" - ")}"));
+    if (terms.isNotEmpty) seeref.add(_toSpan(1, " ${terms.join(" - ")}"));
     String? seetext = multiGet("SeeReference", index, "SeeText");
-    if (seetext != null) seeref.add(_toSpan(0, " ${seetext}"));
+    if (seetext != null) seeref.add(_toSpan(0, " $seetext"));
 
     return seeref;
   }
@@ -115,23 +117,23 @@ mixin Render {
     StatusType st = multiStatusType(index);
     switch (st.kind()) {
       case StatusKind.date:
-        return _status_date(st, index);
+        return _statusDate(st, index);
       case StatusKind.supersede:
-        return _status_supersede(st, index);
+        return _statusSupersede(st, index);
       case StatusKind.draft:
-        return _status_draft(st, index);
+        return _statusDraft(st, index);
       case StatusKind.submitted:
-        return _status_submitted(st, index);
+        return _statusSubmitted(st, index);
       case StatusKind.applying:
-        return _status_applying(st, index);
+        return _statusApplying(st, index);
       case StatusKind.issued:
-        return _status_issued(st, index);
+        return _statusIssued(st, index);
       default:
         return [];
     }
   }
 
-  List<TextSpan> _status_supersede(StatusType st, int index) {
+  List<TextSpan> _statusSupersede(StatusType st, int index) {
     List<TextSpan> ret = [_toSpan(0, st.toString())];
     String? id = _id(
       multiGet(st.toElement(), index, "control"),
@@ -139,7 +141,7 @@ mixin Render {
     );
     if (id != null) ret.add(_toSpan(0, " $id"));
     String? title = multiGet(st.toElement(), index, "AuthorityTitleRef");
-    if (title != null) ret.add(_toSpan(2, " ${title}"));
+    if (title != null) ret.add(_toSpan(2, " $title"));
     int num = termsRefLen(st.toElement(), index);
     List<String> terms = List.filled(num, "", growable: true);
     int tidx = 0;
@@ -149,7 +151,7 @@ mixin Render {
     }
     String? itemno = multiGet(st.toElement(), index, "ItemNoRef");
     if (itemno != null) terms.add(itemno);
-    if (terms.length > 0) ret.add(_toSpan(1, " ${terms.join(" - ")}"));
+    if (terms.isNotEmpty) ret.add(_toSpan(1, " ${terms.join(" - ")}"));
     String? parttext = multiGet(st.toElement(), index, "PartText");
     if (parttext != null) ret.add(_toSpan(0, " $parttext"));
     String? date = _formatDate(
@@ -159,7 +161,7 @@ mixin Render {
     return ret;
   }
 
-  List<TextSpan> _status_draft(StatusType st, int index) {
+  List<TextSpan> _statusDraft(StatusType st, int index) {
     List<TextSpan> ret = [_toSpan(0, st.toString())];
     String? version = multiGet(st.toElement(), index, "version");
     String? agency = _agency(
@@ -181,7 +183,7 @@ mixin Render {
     return ret;
   }
 
-  List<TextSpan> _status_issued(StatusType st, int index) {
+  List<TextSpan> _statusIssued(StatusType st, int index) {
     List<TextSpan> ret = [_toSpan(0, st.toString())];
     String? agency = _agency(
       multiGet(st.toElement(), index, "Agency"),
@@ -199,7 +201,7 @@ mixin Render {
     return ret;
   }
 
-  List<TextSpan> _status_submitted(StatusType st, int index) {
+  List<TextSpan> _statusSubmitted(StatusType st, int index) {
     List<TextSpan> ret = [_toSpan(0, st.toString())];
     String? officer = multiGet(st.toElement(), index, "Officer");
     String? position = multiGet(st.toElement(), index, "Officer");
@@ -236,7 +238,7 @@ mixin Render {
     return ret;
   }
 
-  List<TextSpan> _status_applying(StatusType st, int index) {
+  List<TextSpan> _statusApplying(StatusType st, int index) {
     List<TextSpan> ret = [_toSpan(0, "Applied")];
     String? agency = _agency(
       multiGet(st.toElement(), index, "Agency"),
@@ -264,7 +266,7 @@ mixin Render {
     return ret;
   }
 
-  List<TextSpan> _status_date(StatusType st, int index) {
+  List<TextSpan> _statusDate(StatusType st, int index) {
     String? date = _formatDate(
       _parseDate(multiGet(st.toElement(), index, null)),
     );
@@ -281,7 +283,7 @@ mixin Render {
     String? trigger = multiGet("Disposal", index, "DisposalTrigger");
     String? disposalAction = multiGet("Disposal", index, "DisposalAction");
     String? transferTo = multiGet("Disposal", index, "TransferTo");
-    if (transferTo != null) transferTo = " to ${transferTo}";
+    if (transferTo != null) transferTo = " to $transferTo";
     List<XmlElement>? customAction = multiGetParagraphs(
       "Disposal",
       index,
@@ -290,13 +292,14 @@ mixin Render {
 
     String retention(String? period, String? unit, String? trigger) {
       if (period == null && trigger == null) return "";
-      if (period == null) return "until ${trigger}";
-      if (unit == null) unit = "years"; // should not reach
-      String ret = (unit == "1")
-          ? "${period} ${unit.substring(0, unit.length - 1)}"
-          : "${period} ${unit}";
-      if (trigger == null) return "minimum of ${ret}";
-      return "minimum of ${ret} after ${trigger}";
+      if (period == null) return "until $trigger";
+      unit ??= "years"; // should not reach
+      String ret =
+          (unit == "1")
+              ? "$period ${unit.substring(0, unit.length - 1)}"
+              : "$period $unit";
+      if (trigger == null) return "minimum of $ret";
+      return "minimum of $ret after $trigger";
     }
 
     String ret = retention(retentionPeriod, retentionUnit, trigger);
@@ -307,15 +310,15 @@ mixin Render {
         action.add(_toSpan(0, disposalAction));
       case "Destroy":
         action.add(
-          _toSpan(0, (ret.isEmpty) ? "Destroy" : "Retain ${ret}, then destroy"),
+          _toSpan(0, (ret.isEmpty) ? "Destroy" : "Retain $ret, then destroy"),
         );
       case "Transfer":
         action.add(
           _toSpan(
             0,
             (ret.isEmpty)
-                ? "Transfer${transferTo}"
-                : "Retain ${ret}, then transfer${transferTo}",
+                ? "Transfer$transferTo"
+                : "Retain $ret, then transfer$transferTo",
           ),
         );
       default: // "Retain in agency"
@@ -326,7 +329,7 @@ mixin Render {
       action.addAll(_renderParas(customAction));
     }
     if (condition != null) {
-      action.insert(0, _toSpan(1, '${condition}:\n'));
+      action.insert(0, _toSpan(1, '$condition:\n'));
     }
     return action;
   }
@@ -352,9 +355,8 @@ List<TextSpan> _renderParas(List<XmlElement> paragraphs) {
   }
 
   void _commitNode(XmlNode node, int style) {
-    String txt = (node.nodeType == XmlNodeType.TEXT)
-        ? node.value!
-        : node.innerText;
+    String txt =
+        (node.nodeType == XmlNodeType.TEXT) ? node.value! : node.innerText;
     if (txt.trim().isEmpty) return; // kill blank text nodes
     if (style == 0) {
       buf.write(txt);

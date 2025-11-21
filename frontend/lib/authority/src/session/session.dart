@@ -1,5 +1,6 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
+import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:xml/xml.dart' show XmlElement;
 import '../../authority.dart'
@@ -18,13 +19,19 @@ class Session {
   static final Session _instance = Session._();
   factory Session() => _instance;
 
-  // this is a different function signature
   int load(PlatformFile file) {
     if (file.path == null) return -1;
     final Pointer<Utf8> p = file.path!.toNativeUtf8();
     final int result = _bindings.load(p);
     malloc.free(p);
     return result;
+  }
+
+  bool save(int index, String path) {
+    final Pointer<Utf8> p = path.toNativeUtf8();
+    final success = _bindings.save(index, p);
+    malloc.free(p);
+    return success;
   }
 
   int empty() => _bindings.empty();
@@ -128,13 +135,27 @@ class Session {
     final payload = _bindings.getParagraphs(index, n);
     malloc.free(n);
     if (payload.length == 0) return null;
-    return deserialiseParagraphs(
+    final paras = deserialiseParagraphs(
       payload.data.asTypedList(payload.length),
-    ); // LEAKS!!!
+    );
+    _bindings.freePayload(payload.length, payload.data);
+    return paras;
   }
 
-  // todo
-  void setParagraphs(int index, String name, List<XmlElement>? paras) {}
+  void setParagraphs(int index, String name, List<XmlElement>? paras) {
+    final Pointer<Utf8> n = name.toNativeUtf8();
+    final byts = serialiseParagraphs(paras);
+    if (byts == null) {
+      _bindings.setParagraphs(index, n, 0, nullptr);
+    } else {
+      final Pointer<Uint8> p = calloc<Uint8>(byts.length);
+      final Uint8List view = p.asTypedList(byts.length);
+      view.setAll(0, byts);
+      _bindings.setParagraphs(index, n, byts.length, p);
+      malloc.free(p);
+    }
+    malloc.free(n);
+  }
 
   int multiLen(int index, String name) {
     final Pointer<Utf8> n = name.toNativeUtf8();
@@ -214,19 +235,35 @@ class Session {
     malloc.free(n);
     malloc.free(s);
     if (payload.length == 0) return null;
-    return deserialiseParagraphs(
+    final paras = deserialiseParagraphs(
       payload.data.asTypedList(payload.length),
-    ); // LEAKS!!!
+    );
+    _bindings.freePayload(payload.length, payload.data);
+    return paras;
   }
 
-  // todo
   void multiSetParagraphs(
     int index,
     String name,
     int idx,
     String? sub,
-    List<XmlElement>? val,
-  ) {}
+    List<XmlElement>? paras,
+  ) {
+    final Pointer<Utf8> n = name.toNativeUtf8();
+    final Pointer<Utf8> s = (sub == null) ? nullptr : sub.toNativeUtf8();
+    final byts = serialiseParagraphs(paras);
+    if (byts == null) {
+      _bindings.multiSetParagraphs(index, n, idx, s, 0, nullptr);
+    } else {
+      final Pointer<Uint8> p = calloc<Uint8>(byts.length);
+      final Uint8List view = p.asTypedList(byts.length);
+      view.setAll(0, byts);
+      _bindings.multiSetParagraphs(index, n, idx, s, byts.length, p);
+      malloc.free(p);
+    }
+    malloc.free(n);
+    malloc.free(s);
+  }
 
   StatusType multiStatusType(int index, int idx) =>
       StatusType.values[_bindings.multiStatusType(index, idx)];

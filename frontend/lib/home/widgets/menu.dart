@@ -2,6 +2,8 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/services.dart' show ServicesBinding;
+import 'dart:ui' show AppExitType;
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 
 final class AuthorityCommand extends ConsumerWidget {
@@ -32,11 +34,51 @@ final class AuthorityCommand extends ConsumerWidget {
                 }
               },
             ),
-            MenuFlyoutItem(text: const Text('Save'), onPressed: () {}),
-            MenuFlyoutItem(text: const Text('Save as'), onPressed: () {}),
+            MenuFlyoutItem(
+              text: const Text('Save'),
+              onPressed: () async {
+                if (ref
+                        .watch(documentsProvider)
+                        .documents[documents.current]
+                        .path ==
+                    null) {
+                  String? path = await FilePicker.platform.saveFile(
+                    dialogTitle: 'Please select an output file:',
+                  );
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .saveAs(path);
+                } else {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .save();
+                }
+              },
+            ),
+            MenuFlyoutItem(
+              text: const Text('Save as'),
+              onPressed: () async {
+                String? path = await FilePicker.platform.saveFile(
+                  dialogTitle: 'Please select an output file:',
+                );
+                ref
+                    .read(documentsProvider)
+                    .documents[documents.current]
+                    .saveAs(path);
+              },
+            ),
             if (!kIsWeb) MenuFlyoutSeparator(),
             if (!kIsWeb)
-              MenuFlyoutItem(text: const Text('Exit'), onPressed: () {}),
+              MenuFlyoutItem(
+                text: const Text('Exit'),
+                onPressed: () async {
+                  await ServicesBinding.instance.exitApplication(
+                    AppExitType.cancelable,
+                  );
+                },
+              ),
           ],
         ),
 

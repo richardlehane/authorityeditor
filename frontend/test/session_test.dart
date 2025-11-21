@@ -3,6 +3,7 @@ import 'package:test/test.dart';
 import 'dart:io' show Directory;
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
+import 'package:xml/xml.dart';
 
 import 'package:authorityeditor/authority/authority.dart';
 import 'package:authorityeditor/authority/src/session/paragraph.dart';
@@ -18,6 +19,7 @@ void main() {
   final doc = rda.load(
     PlatformFile(name: "SRNSW_example.xml", path: examplePath, size: 12036),
   );
+  final XmlDocument paraDoc = XmlDocument.parse(testParas);
   test('doc index', () {
     expect(doc, 0);
   });
@@ -36,15 +38,38 @@ void main() {
   });
   test('paragraphs', () {
     final paras = deserialiseParagraphs(Uint8List.fromList(paraByts));
-    expect(paras!.length, 5);
+    expect(paras!.length, 6);
+    final sparas = serialiseParagraphs(
+      paraDoc.rootElement.childElements.toList(),
+    );
+    expect(sparas == null, false);
+    expect(sparas!.toList(), paraByts);
+    final dparas = deserialiseParagraphs(sparas);
+    expect(dparas!.length, 6);
   });
   test('set current', () {
     rda.setCurrent(doc, (NodeType.termType, 0));
   });
 }
 
+final testParas = '''
+<Test xmlns="http://www.records.nsw.gov.au/schemas/RDA">
+  <Paragraph>Hello world.</Paragraph>
+  <Paragraph>This is a <Emphasis>test</Emphasis>. I want to use all the<Source>formatting</Source>. Including<Source url="http://www.world.com">links</Source>.</Paragraph>
+  <Paragraph>And lists:
+    <List>
+      <Item>One item</Item>
+      <Item>Two item, this one with<Emphasis>emphasis</Emphasis></Item>
+    </List>
+  </Paragraph>
+  <Paragraph>And a final para!</Paragraph>
+  <Paragraph>And a bad char Office’s</Paragraph>
+  <Paragraph><Source /></Paragraph>
+</Test> 
+''';
+
 List<int> paraByts = [
-  0x05,
+  0x06,
   0x01,
   0x00,
   0x0d,
@@ -306,5 +331,9 @@ List<int> paraByts = [
   0x80,
   0x99,
   0x73,
+  0x00,
+  0x01,
+  0x01,
+  0x00,
   0x00,
 ];

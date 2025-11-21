@@ -1,5 +1,3 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:fluent_ui/fluent_ui.dart' show TreeViewItem;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'session.dart';
@@ -72,14 +70,13 @@ class Document {
     return Session().asString(sessionIndex);
   }
 
-  Future<File> save() {
-    if (path == null) {
-      throw Exception("no path!");
-    }
-    return File(path!).writeAsString(toString(), flush: true);
+  bool save() {
+    if (path == null) return false;
+    return Session().save(sessionIndex, path!);
   }
 
-  Future<File> saveAs(String p) {
+  bool saveAs(String? p) {
+    if (p == null) return false;
     path = p;
     return save();
   }

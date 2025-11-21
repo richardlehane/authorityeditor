@@ -188,9 +188,13 @@ fn add(list: *std.ArrayList(u8), ally: Allocator, current_node: xml.xmlNodePtr) 
             .Term, .Class => |nt| {
                 try list.append(ally, @intFromEnum(nt));
                 const chars = xml.xmlGetProp(curr, "itemno");
-                const len: u8 = @truncate(std.mem.len(chars));
-                try list.append(ally, len);
-                if (len > 0) try list.appendSlice(ally, std.mem.span(chars));
+                if (chars == null) {
+                    try list.append(ally, 0);
+                } else {
+                    const len: u8 = @truncate(std.mem.len(chars));
+                    try list.append(ally, len);
+                    if (len > 0) try list.appendSlice(ally, std.mem.span(chars));
+                }
                 const title = childN(curr, nt.title(), 0);
                 if (title == null) {
                     try list.append(ally, 0);
@@ -198,7 +202,7 @@ fn add(list: *std.ArrayList(u8), ally: Allocator, current_node: xml.xmlNodePtr) 
                     const tchars = xml.xmlNodeGetContent(title.?);
                     const tlen: u8 = @truncate(std.mem.len(tchars));
                     try list.append(ally, tlen);
-                    if (len > 0) try list.appendSlice(ally, std.mem.span(tchars));
+                    if (tlen > 0) try list.appendSlice(ally, std.mem.span(tchars));
                 }
                 if (nt == .Term) {
                     const children = countChildren(curr, NodeKind.TermClass);

@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:convert';
 import 'package:xml/xml.dart';
 import 'package:file_picker/file_picker.dart' show PlatformFile;
@@ -56,6 +57,11 @@ class Session {
     final utf16Body = utf8.decode(f.bytes!);
     final doc = XmlDocument.parse(utf16Body);
     return _init(doc);
+  }
+
+  bool save(int index, String path) {
+    File(path).writeAsStringSync(Session().toString(), flush: true);
+    return true;
   }
 
   // stubs - not implemented for web
@@ -129,8 +135,9 @@ class Session {
     XmlElement? el = _nth(documents[index], ref);
     if (el == null) return false;
     XmlElement? prev = el.previousElementSibling;
-    if (prev == null || !ref.$1.like(nodeFromString(prev.localName)))
+    if (prev == null || !ref.$1.like(nodeFromString(prev.localName))) {
       return false;
+    }
     el.remove();
     prev.parentElement!.children.insert(_pos(prev), el);
     return true;
@@ -140,8 +147,9 @@ class Session {
     XmlElement? el = _nth(documents[index], ref);
     if (el == null) return false;
     XmlElement? next = el.nextElementSibling;
-    if (next == null || !ref.$1.like(nodeFromString(next.localName)))
+    if (next == null || !ref.$1.like(nodeFromString(next.localName))) {
       return false;
+    }
     el.remove();
     next.parentElement!.children.insert(_pos(next) + 1, el);
     return true;
@@ -452,7 +460,7 @@ class Session {
     if (el == null) return;
     if (mt == _MultiType.status) {
       el.childElements.elementAt(idx).remove();
-      if (el.childElements.length == 0) el.remove(); // remove Status if empty
+      if (el.childElements.isEmpty) el.remove(); // remove Status if empty
       return;
     }
     el = el.findElements(name).elementAtOrNull(idx);
@@ -470,8 +478,9 @@ class Session {
             ? el.childElements.elementAtOrNull(idx)
             : el.findElements(name).elementAtOrNull(idx);
     XmlElement? prev = el?.previousElementSibling;
-    if (prev == null || (mt != _MultiType.status && prev.localName != name))
+    if (prev == null || (mt != _MultiType.status && prev.localName != name)) {
       return;
+    }
     el!.remove(); // can't be null as prev would be null too and return
     prev.parentElement!.children.insert(_pos(prev), el);
   }
@@ -487,8 +496,9 @@ class Session {
             ? el.childElements.elementAtOrNull(idx)
             : el.findElements(name).elementAtOrNull(idx);
     XmlElement? next = el?.nextElementSibling;
-    if (next == null || (mt != _MultiType.status && next.localName != name))
+    if (next == null || (mt != _MultiType.status && next.localName != name)) {
       return;
+    }
     el!.remove();
     next.parentElement!.children.insert(_pos(next) + 1, el);
   }
@@ -601,10 +611,10 @@ class Session {
     List<XmlElement>? val,
   ) {
     XmlElement? el = nodes[index];
-    if (el == null) return null;
+    if (el == null) return;
     final mt = _multypFromName(name);
     el = mt.parent(el);
-    if (el == null) return null;
+    if (el == null) return;
     el =
         (mt == _MultiType.status)
             ? el.childElements.elementAt(idx)
@@ -671,10 +681,10 @@ class Session {
 
   void termsRefAdd(int index, String name, int idx) {
     XmlElement? el = nodes[index];
-    if (el == null) return null;
+    if (el == null) return;
     final mt = _multypFromName(name);
     el = mt.parent(el);
-    if (el == null) return null;
+    if (el == null) return;
     el =
         (mt == _MultiType.status)
             ? el.childElements.elementAt(idx)
@@ -701,10 +711,10 @@ class Session {
 
   void termsRefSet(int index, String name, int idx, int tidx, String? val) {
     XmlElement? el = nodes[index];
-    if (el == null) return null;
+    if (el == null) return;
     final mt = _multypFromName(name);
     el = mt.parent(el);
-    if (el == null) return null;
+    if (el == null) return;
     el =
         (mt == _MultiType.status)
             ? el.childElements.elementAt(idx)

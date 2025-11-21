@@ -26,7 +26,7 @@ class TermView extends ConsumerWidget {
     final currentNode = ref.watch(nodeProvider);
     return SingleChildScrollView(
       child: Container(
-        color: Colors.white,
+        color: Colors.grey[10],
         child: Column(
           children: [
             Center(

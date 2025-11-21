@@ -73,15 +73,17 @@ Widget Function(BuildContext) contextBuilder(
       ),
     );
   }
-  items.add(
-    MenuFlyoutItem(
-      leading: const Icon(FluentIcons.delete),
-      text: const Text('Delete'),
-      onPressed: () {
-        ref.read(treeProvider.notifier).dropNode(value);
-      },
-    ),
-  );
+  if (value.$1 != NodeType.rootType && value.$1 != NodeType.none) {
+    items.add(
+      MenuFlyoutItem(
+        leading: const Icon(FluentIcons.delete),
+        text: const Text('Delete'),
+        onPressed: () {
+          ref.read(treeProvider.notifier).dropNode(value);
+        },
+      ),
+    );
+  }
   // if (parent > 2) {
   //   items.add(
   //     MenuFlyoutItem(

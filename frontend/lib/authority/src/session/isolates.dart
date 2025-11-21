@@ -14,7 +14,7 @@ class Session {
   Future<void> init() async {
     await futureSendPort.then(
       ((value) => helperIsolateSendPort = value),
-      onError: (err) => print(err),
+      onError: (_) {}, // todo
     );
   }
 
@@ -22,7 +22,7 @@ class Session {
     final int requestId = _nextRequestId++;
     final _LoadRequest request = _LoadRequest(requestId, path);
     final Completer<int> completer = Completer<int>();
-    _Requests[requestId] = completer;
+    _requests[requestId] = completer;
     helperIsolateSendPort?.send(request);
     return completer.future;
   }
@@ -31,7 +31,7 @@ class Session {
     final int requestId = _nextRequestId++;
     final _ValidRequest request = _ValidRequest(requestId, index);
     final Completer<bool> completer = Completer<bool>();
-    _Requests[requestId] = completer;
+    _requests[requestId] = completer;
     helperIsolateSendPort?.send(request);
     return completer.future;
   }
@@ -40,7 +40,7 @@ class Session {
     final int requestId = _nextRequestId++;
     final _AsStringRequest request = _AsStringRequest(requestId, index);
     final Completer<String> completer = Completer<String>();
-    _Requests[requestId] = completer;
+    _requests[requestId] = completer;
     helperIsolateSendPort?.send(request);
     return completer.future;
   }
@@ -49,7 +49,7 @@ class Session {
     final int requestId = _nextRequestId++;
     final _TreeRequest request = _TreeRequest(requestId, index);
     final Completer<List<TreeNode>> completer = Completer<List<TreeNode>>();
-    _Requests[requestId] = completer;
+    _requests[requestId] = completer;
     helperIsolateSendPort?.send(request);
     return completer.future;
   }
@@ -106,7 +106,7 @@ class _TreeResponse {
 int _nextRequestId = 0;
 
 /// Mapping from [_SumRequest] `id`s to the completers corresponding to the correct future of the pending request.
-final Map<int, Completer> _Requests = <int, Completer>{};
+final Map<int, Completer> _requests = <int, Completer>{};
 
 /// The SendPort belonging to the helper isolate.
 Future<SendPort> _helperIsolateSendPort = () async {
@@ -126,12 +126,12 @@ Future<SendPort> _helperIsolateSendPort = () async {
           return;
         }
         switch (data.runtimeType) {
-          case _LoadResponse:
-          case _ValidResponse:
-          case _AsStringResponse:
-          case _TreeResponse:
-            final Completer completer = _Requests[data.id]!;
-            _Requests.remove(data.id);
+          case _LoadResponse _:
+          case _ValidResponse _:
+          case _AsStringResponse _:
+          case _TreeResponse _:
+            final Completer completer = _requests[data.id]!;
+            _requests.remove(data.id);
             completer.complete(data.result);
             return;
           default:
@@ -143,37 +143,37 @@ Future<SendPort> _helperIsolateSendPort = () async {
 
   // Start the helper isolate.
   await Isolate.spawn((SendPort sendPort) async {
-    final _bindings = Bindings();
+    final bindings = Bindings();
 
     final ReceivePort helperReceivePort =
         ReceivePort()..listen((dynamic data) {
           // On the helper isolate listen to requests and respond to them.
           switch (data.runtimeType) {
-            case _LoadRequest:
+            case _LoadRequest _:
               final String pstr = data.path;
               final Pointer<Utf8> p = pstr.toNativeUtf8();
-              final int result = _bindings.load(p);
+              final int result = bindings.load(p);
               malloc.free(p);
               final _LoadResponse response = _LoadResponse(data.id, result);
               sendPort.send(response);
               return;
-            case _ValidRequest:
-              final bool result = _bindings.valid(data.idx);
+            case _ValidRequest _:
+              final bool result = bindings.valid(data.idx);
               final _ValidResponse response = _ValidResponse(data.id, result);
               sendPort.send(response);
               return;
-            case _AsStringRequest:
-              final messageUtf8 = _bindings.asStr(data.idx);
+            case _AsStringRequest _:
+              final messageUtf8 = bindings.asStr(data.idx);
               final message = messageUtf8.toDartString();
-              _bindings.freeStr(messageUtf8);
+              bindings.freeStr(messageUtf8);
               final _AsStringResponse response = _AsStringResponse(
                 data.id,
                 message,
               );
               sendPort.send(response);
               return;
-            case _TreeRequest:
-              final payload = _bindings.tree(data.idx);
+            case _TreeRequest _:
+              final payload = bindings.tree(data.idx);
               final message = asTree(
                 payload.data.asTypedList(payload.length),
                 Counter(),

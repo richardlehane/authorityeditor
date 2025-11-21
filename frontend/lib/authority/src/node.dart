@@ -198,10 +198,7 @@ class CurrentNode with Render {
   }
 
   int key() {
-    return this.session << 56 |
-        this.mutation << 40 |
-        this.ref.$1.toInt() << 32 |
-        this.ref.$2;
+    return session << 56 | mutation << 40 | ref.$1.toInt() << 32 | ref.$2;
   }
 
   String? get(String name) {
@@ -282,10 +279,12 @@ class CurrentNode with Render {
   }
 
   // todo: get attribute
+  @override
   String? multiGet(String name, int idx, String? sub) {
     return Session().multiGet(session, name, idx, sub);
   }
 
+  @override
   List<XmlElement>? multiGetParagraphs(String name, int idx, String? sub) {
     return Session().multiGetParagraphs(session, name, idx, sub);
   }
@@ -300,6 +299,7 @@ class CurrentNode with Render {
     return Session().multiSetParagraphs(session, name, idx, sub, val);
   }
 
+  @override
   StatusType multiStatusType(int idx) {
     return Session().multiStatusType(session, idx);
   }
@@ -313,6 +313,7 @@ class CurrentNode with Render {
     return Session().multiAddSeeRef(session, srt);
   }
 
+  @override
   int termsRefLen(String name, int idx) {
     return Session().termsRefLen(session, name, idx);
   }
@@ -322,6 +323,7 @@ class CurrentNode with Render {
     return Session().termsRefAdd(session, name, idx);
   }
 
+  @override
   String? termsRefGet(String name, int idx, int tidx) {
     return Session().termsRefGet(session, name, idx, tidx);
   }

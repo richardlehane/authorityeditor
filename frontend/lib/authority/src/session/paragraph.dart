@@ -25,6 +25,16 @@ List<XmlElement>? deserialiseParagraphs(Uint8List list) {
   return ret;
 }
 
+Uint8List? serialiseParagraphs(List<XmlElement>? paras) {
+  if (paras == null || paras.isEmpty) return null;
+  BytesBuilder buf = BytesBuilder();
+  buf.addByte(paras.length);
+  for (var i = 0; i < paras.length; i++) {
+    serialiseParagraph(buf, paras[i]);
+  }
+  return buf.takeBytes();
+}
+
 void deserialiseParagraph(Uint8List list, Index idx, XmlElement parent) {
   final tokCount = list[idx.i];
   idx.increment();
@@ -53,11 +63,41 @@ void deserialiseParagraph(Uint8List list, Index idx, XmlElement parent) {
   }
 }
 
+bool emptyNode(XmlNode node) {
+  if (node.nodeType != XmlNodeType.TEXT) return false;
+  if (node.value == null) return true;
+  return node.value!.trim().isEmpty;
+}
+
+void serialiseParagraph(BytesBuilder buf, XmlElement para) {
+  final children = para.children.where((n) => !emptyNode(n)).toList();
+  buf.addByte(children.length);
+  for (var i = 0; i < children.length; i++) {
+    final tok = from(children[i]);
+    tok.serialise(buf, children[i]);
+  }
+}
+
+void writeText(BytesBuilder buf, String? str) {
+  // empty text is a zero U16 (no sentinel)
+  if (str == null || str.isEmpty) {
+    buf.addByte(0);
+    buf.addByte(0);
+    return;
+  }
+  final byts = utf8.encode(str);
+  final lenbuf = ByteData(2);
+  lenbuf.setUint16(0, byts.length + 1, Endian.little);
+  buf.add(lenbuf.buffer.asUint8List());
+  buf.add(byts);
+  buf.addByte(0); // null sentinel
+}
+
 String? asText(Uint8List list, Index idx) {
   final bd = ByteData.sublistView(list, 0, 2);
   final l = bd.getUint16(0, Endian.little);
   idx.advance(2 + l);
-  if (l == 0) return null;
+  if (l == 0) return null; // no sentinel on empty strings
   return utf8.decode(
     list.sublist(2, 1 + l),
   ); // length includes a zero terminating byte
@@ -71,6 +111,29 @@ enum ParaToken {
   list,
   item,
   none;
+
+  void serialise(BytesBuilder buf, XmlNode node) {
+    buf.addByte(index);
+    switch (this) {
+      case ParaToken.text:
+        writeText(buf, node.value);
+        return;
+      case ParaToken.source:
+      case ParaToken.emphasis:
+        writeText(buf, (node as XmlElement).innerText);
+        return;
+      case ParaToken.url:
+        final el = node as XmlElement;
+        writeText(buf, el.getAttribute("url"));
+        writeText(buf, el.innerText);
+        return;
+      case ParaToken.list:
+      case ParaToken.item:
+        serialiseParagraph(buf, node as XmlElement);
+        return;
+      case ParaToken.none:
+    }
+  }
 
   void deserialise(Uint8List list, Index idx, XmlElement parent) {
     switch (this) {
@@ -101,5 +164,30 @@ enum ParaToken {
       default:
         return;
     }
+  }
+}
+
+ParaToken from(XmlNode node) {
+  switch (node.nodeType) {
+    case XmlNodeType.TEXT:
+      return ParaToken.text;
+    case XmlNodeType.ELEMENT:
+      XmlElement el = node as XmlElement;
+      switch (el.name.local) {
+        case "Emphasis":
+          return ParaToken.emphasis;
+        case "List":
+          return ParaToken.list;
+        case "Item":
+          return ParaToken.item;
+        case "Source":
+          return (el.getAttribute("url") == null)
+              ? ParaToken.source
+              : ParaToken.url;
+        default:
+          return ParaToken.none;
+      }
+    default:
+      return ParaToken.none;
   }
 }

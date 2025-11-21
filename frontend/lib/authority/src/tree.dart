@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart'
     show Widget, FluentIcons, Icon, SizedBox, Text, TreeViewItem;
+import 'package:flutter/material.dart';
 import 'node.dart' show NodeType;
 
 typedef Ref = (NodeType, int);
@@ -46,10 +47,23 @@ class Counter {
   }
 }
 
+bool _shouldExpand(List<TreeNode> nodes) {
+  const num = 20;
+  int i = 0;
+  for (final node in nodes) {
+    i++;
+    i += node.children?.length ?? 0;
+    if (i > num) return false;
+  }
+  return true;
+}
+
 List<TreeViewItem> treeFrom(List<TreeNode> nodes, Ref selected) {
+  final expanded = _shouldExpand(nodes);
   return List<TreeViewItem>.generate(
     nodes.length,
     (int i) => makeItem(
+      expanded,
       selected,
       nodes[i].ref,
       nodes[i].itemno,
@@ -59,18 +73,22 @@ List<TreeViewItem> treeFrom(List<TreeNode> nodes, Ref selected) {
   );
 }
 
-Widget makeLabel(String? itemno, String? title) {
-  final label = (itemno == null && title == null)
-      ? null
-      : (itemno == null)
-      ? title
-      : (title == null)
-      ? itemno
-      : "$itemno $title";
+Widget makeLabel(String? itemno, String? title, NodeType nt) {
+  final label =
+      (itemno == null && title == null)
+          ? null
+          : (itemno == null)
+          ? title
+          : (title == null)
+          ? itemno
+          : (nt == NodeType.termType)
+          ? title
+          : "$itemno $title";
   return (label == null) ? SizedBox() : Text(label);
 }
 
 TreeViewItem makeItem(
+  bool expanded,
   Ref selected,
   Ref ref,
   String? itemno,
@@ -79,15 +97,19 @@ TreeViewItem makeItem(
 ) {
   return TreeViewItem(
     leading: switch (ref.$1) {
-      NodeType.termType => Icon(FluentIcons.fabric_folder),
-      NodeType.classType => Icon(FluentIcons.page),
-      NodeType.contextType => Icon(FluentIcons.page_list),
+      NodeType.termType => Icon(
+        FluentIcons.fabric_folder,
+        color: Colors.deepOrangeAccent,
+      ),
+      NodeType.classType => Icon(FluentIcons.page, color: Colors.blueGrey),
+      NodeType.contextType => Icon(FluentIcons.page_list, color: Colors.teal),
       _ => null,
     },
     selected: selected == ref,
-    content: makeLabel(itemno, title),
+    content: makeLabel(itemno, title, ref.$1),
     value: ref,
     children: (list == null) ? [] : treeFrom(list, selected),
+    expanded: expanded,
   );
 }
 
@@ -148,14 +170,16 @@ TreeViewItem _copyItemWithChildren(
 }) {
   return TreeViewItem(
     leading: switch (old.value.$1) {
-      NodeType.termType => Icon(FluentIcons.fabric_folder),
-      NodeType.classType => Icon(FluentIcons.page),
-      NodeType.contextType => Icon(FluentIcons.page_list),
+      NodeType.termType => Icon(
+        FluentIcons.fabric_folder,
+        color: Colors.deepOrangeAccent,
+      ),
+      NodeType.classType => Icon(FluentIcons.page, color: Colors.blueGrey),
+      NodeType.contextType => Icon(FluentIcons.page_list, color: Colors.teal),
       _ => null,
     },
-    content: (old.content is Text)
-        ? Text((old.content as Text).data!)
-        : SizedBox(),
+    content:
+        (old.content is Text) ? Text((old.content as Text).data!) : SizedBox(),
     value: (index == null) ? old.value : (old.value.$1, index),
     selected: (selected == null) ? old.selected : selected,
     expanded: (expand) ? true : old.expanded,
@@ -212,7 +236,14 @@ TreeViewItem Function(int i) _siblingGenerator(
     if (next) {
       next = false;
       decrement = true;
-      final ti = makeItem(ctr.selected, (nt, ctr.next(nt)), null, null, []);
+      final ti = makeItem(
+        true,
+        ctr.selected,
+        (nt, ctr.next(nt)),
+        null,
+        null,
+        [],
+      );
       ti.selected = true;
       return ti;
     }
@@ -245,7 +276,14 @@ TreeViewItem Function(int i) _childGenerator(
   return (int i) {
     // add child as the last sibling
     if (i == old.length) {
-      final ti = makeItem(ctr.selected, (nt, ctr.next(nt)), null, null, []);
+      final ti = makeItem(
+        true,
+        ctr.selected,
+        (nt, ctr.next(nt)),
+        null,
+        null,
+        [],
+      );
       ti.selected = true;
       return ti;
     }
@@ -300,16 +338,20 @@ TreeViewItem Function(int i) _relabelGenerator(
   return (int i) {
     return TreeViewItem(
       leading: switch (old[i].value.$1) {
-        NodeType.termType => Icon(FluentIcons.fabric_folder),
-        NodeType.classType => Icon(FluentIcons.page),
-        NodeType.contextType => Icon(FluentIcons.page_list),
+        NodeType.termType => Icon(
+          FluentIcons.fabric_folder,
+          color: Colors.deepOrangeAccent,
+        ),
+        NodeType.classType => Icon(FluentIcons.page, color: Colors.blueGrey),
+        NodeType.contextType => Icon(FluentIcons.page_list, color: Colors.teal),
         _ => null,
       },
-      content: (old[i].value == ref)
-          ? makeLabel(itemno, title)
-          : (old[i].content is Text)
-          ? Text((old[i].content as Text).data!)
-          : SizedBox(),
+      content:
+          (old[i].value == ref)
+              ? makeLabel(itemno, title, ref.$1)
+              : (old[i].content is Text)
+              ? Text((old[i].content as Text).data!)
+              : SizedBox(),
       value: old[i].value,
       selected: old[i].selected,
       expanded: old[i].expanded,

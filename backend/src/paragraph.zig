@@ -123,9 +123,9 @@ const ParaToken = enum(u8) {
                 if (tok.*.properties.*.children == null or tok.*.properties.*.children.*.content == null) {
                     list.append(alloc, 0) catch return ParaError.OutofMemory;
                     list.append(alloc, 0) catch return ParaError.OutofMemory;
-                    return;
+                } else {
+                    try writeText(list, alloc, std.mem.span(tok.*.properties.*.children.*.content));
                 }
-                try writeText(list, alloc, std.mem.span(tok.*.properties.*.children.*.content));
                 if (tok.*.children == null or tok.*.children.*.content == null) {
                     list.append(alloc, 0) catch return ParaError.OutofMemory;
                     list.append(alloc, 0) catch return ParaError.OutofMemory;
@@ -133,10 +133,7 @@ const ParaToken = enum(u8) {
                 }
                 try writeText(list, alloc, std.mem.span(tok.*.children.*.content));
             },
-            .item => {
-                serialisePara(list, alloc, tok) catch return ParaError.BadToken;
-            },
-            .list => serialisePara(list, alloc, tok) catch return ParaError.BadToken,
+            .item, .list => serialisePara(list, alloc, tok) catch return ParaError.BadToken,
             else => return ParaError.BadToken,
         }
     }
@@ -144,30 +141,38 @@ const ParaToken = enum(u8) {
     fn deserialise(self: ParaToken, doc: *Document, parent: xml.xmlNodePtr, paras: []const u8, start: usize) usize {
         switch (self) {
             .text => {
+                if (paras[start] == 0 and paras[start + 1] == 0) return 2;
                 const txt = asText(paras[start..]);
                 const textNode = xml.xmlNewDocText(doc.doc, txt.ptr);
                 _ = xml.xmlAddChild(parent, textNode);
                 return 3 + txt.len;
             },
             .source => {
-                const txt = asText(paras[start..]);
                 const src = xml.xmlNewChild(parent, null, "Source", null);
+                if (paras[start] == 0 and paras[start + 1] == 0) return 2;
+                const txt = asText(paras[start..]);
                 _ = xml.xmlNodeAddContent(src, txt.ptr);
                 return 3 + txt.len;
             },
             .emphasis => {
-                const txt = asText(paras[start..]);
                 const emp = xml.xmlNewChild(parent, null, "Emphasis", null);
+                if (paras[start] == 0 and paras[start + 1] == 0) return 2;
+                const txt = asText(paras[start..]);
                 _ = xml.xmlNodeAddContent(emp, txt.ptr);
                 return 3 + txt.len;
             },
             .url => {
-                const prop = asText(paras[start..]);
-                const txt = asText(paras[start + 3 + prop.len ..]);
                 const src = xml.xmlNewChild(parent, null, "Source", null);
+                var propLen: usize = 2;
+                if (paras[start] > 0 or paras[start + 1] > 0) {
+                    const prop = asText(paras[start..]);
+                    _ = xml.xmlSetProp(src, "url", prop.ptr);
+                    propLen = 3 + prop.len;
+                }
+                if (paras[start + propLen] == 0 and paras[start + propLen + 1] == 0) return propLen + 2;
+                const txt = asText(paras[start + propLen ..]);
                 _ = xml.xmlNodeAddContent(src, txt.ptr);
-                _ = xml.xmlSetProp(src, "url", prop.ptr);
-                return 6 + prop.len + txt.len;
+                return propLen + 3 + txt.len;
             },
             else => return start,
         }
@@ -229,6 +234,7 @@ test "serialise" {
         \\  </Paragraph>
         \\  <Paragraph>And a final para!</Paragraph>
         \\  <Paragraph>And a bad char Office’s</Paragraph>
+        \\  <Paragraph><Source /></Paragraph>
         \\</Test> 
     ;
     const session = try Session.init(testing.allocator);
@@ -250,7 +256,7 @@ test "serialise" {
     // defer file.close();
     // file.writeAll(res) catch unreachable;
     defer testing.allocator.free(res);
-    try testing.expect(res[0] == 5); // four paras
+    try testing.expect(res[0] == 6); // six paras
     try testing.expect(res[1] == 1); // single token para
     try testing.expect(res[2] == 0); // text type
     try testing.expect(res[3] == 13); // le length

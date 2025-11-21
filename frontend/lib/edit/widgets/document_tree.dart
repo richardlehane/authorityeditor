@@ -13,7 +13,7 @@ class DocumentTree extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final treeItems = ref.watch(treeProvider);
     return Container(
-      color: Colors.white,
+      color: Colors.grey[10],
       padding: const EdgeInsets.only(top: 8.0),
       alignment: Alignment.topLeft,
       child: SingleChildScrollView(

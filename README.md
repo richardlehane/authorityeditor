@@ -8,7 +8,7 @@ https://authorityeditor.com
 
 Apache version 2.0
 
-# Build instructions
+# Building
 ## Prerequisites
 
 zig 0.15.2
@@ -41,10 +41,20 @@ git push origin main
 
 # Developing
 
+## Generators
+
 Uses riverpod for state management. Run `dart run build_runner build` to regenerate providers.
 
+## Tests
 
-After rebuilding DLL, locations:
+From backend folder, run `zig build test`
+
+From frontend folder, run `flutter test`
+
+## DLL locations
+
+After rebuilding DLL, copy to locations:
+
 .flutter\flutter\bin\cache\artifacts\engine\windows-x64
-C:\Users\richa\Code\polyglot\authorityeditor\frontend\build\windows\x64\runner\Release
-C:\Users\richa\Code\polyglot\authorityeditor\frontend\build\windows\x64\runner\Debug
+authorityeditor\frontend\build\windows\x64\runner\Release
+authorityeditor\frontend\build\windows\x64\runner\Debug

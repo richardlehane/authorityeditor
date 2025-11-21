@@ -31,8 +31,7 @@ current: ?xml.xmlNodePtr,
 current_nt: tree.NodeType,
 current_idx: usize,
 
-fn loadMem(session: *Session, bytes: []const u8, len: usize) !*Document {
-    const d = xml.xmlReadMemory(bytes.ptr, @intCast(len), null, "utf-8", xml.XML_PARSE_NOBLANKS | xml.XML_PARSE_RECOVER | xml.XML_PARSE_NOERROR | xml.XML_PARSE_NOWARNING);
+fn wrapDoc(session: *Session, d: xml.xmlDocPtr) !*Document {
     const ptr = try session.allocator.create(Document);
     ptr.* = .{
         .session = session,
@@ -49,13 +48,18 @@ fn loadMem(session: *Session, bytes: []const u8, len: usize) !*Document {
 pub fn empty(
     session: *Session,
 ) !*Document {
-    return loadMem(session, srnsw_blank, srnsw_blank.len);
+    const d = xml.xmlReadMemory(srnsw_blank.ptr, @intCast(srnsw_blank.len), null, "utf-8", xml.XML_PARSE_NOBLANKS | xml.XML_PARSE_RECOVER | xml.XML_PARSE_NOERROR | xml.XML_PARSE_NOWARNING);
+    return wrapDoc(session, d);
 }
 
 pub fn load(session: *Session, path: []const u8) !*Document {
-    const b = try std.fs.cwd().readFileAlloc(session.allocator, path, max_file);
-    defer session.allocator.free(b);
-    return loadMem(session, b, b.len);
+    const d = xml.xmlReadFile(path.ptr, "utf-8", xml.XML_PARSE_NOBLANKS | xml.XML_PARSE_RECOVER | xml.XML_PARSE_NOERROR | xml.XML_PARSE_NOWARNING);
+    return wrapDoc(session, d);
+}
+
+// Save returns true if document saved
+pub fn save(self: *Document, path: [*c]const u8) bool {
+    return xml.xmlSaveFile(path, self.doc) > 0;
 }
 
 pub fn deinit(self: *Document) void {
@@ -98,7 +102,7 @@ pub fn valid(self: *Document) bool {
 pub fn toStr(self: *Document) [*c]u8 {
     var char: [*c]xml.xmlChar = undefined;
     var len: c_int = 0;
-    xml.xmlDocDumpMemory(self.doc, &char, &len);
+    xml.xmlDocDumpFormatMemory(self.doc, &char, &len, 1);
     return char;
 }
 
@@ -649,6 +653,15 @@ test "empty" {
     const session = try Session.init(testing.allocator);
     defer session.deinit();
     const doc = try Document.empty(session);
+    defer doc.deinit();
+    try doc.refreshTree();
+    try testing.expectEqual(doc.tree_menu.items.len, 28);
+}
+
+test "load" {
+    const session = try Session.init(testing.allocator);
+    defer session.deinit();
+    const doc = try Document.load(session, "../data/test.xml");
     defer doc.deinit();
     try doc.refreshTree();
     try testing.expectEqual(doc.tree_menu.items.len, 28);
