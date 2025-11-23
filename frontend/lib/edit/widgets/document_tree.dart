@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/edit/provider/tree_provider.dart';
 import 'package:authorityeditor/edit/widgets/context_menu.dart';
+import 'package:authorityeditor/authority/authority.dart' show NodeType;
 
 class DocumentTree extends ConsumerWidget {
   DocumentTree({super.key});
@@ -28,7 +29,7 @@ class DocumentTree extends ConsumerWidget {
               ref.read(nodeProvider.notifier).selectionChanged(item.value);
             },
             onSecondaryTap: (item, details) async {
-              //if (item.value == 2) return;
+              if (item.value.$1 == NodeType.rootType) return;
               final targetContext = contextAttachKey.currentContext;
               if (targetContext == null) return;
               contextController.showFlyout(

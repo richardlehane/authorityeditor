@@ -1,6 +1,8 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'dart:typed_data';
+import 'dart:io' show Platform;
+import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:xml/xml.dart' show XmlElement;
 import '../../authority.dart'
@@ -8,6 +10,14 @@ import '../../authority.dart'
 import 'paragraph.dart';
 import 'bindings.dart';
 import 'tree.dart';
+
+final stylesheetsDir = path.join(
+  path.dirname(Platform.resolvedExecutable),
+  "data",
+  "flutter_assets",
+  "assets",
+  "stylesheets",
+);
 
 class Session {
   late Bindings _bindings;
@@ -44,14 +54,16 @@ class Session {
   bool valid(int index) => _bindings.valid(index);
 
   bool edit(int index, String stylesheet) {
-    final Pointer<Utf8> s = stylesheet.toNativeUtf8();
+    final stylesheetAbs = path.join(stylesheetsDir, stylesheet);
+    final Pointer<Utf8> s = stylesheetAbs.toNativeUtf8();
     final bool result = _bindings.edit(index, s);
     malloc.free(s);
     return result;
   }
 
   void transform(int index, String stylesheet, String outpath) {
-    final Pointer<Utf8> s = stylesheet.toNativeUtf8();
+    final stylesheetAbs = path.join(stylesheetsDir, stylesheet);
+    final Pointer<Utf8> s = stylesheetAbs.toNativeUtf8();
     final Pointer<Utf8> o = outpath.toNativeUtf8();
     _bindings.transform(index, s, o);
     malloc.free(s);

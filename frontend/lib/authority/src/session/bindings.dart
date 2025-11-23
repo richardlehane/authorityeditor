@@ -5,7 +5,10 @@ import 'package:path/path.dart' as path;
 
 final libraryPath = path.join(
   path.dirname(Platform.resolvedExecutable),
-  'authority.dll',
+  "data",
+  "flutter_assets",
+  "assets",
+  "authority.dll",
 );
 
 final class Payload extends Struct {

@@ -340,7 +340,7 @@ List<TextSpan> _renderParas(List<XmlElement> paragraphs) {
   StringBuffer buf = StringBuffer();
   List<TextSpan> ret = [];
 
-  int _getStyle(XmlNode node) {
+  int getStyle(XmlNode node) {
     if (node.nodeType != XmlNodeType.ELEMENT) return 0;
     switch ((node as XmlElement).name.local) {
       case "List":
@@ -354,7 +354,7 @@ List<TextSpan> _renderParas(List<XmlElement> paragraphs) {
     return 0;
   }
 
-  void _commitNode(XmlNode node, int style) {
+  void commitNode(XmlNode node, int style) {
     String txt =
         (node.nodeType == XmlNodeType.TEXT) ? node.value! : node.innerText;
     if (txt.trim().isEmpty) return; // kill blank text nodes
@@ -379,7 +379,7 @@ List<TextSpan> _renderParas(List<XmlElement> paragraphs) {
     }
     bool nl = true;
     for (var child in para.children) {
-      int style = _getStyle(child);
+      int style = getStyle(child);
       if (style < 0) {
         for (var item in child.children) {
           if (!nl) {
@@ -387,13 +387,13 @@ List<TextSpan> _renderParas(List<XmlElement> paragraphs) {
           }
           buf.write("$bullet ");
           for (var node in item.children) {
-            style = _getStyle(node);
-            _commitNode(node, style);
+            style = getStyle(node);
+            commitNode(node, style);
             nl = false;
           }
         }
       } else {
-        _commitNode(child, style);
+        commitNode(child, style);
         nl = false;
       }
     }

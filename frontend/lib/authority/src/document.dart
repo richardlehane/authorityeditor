@@ -81,6 +81,12 @@ class Document {
     return save();
   }
 
+  bool edit(String stylesheet) {
+    return Session().edit(sessionIndex, stylesheet);
+  }
+
+  void transform(String stylesheet, String outpath) {}
+
   CurrentNode current() {
     return CurrentNode(sessionIndex, mutation, selected);
   }

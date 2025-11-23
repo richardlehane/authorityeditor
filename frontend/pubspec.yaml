@@ -43,6 +43,7 @@ dependencies:
   intl: ^0.20.2
   open_file: ^3.5.10
   ffi: ^2.1.4
+  path_provider: ^2.1.5
 
 dependency_overrides:
   math_expressions: ^3.1.0
@@ -62,6 +63,7 @@ dev_dependencies:
   custom_lint: ^0.8.0
   riverpod_lint: ^3.0.0-dev.17
   test: ^1.26.3
+  msix: ^3.16.12
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -75,9 +77,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+     - assets/authority.dll
+     - assets/stylesheets/
+     - assets/stylesheets/include/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
@@ -104,3 +107,12 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+msix_config:
+  display_name: Authority Editor
+  publisher_display_name: Richard Lehane
+  identity_name: RichardLehane.AuthorityEditor
+  publisher: CN=90828A42-83C4-4770-ADB8-6ADC14A290E3
+  msix_version: 1.0.0.0
+  logo_path: assets\logo.png
+  store: true

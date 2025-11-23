@@ -33,27 +33,15 @@ AUTHORITY
 IMPLEMENT once all the above complete and design finalized
 XSL transforms baby.
 
-MULTI
-
-- change up/down/delete controls to context menu that's on the viewform only
-- slimline 
-- dynamically size sized box based on length
-- comments need more space. Richtext should show when truncated.
-- disposal - empty content when switch action. Need new API command multiClear(String, index)
-
 AUTHORITY EDITOR
-- tree menu: up, down, delete [quick win]
+- tree menu: up, down, delete
 - keys
 - SimpleText: re-use more. Make stateful. Only update once on exit. Update can be null.
 
-Missing UI: <PRIORITIZE>
-- status
-- seereference
-- daterange
-- publish - "empty, yes, no" [quick win]
+Missing UI: 
+- publish - "empty, yes, no" 
 - update - YYYY-MM-DD [just make this automatic][check AE classic for fields]
 - justification samples (copy to clipboard)
-
 - Review view
 - Source view - colourize and jump to line
 

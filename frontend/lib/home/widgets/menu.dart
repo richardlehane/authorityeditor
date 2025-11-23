@@ -121,28 +121,66 @@ final class AuthorityCommand extends ConsumerWidget {
               //  MenuFlyoutItem(text: const Text('Redo'), onPressed: () {}),
               MenuFlyoutItem(
                 text: const Text('Capitalize functions'),
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .edit("edit_capitalize.xsl");
+                },
               ),
               MenuFlyoutItem(
                 text: const Text('Number classes'),
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .edit("edit_numberitems.xsl");
+                },
               ),
               MenuFlyoutItem(
                 text: const Text('Sort see references'),
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .edit("edit_sortseerefs.xsl");
+                },
               ),
-              MenuFlyoutItem(text: const Text('Sort terms'), onPressed: () {}),
+              MenuFlyoutItem(
+                text: const Text('Sort terms'),
+                onPressed: () {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .edit("edit_sortterms.xsl");
+                },
+              ),
               MenuFlyoutItem(
                 text: const Text('Clear comments (all)'),
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .edit("edit_clear_comments.xsl");
+                },
               ),
               MenuFlyoutItem(
                 text: const Text('Clear comments (agency)'),
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .edit("edit_clearagency.xsl");
+                },
               ),
               MenuFlyoutItem(
                 text: const Text('Clear comments (SRNSW)'),
-                onPressed: () {},
+                onPressed: () {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .edit("edit_clearsrnsw.xsl");
+                },
               ),
             ],
           ),
