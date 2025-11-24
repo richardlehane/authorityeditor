@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 
+import 'package:authorityeditor/home/view/review.dart';
 import 'package:authorityeditor/home/view/source.dart';
 import 'package:authorityeditor/edit/view/edit.dart';
 
@@ -33,6 +34,7 @@ final class DocumentTabs extends ConsumerWidget {
           },
           body: switch (documents.documents[index].view) {
             authority.View.edit => EditPage(),
+            authority.View.review => ReviewPage(),
             authority.View.source => SourcePage(),
           },
         );

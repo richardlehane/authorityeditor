@@ -99,6 +99,19 @@ final class AuthorityCommand extends ConsumerWidget {
                       ref.read(documentsProvider.notifier).viewChanged(value),
             ),
             RadioMenuFlyoutItem<String>(
+              text: const Text('Review view'),
+              value: 'review',
+              groupValue:
+                  ref
+                      .watch(documentsProvider)
+                      .documents[documents.current]
+                      .view
+                      .toString(),
+              onChanged:
+                  (value) =>
+                      ref.read(documentsProvider.notifier).viewChanged(value),
+            ),
+            RadioMenuFlyoutItem<String>(
               text: const Text('Source view'),
               value: 'source',
               groupValue:

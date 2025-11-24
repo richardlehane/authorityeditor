@@ -134,6 +134,24 @@ enum NodeType {
     }
   }
 
+  String toTitle() {
+    switch (this) {
+      case NodeType.termType:
+        return "TermTitle";
+      default:
+        return "ClassTitle";
+    }
+  }
+
+  String toDescription() {
+    switch (this) {
+      case NodeType.termType:
+        return "TermDescription";
+      default:
+        return "ClassDescription";
+    }
+  }
+
   int toInt() {
     switch (this) {
       case NodeType.rootType:
@@ -201,6 +219,7 @@ class CurrentNode with Render {
     return session << 56 | mutation << 40 | ref.$1.toInt() << 32 | ref.$2;
   }
 
+  @override
   String? get(String name) {
     return Session().get(session, name);
   }
@@ -228,6 +247,7 @@ class CurrentNode with Render {
     return Session().setCirca(session, dt, value);
   }
 
+  @override
   List<XmlElement>? getParagraphs(String name) {
     return Session().getParagraphs(session, name);
   }
@@ -240,6 +260,7 @@ class CurrentNode with Render {
   // Count multi elements
   // Name is either enclosing name "Status"
   // Or element name "SeeReference"
+  @override
   int multiLen(String name) {
     return Session().multiLen(session, name);
   }

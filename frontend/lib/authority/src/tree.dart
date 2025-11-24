@@ -58,6 +58,22 @@ bool _shouldExpand(List<TreeNode> nodes) {
   return true;
 }
 
+int termClassLen(List<TreeViewItem>? tree) {
+  if (tree == null) return 0;
+  if (tree.length < 3) return 0;
+  var ret = 0;
+  tree.getRange(2, tree.length).forEach((i) => ret += _count(i));
+  return ret;
+}
+
+int _count(TreeViewItem item) {
+  var ret = 1;
+  for (final i in item.children) {
+    ret += _count(i);
+  }
+  return ret;
+}
+
 List<TreeViewItem> treeFrom(List<TreeNode> nodes, Ref selected) {
   final expanded = _shouldExpand(nodes);
   return List<TreeViewItem>.generate(

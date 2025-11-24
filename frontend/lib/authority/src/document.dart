@@ -6,6 +6,7 @@ import 'tree.dart';
 
 enum View {
   edit,
+  review,
   source;
 
   @override
@@ -13,6 +14,8 @@ enum View {
     switch (this) {
       case View.edit:
         return "edit";
+      case View.review:
+        return "review";
       case View.source:
         return "source";
     }

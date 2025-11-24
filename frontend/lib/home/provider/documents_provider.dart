@@ -49,6 +49,8 @@ class Documents extends _$Documents {
 
   void viewChanged(String view) {
     switch (view) {
+      case "review":
+        state.documents[state.current].view = authority.View.review;
       case "source":
         state.documents[state.current].view = authority.View.source;
       default:

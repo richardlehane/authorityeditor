@@ -3,7 +3,9 @@ import 'package:fluent_ui/fluent_ui.dart'
 import 'package:xml/xml.dart'
     show XmlElement, XmlNode, XmlNodeType, XmlStringExtension;
 import 'package:intl/intl.dart' show DateFormat;
-import 'node.dart' show StatusType, StatusKind;
+import 'node.dart' show StatusType, StatusKind, NodeType;
+
+const _nl = TextSpan(text: "\n");
 
 DateTime? _parseDate(String? val) {
   if (val == null) return null;
@@ -36,6 +38,9 @@ String? _id(String? control, String? content) {
 }
 
 mixin Render {
+  String? get(String name);
+  List<XmlElement>? getParagraphs(String name);
+  int multiLen(String name);
   String? multiGet(String name, int idx, String? sub);
   StatusType multiStatusType(int idx);
   List<XmlElement>? multiGetParagraphs(String name, int idx, String? sub);
@@ -78,6 +83,18 @@ mixin Render {
     return [];
   }
 
+  List<TextSpan> comments() {
+    List<TextSpan> comments = [];
+    final l = multiLen("Comment");
+    for (var i = 0; i < l; i++) {
+      comments.addAll(comment(i));
+      if (i + 1 < l) {
+        comments.add(_nl);
+      }
+    }
+    return comments;
+  }
+
   List<TextSpan> comment(int index) {
     List<TextSpan> comment = [];
     String? author = multiGet("Comment", index, "author");
@@ -86,6 +103,35 @@ mixin Render {
     if (author != null) comment.add(_toSpan(1, '$author: '));
     if (content != null) comment.addAll(_renderParas(content));
     return comment;
+  }
+
+  List<TextSpan> title(NodeType nt) {
+    String? t = get(nt.toTitle());
+    return (t == null) ? [] : [_toSpan(1, t)];
+  }
+
+  List<TextSpan> description(NodeType nt) {
+    List<TextSpan> desc = [];
+    List<XmlElement>? content = getParagraphs(nt.toDescription());
+    if (content != null) desc.addAll(_renderParas(content));
+    List<TextSpan> seerefs = seereferences();
+    if (seerefs.isNotEmpty) {
+      if (content != null) desc.add(_nl);
+      desc.addAll(seerefs);
+    }
+    return desc;
+  }
+
+  List<TextSpan> seereferences() {
+    List<TextSpan> seerefs = [];
+    final l = multiLen("SeeReference");
+    for (var i = 0; i < l; i++) {
+      seerefs.addAll(seereference(i));
+      if (i + 1 < l) {
+        seerefs.add(_nl);
+      }
+    }
+    return seerefs;
   }
 
   List<TextSpan> seereference(int index) {
@@ -111,6 +157,12 @@ mixin Render {
     if (seetext != null) seeref.add(_toSpan(0, " $seetext"));
 
     return seeref;
+  }
+
+  List<TextSpan> justification(NodeType nt) {
+    if (nt != NodeType.classType) return [];
+    List<XmlElement>? content = getParagraphs("Justification");
+    return (content == null) ? [] : _renderParas(content);
   }
 
   List<TextSpan> status(int index) {
@@ -272,6 +324,18 @@ mixin Render {
     );
     if (date == null) return [_toSpan(0, st.toString())];
     return [_toSpan(0, "${st.toString()} on $date")];
+  }
+
+  List<TextSpan> disposals() {
+    List<TextSpan> disposals = [];
+    final l = multiLen("Disposal");
+    for (var i = 0; i < l; i++) {
+      disposals.addAll(disposal(i));
+      if (i + 1 < l) {
+        disposals.add(_nl);
+      }
+    }
+    return disposals;
   }
 
   List<TextSpan> disposal(int index) {
