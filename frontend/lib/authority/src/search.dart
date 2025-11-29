@@ -1,11 +1,11 @@
+import "node.dart";
+
 enum MatchType {
   titleEquals,
   titleContains,
   textContainsAll,
   textContainsAny,
   textContainsPhrase,
-  termType,
-  classType,
   updatedSince,
   retentionMoreThan,
   retentionLessThan,
@@ -21,8 +21,6 @@ enum MatchType {
       MatchType.textContainsAll => "text fields contain all",
       MatchType.textContainsAny => "text fields contain any",
       MatchType.textContainsPhrase => "text fields contain phrase",
-      MatchType.termType => "terms",
-      MatchType.classType => "disposal classes",
       MatchType.updatedSince => "updated since",
       MatchType.retentionMoreThan => "retention period is more than",
       MatchType.retentionLessThan => "retention period is less than",
@@ -40,8 +38,6 @@ class Match {
   @override
   String toString() {
     return switch (typ) {
-      MatchType.termType => typ.toString(),
-      MatchType.classType => typ.toString(),
       MatchType.retentionMoreThan => "$typ $value years",
       MatchType.retentionLessThan => "$typ $value years",
       MatchType.hasComments => typ.toString(),
@@ -51,10 +47,11 @@ class Match {
 }
 
 class Search {
+  final NodeType? scope;
   final List<Match> matches;
   final bool and;
 
-  Search(this.matches, [this.and = false]);
+  Search(this.matches, [this.and = false, this.scope]);
 
   @override
   String toString() {
