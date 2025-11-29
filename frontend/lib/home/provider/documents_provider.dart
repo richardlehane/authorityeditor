@@ -52,8 +52,19 @@ class Documents extends _$Documents {
       case "review":
         state.documents[state.current].view = authority.View.review;
       case "source":
+        if (state.documents[state.current].view == authority.View.review) {
+          state.documents[state.current].setCurrent(
+            state.documents[state.current].selected,
+          );
+        }
         state.documents[state.current].view = authority.View.source;
       default:
+        // reset current
+        if (state.documents[state.current].view == authority.View.review) {
+          state.documents[state.current].setCurrent(
+            state.documents[state.current].selected,
+          );
+        }
         state.documents[state.current].view = authority.View.edit;
     }
     ref.notifyListeners();

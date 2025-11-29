@@ -94,6 +94,11 @@ class Document {
     return CurrentNode(sessionIndex, mutation, selected);
   }
 
+  CurrentNode asCurrent(Ref ref) {
+    Session().setCurrent(sessionIndex, ref);
+    return CurrentNode(sessionIndex, 0, ref);
+  }
+
   void setCurrent(Ref ref) {
     selected = ref;
     Session().setCurrent(sessionIndex, ref);

@@ -9,34 +9,184 @@ class ReviewPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double height = MediaQuery.sizeOf(context).height - 108.5;
     final documents = ref.watch(documentsProvider);
-    final len = termClassLen(documents.documents[documents.current].treeItems);
-    return ListView.builder(
-      itemCount: len,
-      itemBuilder: (context, index) {
-        if (index == 0) {
-          return Row(
+    final tree = documents.documents[documents.current].treeItems;
+    final len = termClassLen(tree);
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.all(5.0),
+          decoration: BoxDecoration(
+            color: Colors.grey[20],
+            border: Border(bottom: BorderSide(color: Colors.grey[80])),
+          ),
+          child: Row(
             children: [
-              Expanded(flex: 1, child: Text("Number")),
-              Expanded(flex: 2, child: Text("Title")),
-              Expanded(flex: 3, child: Text("Description")),
-              Expanded(flex: 2, child: Text("Disposal")),
-              Expanded(flex: 3, child: Text("Justification")),
-              Expanded(flex: 2, child: Text("Comments")),
+              Expanded(
+                flex: 1,
+                child: const Text(
+                  "Number",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: const Text(
+                  "Title",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: const Text(
+                  "Description",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: const Text(
+                  "Disposal",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: const Text(
+                  "Justification",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Expanded(
+                flex: 2,
+                child: const Text(
+                  "Comments",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
             ],
-          );
-        }
-        return Row(
-          children: [
-            Expanded(flex: 1, child: Text("Number")),
-            Expanded(flex: 2, child: Text("Title")),
-            Expanded(flex: 3, child: Text("Description")),
-            Expanded(flex: 2, child: Text("Disposal")),
-            Expanded(flex: 3, child: Text("Justification")),
-            Expanded(flex: 2, child: Text("Comments")),
-          ],
-        );
-      },
+          ),
+        ),
+        SizedBox(
+          height: height,
+          child: ListView.builder(
+            itemCount: len,
+            itemBuilder: (context, index) {
+              final ti = treeNth((NodeType.termType, index), tree);
+              if (ti == null) return Row();
+              final node = documents.documents[documents.current].asCurrent(
+                ti.value,
+              );
+              return GestureDetector(
+                onDoubleTap: () {
+                  unmarkSelected(
+                    documents.documents[documents.current].treeItems,
+                    documents.documents[documents.current].selected,
+                  );
+                  markSelected(
+                    documents.documents[documents.current].treeItems,
+                    ti.value,
+                  );
+                  documents.documents[documents.current].selected = ti.value;
+                  ref.read(documentsProvider.notifier).viewChanged("edit");
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color:
+                        (ti.value.$1 == NodeType.termType)
+                            ? Colors.grey[20]
+                            : Colors.grey[10],
+                    border: Border(bottom: BorderSide(color: Colors.grey[40])),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(5.0),
+                          child: Text(node.get("itemno") ?? ""),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(5.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: node.title(ti.value.$1),
+                            ),
+                            maxLines: null,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(5.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: node.description(ti.value.$1),
+                            ),
+                            maxLines: null,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(5.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: node.disposals(ti.value.$1),
+                            ),
+                            maxLines: null,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 3,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(5.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: node.justification(ti.value.$1),
+                            ),
+                            maxLines: null,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 2,
+                        child: Padding(
+                          padding: EdgeInsetsGeometry.all(5.0),
+                          child: RichText(
+                            text: TextSpan(
+                              style: DefaultTextStyle.of(context).style,
+                              children: node.comments(),
+                            ),
+                            maxLines: null,
+                            overflow: TextOverflow.visible,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

@@ -326,8 +326,9 @@ mixin Render {
     return [_toSpan(0, "${st.toString()} on $date")];
   }
 
-  List<TextSpan> disposals() {
+  List<TextSpan> disposals(NodeType nt) {
     List<TextSpan> disposals = [];
+    if (nt != NodeType.classType) return disposals;
     final l = multiLen("Disposal");
     for (var i = 0; i < l; i++) {
       disposals.addAll(disposal(i));

@@ -90,7 +90,6 @@ class Session {
       documents[index].toXmlString(pretty: true, indent: '\t');
 
   void setCurrent(int index, Ref ref) {
-    // todo: authority/ context nodes
     nodes[index] = _nth(documents[index], ref);
   }
 

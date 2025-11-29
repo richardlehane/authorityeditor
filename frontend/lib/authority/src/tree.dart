@@ -58,6 +58,39 @@ bool _shouldExpand(List<TreeNode> nodes) {
   return true;
 }
 
+void unmarkSelected(List<TreeViewItem>? tree, Ref ref) {
+  if (tree == null) return;
+  for (var i = 0; i < tree.length; i++) {
+    final element = tree[i];
+    if (!ref.$1.like(element.value.$1)) continue;
+    if (element.value == ref) {
+      element.selected = false;
+      element.expanded = false;
+      return;
+    }
+    if (i == tree.length - 1 || tree[i + 1].value.$2 > ref.$2) {
+      element.expanded = false;
+      return unmarkSelected(element.children, ref);
+    }
+  }
+}
+
+void markSelected(List<TreeViewItem>? tree, Ref ref) {
+  if (tree == null) return;
+  for (var i = 0; i < tree.length; i++) {
+    final element = tree[i];
+    if (!ref.$1.like(element.value.$1)) continue;
+    if (element.value == ref) {
+      element.selected = true;
+      return;
+    }
+    if (i == tree.length - 1 || tree[i + 1].value.$2 > ref.$2) {
+      element.expanded = true;
+      return markSelected(element.children, ref);
+    }
+  }
+}
+
 int termClassLen(List<TreeViewItem>? tree) {
   if (tree == null) return 0;
   if (tree.length < 3) return 0;
@@ -140,11 +173,11 @@ Ref? getSelected(List<TreeViewItem>? list) {
 }
 
 TreeViewItem? treeNth(Ref ref, List<TreeViewItem>? list) {
-  if (list == null) return null;
+  if (list == null || list.isEmpty) return null;
   TreeViewItem? prev;
   for (final element in list) {
     if (!ref.$1.like(element.value.$1)) continue;
-    if (element.value == ref) {
+    if (element.value.$2 == ref.$2) {
       return element;
     }
     if (element.value.$2 > ref.$2) {
@@ -159,7 +192,7 @@ TreeViewItem? treeNth(Ref ref, List<TreeViewItem>? list) {
     }
     prev = element;
   }
-  return null;
+  return treeNth(ref, list[list.length - 1].children);
 }
 
 int treeDescendants(TreeViewItem item) {
