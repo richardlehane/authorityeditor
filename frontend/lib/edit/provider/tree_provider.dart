@@ -1,4 +1,3 @@
-import 'package:authorityeditor/authority/src/tree.dart';
 import 'package:fluent_ui/fluent_ui.dart' show TreeViewItem;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';

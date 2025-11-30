@@ -48,14 +48,16 @@ class Match {
 
 class Search {
   final NodeType? scope;
-  final List<Match> matches;
   final bool and;
+  final List<Match> matches;
 
-  Search(this.matches, [this.and = false, this.scope]);
+  Search(this.matches, [this.and = true, this.scope]);
 
   @override
   String toString() {
     final sep = (and) ? " and " : " or ";
-    return matches.join(sep);
+    if (scope == null) return matches.join(sep);
+    if (scope == NodeType.termType) return "terms where ${matches.join(sep)}";
+    return "classes where ${matches.join(sep)}";
   }
 }
