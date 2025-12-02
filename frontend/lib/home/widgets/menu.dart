@@ -34,61 +34,56 @@ final class AuthorityCommand extends ConsumerWidget {
                 }
               },
             ),
-            MenuFlyoutItem(
-              text: const Text('Save'),
-              onPressed: () async {
-                if (ref
-                        .watch(documentsProvider)
-                        .documents[documents.current]
-                        .path ==
-                    null) {
-                  String? path = await FilePicker.platform.saveFile(
-                    fileName: (kIsWeb) ? "document.rda" : null,
-                    dialogTitle: 'Please select an output file:',
-                    bytes:
-                        (kIsWeb)
-                            ? ref
-                                .read(documentsProvider)
-                                .documents[documents.current]
-                                .bytes()
-                            : null,
+            if (kIsWeb)
+              MenuFlyoutItem(
+                text: const Text('Download'),
+                onPressed: () async {
+                  final doc =
+                      ref.read(documentsProvider).documents[documents.current];
+                  await FilePicker.platform.saveFile(
+                    fileName:
+                        (doc.title == "Untitled") ? "document.rda" : doc.title,
+                    bytes: doc.bytes(),
                   );
-                  if (!kIsWeb) {
+                },
+              ),
+            if (!kIsWeb)
+              MenuFlyoutItem(
+                text: const Text('Save'),
+                onPressed: () async {
+                  if (ref
+                          .watch(documentsProvider)
+                          .documents[documents.current]
+                          .path ==
+                      null) {
+                    String? path = await FilePicker.platform.saveFile(
+                      dialogTitle: 'Please select an output file:',
+                    );
                     ref
                         .read(documentsProvider)
                         .documents[documents.current]
                         .saveAs(path);
+                  } else {
+                    ref
+                        .read(documentsProvider)
+                        .documents[documents.current]
+                        .save();
                   }
-                } else {
-                  ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
-                      .save();
-                }
-              },
-            ),
-            MenuFlyoutItem(
-              text: const Text('Save as'),
-              onPressed: () async {
-                String? path = await FilePicker.platform.saveFile(
-                  fileName: (kIsWeb) ? "document.rda" : null,
-                  dialogTitle: 'Please select an output file:',
-                  bytes:
-                      (kIsWeb)
-                          ? ref
-                              .read(documentsProvider)
-                              .documents[documents.current]
-                              .bytes()
-                          : null,
-                );
-                if (!kIsWeb) {
+                },
+              ),
+            if (!kIsWeb)
+              MenuFlyoutItem(
+                text: const Text('Save as'),
+                onPressed: () async {
+                  String? path = await FilePicker.platform.saveFile(
+                    dialogTitle: 'Please select an output file:',
+                  );
                   ref
                       .read(documentsProvider)
                       .documents[documents.current]
                       .saveAs(path);
-                }
-              },
-            ),
+                },
+              ),
             if (!kIsWeb) MenuFlyoutSeparator(),
             if (!kIsWeb)
               MenuFlyoutItem(
