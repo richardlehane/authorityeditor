@@ -43,12 +43,22 @@ final class AuthorityCommand extends ConsumerWidget {
                         .path ==
                     null) {
                   String? path = await FilePicker.platform.saveFile(
+                    fileName: (kIsWeb) ? "document.rda" : null,
                     dialogTitle: 'Please select an output file:',
+                    bytes:
+                        (kIsWeb)
+                            ? ref
+                                .read(documentsProvider)
+                                .documents[documents.current]
+                                .bytes()
+                            : null,
                   );
-                  ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
-                      .saveAs(path);
+                  if (!kIsWeb) {
+                    ref
+                        .read(documentsProvider)
+                        .documents[documents.current]
+                        .saveAs(path);
+                  }
                 } else {
                   ref
                       .read(documentsProvider)
@@ -61,12 +71,22 @@ final class AuthorityCommand extends ConsumerWidget {
               text: const Text('Save as'),
               onPressed: () async {
                 String? path = await FilePicker.platform.saveFile(
+                  fileName: (kIsWeb) ? "document.rda" : null,
                   dialogTitle: 'Please select an output file:',
+                  bytes:
+                      (kIsWeb)
+                          ? ref
+                              .read(documentsProvider)
+                              .documents[documents.current]
+                              .bytes()
+                          : null,
                 );
-                ref
-                    .read(documentsProvider)
-                    .documents[documents.current]
-                    .saveAs(path);
+                if (!kIsWeb) {
+                  ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .saveAs(path);
+                }
               },
             ),
             if (!kIsWeb) MenuFlyoutSeparator(),

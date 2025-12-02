@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:fluent_ui/fluent_ui.dart' show TreeViewItem;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
+import 'dart:typed_data';
 import 'session.dart';
 import 'node.dart' show CurrentNode, NodeType;
 import 'tree.dart';
@@ -82,6 +85,10 @@ class Document {
     if (p == null) return false;
     path = p;
     return save();
+  }
+
+  Uint8List bytes() {
+    return utf8.encode(toString());
   }
 
   bool edit(String stylesheet) {
