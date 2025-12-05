@@ -1,5 +1,6 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'togglebutton.dart';
+import 'justifications.dart';
 
 class MarkupToolbar extends StatelessWidget {
   const MarkupToolbar({
@@ -8,14 +9,18 @@ class MarkupToolbar extends StatelessWidget {
     required this.listButtonState,
     required this.updateToggleButtonsStateOnButtonPressed,
     required this.updateListButtonStateOnButtonPressed,
+    this.appendJustification,
     this.compact = false,
+    this.justification = false,
   });
   final ToggleButtonsState toggleButtonsState;
   final bool listButtonState;
   final void Function(ToggleButtonsState, {String? url})
   updateToggleButtonsStateOnButtonPressed;
   final ValueChanged<bool> updateListButtonStateOnButtonPressed;
+  final void Function(String)? appendJustification;
   final bool compact;
+  final bool justification;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +81,23 @@ class MarkupToolbar extends StatelessWidget {
             ),
           ),
         ),
+        if (justification)
+          Padding(
+            padding: EdgeInsets.fromLTRB(5.0, 0, 0, 5.0),
+            child: Button(
+              onPressed: () async {
+                final txt = await showStocks(context);
+                if (txt != null) {
+                  appendJustification!(txt);
+                }
+              },
+              child: MarkupButton(
+                "Stocks",
+                FluentIcons.library,
+                compact: compact,
+              ),
+            ),
+          ),
       ],
     );
   }

@@ -1,11 +1,15 @@
 import 'dart:convert';
-
+import 'package:uuid/uuid.dart';
+import 'package:fast_base58/fast_base58.dart';
 import 'package:fluent_ui/fluent_ui.dart' show TreeViewItem;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
+import 'package:path/path.dart' as p;
 import 'dart:typed_data';
 import 'session.dart';
 import 'node.dart' show CurrentNode, NodeType;
 import 'tree.dart';
+
+final uuid = Uuid();
 
 enum View {
   edit,
@@ -95,7 +99,12 @@ class Document {
     return Session().edit(sessionIndex, stylesheet);
   }
 
-  void transform(String stylesheet, String outpath) {}
+  String transform(String stylesheet, String extension) {
+    final filename = Base58Encode(uuid.v1obj().toBytes());
+    final outFile = p.join(outputDir, "$filename.$extension");
+    Session().transform(sessionIndex, stylesheet, outFile);
+    return outFile;
+  }
 
   CurrentNode current() {
     return CurrentNode(sessionIndex, mutation, selected);

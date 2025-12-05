@@ -24,18 +24,34 @@ class TermView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentNode = ref.watch(nodeProvider);
+    final updated = currentNode.get("update");
     return SingleChildScrollView(
       child: Container(
         color: Colors.grey[10],
         child: Column(
           children: [
-            Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Text(
-                  "Term",
-                  style: FluentTheme.of(context).typography.subtitle,
-                ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Term",
+                        style: FluentTheme.of(context).typography.subtitle,
+                      ),
+                    ),
+                  ),
+                  (updated == null)
+                      ? SizedBox(width: 94.0)
+                      : Text(
+                        'Updated: $updated',
+                        style: TextStyle(
+                          color: Colors.grey[90],
+                          fontSize: 10.0,
+                        ),
+                      ),
+                ],
               ),
             ),
             Row(

@@ -1,7 +1,7 @@
 import 'dart:ffi';
 import 'package:ffi/ffi.dart';
 import 'dart:typed_data';
-import 'dart:io' show Platform;
+import 'dart:io' show Platform, Directory;
 import 'package:path/path.dart' as path;
 import 'package:file_picker/file_picker.dart' show PlatformFile;
 import 'package:xml/xml.dart' show XmlElement;
@@ -10,6 +10,9 @@ import '../../authority.dart'
 import 'paragraph.dart';
 import 'bindings.dart';
 import 'tree.dart';
+
+// this dir is created and cleared in main
+final outputDir = path.join(Directory.systemTemp.path, "AuthorityEditor");
 
 final stylesheetsDir = path.join(
   path.dirname(Platform.resolvedExecutable),

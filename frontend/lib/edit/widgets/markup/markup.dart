@@ -8,7 +8,14 @@ class Markup extends StatefulWidget {
   final List<XmlElement>? paras;
   final Function(List<XmlElement>)? cb;
   final double height;
-  const Markup({super.key, this.paras, this.cb, this.height = 150.0});
+  final bool justification;
+  const Markup({
+    super.key,
+    this.paras,
+    this.cb,
+    this.height = 150.0,
+    this.justification = false,
+  });
 
   @override
   State<Markup> createState() => _MarkupState();
@@ -52,6 +59,13 @@ class _MarkupState extends State<Markup> {
     }
   }
 
+  void appendStocks(String txt) {
+    setState(() {
+      markupTextEditingController.append(txt);
+      focusNode.requestFocus();
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -87,7 +101,9 @@ class _MarkupState extends State<Markup> {
                 updateToggleButtonsStateOnButtonPressed,
             updateListButtonStateOnButtonPressed:
                 updateListButtonStateOnButtonPressed,
+            appendJustification: widget.justification ? appendStocks : null,
             compact: widget.height < 150.0 ? true : false,
+            justification: widget.justification,
           ),
           SizedBox(
             height: widget.height,

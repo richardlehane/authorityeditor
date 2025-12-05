@@ -1,6 +1,6 @@
 import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/edit/widgets/markup/markup.dart';
-import 'package:authorityeditor/edit/widgets/simple.dart';
+import 'package:authorityeditor/edit/widgets/context_title.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/multi/source.dart';
@@ -56,10 +56,7 @@ class ContextView extends ConsumerWidget {
                   flex: 3,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                    child: SimpleText(
-                      label: "Context Title",
-                      name: "ContextTitle",
-                    ),
+                    child: ContextTitle(),
                   ),
                 ),
               ],

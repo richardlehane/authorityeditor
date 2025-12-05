@@ -661,10 +661,10 @@ test "empty" {
 test "load" {
     const session = try Session.init(testing.allocator);
     defer session.deinit();
-    const doc = try Document.load(session, "../data/test.xml");
+    const doc = try Document.load(session, "../data/SRNSW_example.xml");
     defer doc.deinit();
     try doc.refreshTree();
-    try testing.expectEqual(doc.tree_menu.items.len, 28);
+    try testing.expectEqual(doc.tree_menu.items.len, 293);
 }
 
 test "toStr" {
@@ -691,7 +691,7 @@ test "transform" {
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
-    doc.transform("../data/stylesheets/word_approved_authority.xsl", "word.xml");
+    doc.transform("../frontend/assets/stylesheets/word_approved_authority.xsl", "word.xml");
     //const stat = try std.fs.cwd().statFile("preview.html");
     // try testing.expect(stat.size == 2025);
     try std.fs.cwd().deleteFile("word.xml");
@@ -704,7 +704,7 @@ test "edit" {
     defer doc.deinit();
     doc.setCurrent(.Authority, 0);
     try testing.expectEqual(doc.multiLen("Comment"), 1);
-    try testing.expect(!doc.edit("../data/stylesheets/edit_clear_comments.xsl"));
+    try testing.expect(!doc.edit("../frontend/assets/stylesheets/edit_clear_comments.xsl"));
     try testing.expectEqual(doc.multiLen("Comment"), 0);
 }
 

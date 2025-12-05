@@ -15,18 +15,34 @@ class ClassView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final node = ref.watch(nodeProvider);
+    final updated = node.get("update");
     return SingleChildScrollView(
       child: Container(
         color: Colors.grey[10],
         child: Column(
           children: [
-            Center(
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Text(
-                  "Class",
-                  style: FluentTheme.of(context).typography.subtitle,
-                ),
+            Padding(
+              padding: EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Class",
+                        style: FluentTheme.of(context).typography.subtitle,
+                      ),
+                    ),
+                  ),
+                  (updated == null)
+                      ? SizedBox(width: 94.0)
+                      : Text(
+                        'Updated: $updated',
+                        style: TextStyle(
+                          color: Colors.grey[90],
+                          fontSize: 10.0,
+                        ),
+                      ),
+                ],
               ),
             ),
             NodeTitle(term: false),
@@ -51,6 +67,7 @@ class ClassView extends ConsumerWidget {
                   key: key,
                   paras: node.getParagraphs("Justification"),
                   cb: (paras) => node.setParagraphs("Justification", paras),
+                  justification: true,
                 ),
               ),
             ),
@@ -89,13 +106,8 @@ class ClassView extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(
-              height: 350.0,
-              child: Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Comments(key: key),
-              ),
-            ),
+
+            Padding(padding: EdgeInsets.all(10.0), child: Comments(key: key)),
           ],
         ),
       ),

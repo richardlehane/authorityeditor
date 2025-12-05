@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart' show ServicesBinding;
 import 'dart:ui' show AppExitType;
+import 'package:open_file/open_file.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 
 final class AuthorityCommand extends ConsumerWidget {
@@ -145,8 +146,6 @@ final class AuthorityCommand extends ConsumerWidget {
           MenuBarItem(
             title: 'Edit',
             items: [
-              //  MenuFlyoutItem(text: const Text('Undo'), onPressed: () {}),
-              //  MenuFlyoutItem(text: const Text('Redo'), onPressed: () {}),
               MenuFlyoutItem(
                 text: const Text('Capitalize functions'),
                 onPressed: () {
@@ -216,24 +215,96 @@ final class AuthorityCommand extends ConsumerWidget {
           MenuBarItem(
             title: 'Preview',
             items: [
-              MenuFlyoutItem(text: const Text('Authority'), onPressed: () {}),
-              MenuFlyoutItem(text: const Text('Comments'), onPressed: () {}),
+              MenuFlyoutItem(
+                text: const Text('Authority'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_authority.xsl", "html");
+                  OpenFile.open(filePath);
+                },
+              ),
+              MenuFlyoutItem(
+                text: const Text('Comments'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_comments.xsl", "html");
+                  OpenFile.open(filePath);
+                },
+              ),
               MenuFlyoutItem(
                 text: const Text('Broken links'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_broken_links.xsl", "html");
+                  OpenFile.open(filePath);
+                },
               ),
-              MenuFlyoutItem(text: const Text('Index'), onPressed: () {}),
+              MenuFlyoutItem(
+                text: const Text('Index'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_index.xsl", "html");
+                  OpenFile.open(filePath);
+                },
+              ),
               MenuFlyoutItem(
                 text: const Text('Linking table'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_liinking_table.xsl", "html");
+                  OpenFile.open(filePath);
+                },
               ),
               MenuFlyoutItem(
                 text: const Text('Retention order'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_retention_order.xsl", "html");
+                  OpenFile.open(filePath);
+                },
               ),
-              MenuFlyoutItem(text: const Text('Recent'), onPressed: () {}),
-              MenuFlyoutItem(text: const Text('Summary'), onPressed: () {}),
-              MenuFlyoutItem(text: const Text('Supporting'), onPressed: () {}),
+              MenuFlyoutItem(
+                text: const Text('Recent'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_recent.xsl", "html");
+                  OpenFile.open(filePath);
+                },
+              ),
+              MenuFlyoutItem(
+                text: const Text('Summary'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_summary.xsl", "html");
+                  OpenFile.open(filePath);
+                },
+              ),
+              MenuFlyoutItem(
+                text: const Text('Supporting'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("preview_supporting.xsl", "html");
+                  OpenFile.open(filePath);
+                },
+              ),
             ],
           ),
         if (!kIsWeb)
@@ -243,53 +314,91 @@ final class AuthorityCommand extends ConsumerWidget {
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Appraisal report'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("word_appraisal_report.xsl", "doc");
+                  OpenFile.open(filePath);
+                },
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Appraisal report pt 1'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("word_appraisal_report_pt1.xsl", "doc");
+                  OpenFile.open(filePath);
+                },
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Approved authority'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("word_approved_authority.xsl", "doc");
+                  OpenFile.open(filePath);
+                },
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Draft authority'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("word_draft_authority.xsl", "doc");
+                  OpenFile.open(filePath);
+                },
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Comments'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("word_comments.xsl", "doc");
+                  OpenFile.open(filePath);
+                },
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Consultation'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("word_consultation.xsl", "doc");
+                  OpenFile.open(filePath);
+                },
               ),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Index'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("word_index.xsl", "doc");
+                  OpenFile.open(filePath);
+                },
               ),
               const MenuFlyoutSeparator(),
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.excel_document),
-                text: const Text('Clean agency'),
-                onPressed: () {},
-              ),
-              MenuFlyoutItem(
-                leading: const Icon(FluentIcons.excel_document),
-                text: const Text('Clean publication'),
-                onPressed: () {},
-              ),
-              MenuFlyoutItem(
-                leading: const Icon(FluentIcons.excel_document),
                 text: const Text('Tab separated'),
-                onPressed: () {},
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .transform("export_tsv.xsl", "tsv");
+                  OpenFile.open(filePath, type: "text/tab-separated-values");
+                },
               ),
             ],
           ),

@@ -111,6 +111,10 @@ class MarkupTextEditingController extends TextEditingController {
     return false;
   }
 
+  void append(String txt) {
+    text += txt;
+  }
+
   void updateSelection(ToggleButtonsState alter, {String? url}) {
     buttonsState = alter;
     int start = selection.start;

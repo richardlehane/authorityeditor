@@ -25,6 +25,8 @@ const String _template = '''
 </Authority>
 ''';
 
+const outputDir = "";
+
 const String _ns = "http://www.records.nsw.gov.au/schemas/RDA";
 
 bool _isAttr(String name) => name[0] == name[0].toLowerCase();
