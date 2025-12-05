@@ -2,6 +2,10 @@
 
 Application to create and edit retention and diposal authorities in XML.
 
+Implements State Records NSW's [xml schema for retention and disposal authorities](https://www.nsw.gov.au/nsw-government/recordkeeping/sentence-and-dispose/xml-schema).
+
+# Install or try online
+
 https://authorityeditor.com
 
 # License
