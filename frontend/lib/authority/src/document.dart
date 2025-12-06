@@ -95,8 +95,11 @@ class Document {
     return utf8.encode(toString());
   }
 
-  bool edit(String stylesheet) {
-    return Session().edit(sessionIndex, stylesheet);
+  void edit(String stylesheet) {
+    final changed = Session().edit(sessionIndex, stylesheet);
+    if (changed) selected = (NodeType.termType, 0);
+    treeItems = treeFrom(Session().tree(sessionIndex, Counter()), selected);
+    mutation++;
   }
 
   String transform(String stylesheet, String extension) {

@@ -5,7 +5,7 @@ import 'multi.dart';
 import 'combo.dart';
 import "../markup/markup.dart";
 
-const List<String> _disposalActions = [
+const List<String> disposalActions = [
   "",
   "Destroy",
   "Required as State archives",
@@ -170,7 +170,7 @@ List<Widget> _disposalChildren(
                         .multiGet(element, idx, "DisposalAction") ??
                     "",
         items:
-            _disposalActions
+            disposalActions
                 .map((s) => ComboBoxItem(value: s, child: Text(s)))
                 .toList(),
         onChanged: (d) {

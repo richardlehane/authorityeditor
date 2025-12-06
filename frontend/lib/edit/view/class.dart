@@ -45,7 +45,7 @@ class ClassView extends ConsumerWidget {
                 ],
               ),
             ),
-            NodeTitle(term: false),
+            NodeTitle(key: key, term: false),
             Padding(
               padding: EdgeInsets.all(10.0),
               child: InfoLabel(

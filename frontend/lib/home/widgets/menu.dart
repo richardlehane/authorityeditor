@@ -6,6 +6,7 @@ import 'package:flutter/services.dart' show ServicesBinding;
 import 'dart:ui' show AppExitType;
 import 'package:open_file/open_file.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
+import 'package:authorityeditor/authority/authority.dart';
 
 final class AuthorityCommand extends ConsumerWidget {
   const AuthorityCommand({super.key});
@@ -97,7 +98,6 @@ final class AuthorityCommand extends ConsumerWidget {
               ),
           ],
         ),
-
         MenuBarItem(
           title: 'View',
           items: [
@@ -140,6 +140,17 @@ final class AuthorityCommand extends ConsumerWidget {
                   (value) =>
                       ref.read(documentsProvider.notifier).viewChanged(value),
             ),
+            const MenuFlyoutSeparator(),
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.search),
+              text: const Text('Apply filter'),
+              onPressed: () async {
+                final query = await queryDialog(context);
+                if (query != null) {
+                  debugPrint(query.toString());
+                }
+              },
+            ),
           ],
         ),
         if (!kIsWeb)
@@ -150,8 +161,7 @@ final class AuthorityCommand extends ConsumerWidget {
                 text: const Text('Capitalize functions'),
                 onPressed: () {
                   ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
+                      .read(documentsProvider.notifier)
                       .edit("edit_capitalize.xsl");
                 },
               ),
@@ -159,8 +169,7 @@ final class AuthorityCommand extends ConsumerWidget {
                 text: const Text('Number classes'),
                 onPressed: () {
                   ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
+                      .read(documentsProvider.notifier)
                       .edit("edit_numberitems.xsl");
                 },
               ),
@@ -168,8 +177,7 @@ final class AuthorityCommand extends ConsumerWidget {
                 text: const Text('Sort see references'),
                 onPressed: () {
                   ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
+                      .read(documentsProvider.notifier)
                       .edit("edit_sortseerefs.xsl");
                 },
               ),
@@ -177,8 +185,7 @@ final class AuthorityCommand extends ConsumerWidget {
                 text: const Text('Sort terms'),
                 onPressed: () {
                   ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
+                      .read(documentsProvider.notifier)
                       .edit("edit_sortterms.xsl");
                 },
               ),
@@ -186,8 +193,7 @@ final class AuthorityCommand extends ConsumerWidget {
                 text: const Text('Clear comments (all)'),
                 onPressed: () {
                   ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
+                      .read(documentsProvider.notifier)
                       .edit("edit_clear_comments.xsl");
                 },
               ),
@@ -195,8 +201,7 @@ final class AuthorityCommand extends ConsumerWidget {
                 text: const Text('Clear comments (agency)'),
                 onPressed: () {
                   ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
+                      .read(documentsProvider.notifier)
                       .edit("edit_clearagency.xsl");
                 },
               ),
@@ -204,8 +209,7 @@ final class AuthorityCommand extends ConsumerWidget {
                 text: const Text('Clear comments (SRNSW)'),
                 onPressed: () {
                   ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
+                      .read(documentsProvider.notifier)
                       .edit("edit_clearsrnsw.xsl");
                 },
               ),
@@ -261,7 +265,7 @@ final class AuthorityCommand extends ConsumerWidget {
                   final filePath = ref
                       .read(documentsProvider)
                       .documents[documents.current]
-                      .transform("preview_liinking_table.xsl", "html");
+                      .transform("preview_linking_table.xsl", "html");
                   OpenFile.open(filePath);
                 },
               ),

@@ -14,7 +14,7 @@ class EditPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentnode = ref.watch(nodeProvider);
-    final key = ValueKey(currentnode.ref);
+    final key = ValueKey(currentnode.key);
     return Row(
       children: [
         // Left column with tree

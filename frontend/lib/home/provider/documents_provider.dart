@@ -42,6 +42,11 @@ class Documents extends _$Documents {
     }
   }
 
+  void edit(String stylesheet) {
+    state.documents[state.current].edit(stylesheet);
+    ref.notifyListeners();
+  }
+
   void paneChanged(int pane) {
     state.current = pane;
     ref.notifyListeners();
