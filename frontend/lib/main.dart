@@ -1,11 +1,14 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:logging/logging.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import "package:flutter/services.dart";
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/home/view/home.dart';
 import 'package:authorityeditor/authority/authority.dart' show outputDir;
+
+final log = Logger('AuthorityEditor');
 
 void main() async {
   if (foundation.kIsWeb) {
@@ -16,7 +19,7 @@ void main() async {
     try {
       dir = await Directory(outputDir).create(recursive: true);
     } catch (e) {
-      print('Failed to open/create temp directory:\n $e');
+      log.severe('Failed to open/create temp directory:\n $e');
       exit(1);
     }
     // clear temp files, ignoring any errors

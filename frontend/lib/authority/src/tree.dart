@@ -15,6 +15,8 @@ class TreeNode {
 
   TreeNode(this.ref, this.itemno, this.title, this.children);
 
+  TreeNode.ref(this.ref);
+
   bool equals(TreeNode n) {
     if (ref != n.ref) return false;
     if (itemno != n.itemno) return false;
@@ -210,6 +212,15 @@ bool _treeContains(List<TreeViewItem> list, Ref ref) {
   return false;
 }
 
+TreeViewItem _copyItemWithoutChildren(TreeViewItem old) {
+  return TreeViewItem(
+    leading: old.leading,
+    content: old.content,
+    value: old.value,
+  );
+}
+
+// TODO: explore whether can just directly copy fields here, rather than recreating them??
 TreeViewItem _copyItemWithChildren(
   TreeViewItem old,
   List<TreeViewItem> list, {
@@ -412,7 +423,7 @@ TreeViewItem Function(int i) _relabelGenerator(
   };
 }
 
-// to do: implement!
+// TODO: implement!
 List<TreeViewItem> mutate(
   List<TreeViewItem> old,
   TreeOp op,
@@ -445,5 +456,19 @@ List<TreeViewItem> mutate(
         _treeContains(old, ref) ? old.length - 1 : old.length,
         _dropGenerator(old, ref, ctr!),
       );
+  }
+}
+
+List<TreeViewItem>? flatten(List<TreeViewItem>? tree) {
+  if (tree == null || tree.length < 3) return null;
+  final List<TreeViewItem> ret = [];
+  tree.getRange(2, tree.length).forEach((i) => _append(ret, i));
+  return ret;
+}
+
+void _append(List<TreeViewItem> ret, TreeViewItem item) {
+  ret.add(_copyItemWithoutChildren(item));
+  for (final i in item.children) {
+    _append(ret, i);
   }
 }

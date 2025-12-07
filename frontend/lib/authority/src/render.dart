@@ -56,6 +56,50 @@ mixin Render {
     return [_toSpan(0, id)];
   }
 
+  // string representation of a node: used in search.dart
+  String asText(NodeType nt) {
+    final buf = StringBuffer();
+    // title
+    final title = get(nt.toTitle());
+    if (title != null) buf.write(title);
+    // description
+    final desc = getParagraphs(nt.toDescription());
+    if (desc != null) _extractParaText(buf, desc);
+    // see text
+    final srs = multiLen("SeeReference");
+    for (var i = 0; i < srs; i++) {
+      final seetext = multiGet("SeeReference", i, "SeeText");
+      if (seetext != null) buf.write(seetext);
+    }
+    // only for classes
+    if (nt == NodeType.classType) {
+      // justification
+      final just = getParagraphs("Justification");
+      if (just != null) _extractParaText(buf, just);
+      // disposal
+      final ds = multiLen("Disposal");
+      for (var i = 0; i < ds; i++) {
+        final trigger = multiGet("Disposal", i, "DisposalTrigger");
+        if (trigger != null) buf.write(trigger);
+        final customAction = multiGetParagraphs("Disposal", i, "CustomAction");
+        if (customAction != null) _extractParaText(buf, customAction);
+      }
+    }
+    // comments
+    final cs = multiLen("Comment");
+    for (var i = 0; i < cs; i++) {
+      List<XmlElement>? content = multiGetParagraphs("Comment", i, null);
+      if (content != null) _extractParaText(buf, content);
+    }
+    // linked tos
+    final lts = multiLen("LinkedTo");
+    for (var i = 0; i < lts; i++) {
+      final content = multiGet("LinkedTo", i, null);
+      if (content != null) buf.write(content);
+    }
+    return buf.toString();
+  }
+
   List<TextSpan> linkedto(int index) {
     String? typ = multiGet("LinkedTo", index, "type");
     String? content = multiGet("LinkedTo", index, null);
@@ -397,6 +441,12 @@ mixin Render {
       action.insert(0, _toSpan(1, '$condition:\n'));
     }
     return action;
+  }
+}
+
+void _extractParaText(StringBuffer buf, List<XmlElement> paragraphs) {
+  for (var para in paragraphs) {
+    buf.write(para.innerText);
   }
 }
 

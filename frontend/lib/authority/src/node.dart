@@ -219,6 +219,16 @@ class CurrentNode with Render {
     return session << 56 | mutation << 40 | ref.$1.toInt() << 32 | ref.$2;
   }
 
+  DateTime? update() {
+    final u = get("update");
+    if (u == null) return null;
+    try {
+      return _format.parse(u);
+    } catch (_) {
+      return null;
+    }
+  }
+
   @override
   String? get(String name) {
     return Session().get(session, name);

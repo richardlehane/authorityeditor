@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:authorityeditor/authority/authority.dart'
     as authority
-    show Document, View;
+    show Document, View, Search;
 
 part 'documents_provider.g.dart';
 
@@ -50,6 +50,14 @@ class Documents extends _$Documents {
   void paneChanged(int pane) {
     state.current = pane;
     ref.notifyListeners();
+  }
+
+  void applyFilter(authority.Search search) {
+    final results = search.apply(state.documents[state.current]);
+    if (results != null && results.isNotEmpty) {
+      state.documents[state.current].treeItems = results;
+      ref.notifyListeners();
+    }
   }
 
   void viewChanged(String view) {

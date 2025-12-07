@@ -145,9 +145,10 @@ final class AuthorityCommand extends ConsumerWidget {
               leading: const Icon(FluentIcons.search),
               text: const Text('Apply filter'),
               onPressed: () async {
+                Navigator.of(context).pop();
                 final query = await queryDialog(context);
                 if (query != null) {
-                  debugPrint(query.toString());
+                  ref.read(documentsProvider.notifier).applyFilter(query);
                 }
               },
             ),
