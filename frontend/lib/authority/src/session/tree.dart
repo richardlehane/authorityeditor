@@ -14,6 +14,7 @@ class Index {
 }
 
 List<TreeNode> asTree(Uint8List list, Counter ctr) {
+  if (list.isEmpty) return [];
   ctr.next(NodeType.rootType);
   final int contextCount = list[0];
   final int tcCount = list[1]; // num of terms/classes

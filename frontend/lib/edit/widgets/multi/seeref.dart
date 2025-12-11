@@ -16,7 +16,8 @@ class SeeReference extends ConsumerWidget {
   static const viewHeight = 30.0;
   static const formHeight = 64.0;
   static const element = "SeeReference";
-  const SeeReference({super.key});
+  final String label;
+  const SeeReference({super.key, this.label = "See references"});
 
   Widget Function(BuildContext, WidgetRef, int flags, Function(int) cb)
   makeForm(int idx, int len) {
@@ -145,7 +146,7 @@ class SeeReference extends ConsumerWidget {
     return SizedBox(
       height: height,
       child: InfoLabel(
-        label: "See references",
+        label: label,
         child: ListView.builder(
           itemCount: l + 1, // add one for the plus button
           itemBuilder: (BuildContext context, int index) {

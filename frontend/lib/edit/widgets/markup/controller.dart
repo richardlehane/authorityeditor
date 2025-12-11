@@ -82,6 +82,9 @@ class MarkupTextEditingController extends TextEditingController {
   ToggleButtonsState _toggleButtonsActive() {
     if (selection.isCollapsed) {
       if (selection.start < 0) return buttonsState;
+      if (selection.start == text.characters.length && selection.start > 0) {
+        return fromInt(_markup[selection.start - 1]);
+      }
       return selection.start < text.characters.length
           ? fromInt(_markup[selection.start])
           : buttonsState;
@@ -113,6 +116,7 @@ class MarkupTextEditingController extends TextEditingController {
 
   void append(String txt) {
     text += txt;
+    _syncMarkupLength();
   }
 
   void updateSelection(ToggleButtonsState alter, {String? url}) {

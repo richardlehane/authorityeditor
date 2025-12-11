@@ -14,77 +14,62 @@ class ContextView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentNode = ref.watch(nodeProvider);
-    return SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        child: Column(
+    return Column(
+      children: [
+        Center(
+          child: Text(
+            "Context",
+            style: FluentTheme.of(context).typography.subtitle,
+          ),
+        ),
+        Row(
           children: [
-            Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Text(
-                  "Context",
-                  style: FluentTheme.of(context).typography.subtitle,
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(10.0, 10.0, 5.0, 10.0),
-                    child: InfoLabel(
-                      label: 'Type',
-                      child: EditableComboBox<String>(
-                        value: currentNode.get("type") ?? "",
-                        items:
-                            contextTypes.map((e) {
-                              return ComboBoxItem(value: e, child: Text(e));
-                            }).toList(),
-                        onChanged:
-                            (String? val) => currentNode.set("type", val),
-                        onFieldSubmitted: (text) {
-                          currentNode.set("type", text);
-                          return text;
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 3,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                    child: ContextTitle(),
-                  ),
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.all(10.0),
+            Expanded(
+              flex: 1,
               child: InfoLabel(
-                label: 'Description',
-                child: Markup(
-                  height: 350.0,
-                  paras: currentNode.getParagraphs("ContextContent"),
-                  cb:
-                      (paras) =>
-                          currentNode.setParagraphs("ContextContent", paras),
+                label: 'Type',
+                child: EditableComboBox<String>(
+                  value: currentNode.get("type") ?? "",
+                  items:
+                      contextTypes.map((e) {
+                        return ComboBoxItem(value: e, child: Text(e));
+                      }).toList(),
+                  onChanged: (String? val) => currentNode.set("type", val),
+                  onFieldSubmitted: (text) {
+                    currentNode.set("type", text);
+                    return text;
+                  },
                 ),
               ),
             ),
-            SizedBox(
-              height: 350.0,
-              child: Padding(padding: EdgeInsets.all(10.0), child: Source()),
-            ),
-            SizedBox(
-              height: 350.0,
-              child: Padding(padding: EdgeInsets.all(10.0), child: Comments()),
+            Expanded(
+              flex: 3,
+              child: Padding(
+                padding: EdgeInsets.only(left: 5.0),
+                child: ContextTitle(),
+              ),
             ),
           ],
         ),
-      ),
+        Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: InfoLabel(
+            label: 'Description',
+            child: Markup(
+              height: 350.0,
+              paras: currentNode.getParagraphs("ContextContent"),
+              cb: (paras) => currentNode.setParagraphs("ContextContent", paras),
+            ),
+          ),
+        ),
+
+        Padding(
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          child: Source(),
+        ),
+        const Divider(),
+        Padding(padding: EdgeInsets.only(top: 10.0), child: Comments()),
+      ],
     );
   }
 }

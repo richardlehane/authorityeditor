@@ -26,12 +26,22 @@ class EditPage extends ConsumerWidget {
         ),
         // Right column with content
         Expanded(
-          child: switch (currentnode.typ()) {
-            NodeType.classType => ClassView(key: key),
-            NodeType.termType => TermView(key: key),
-            NodeType.contextType => ContextView(key: key),
-            _ => DetailsView(),
-          },
+          child: Container(
+            color: Colors.grey[10],
+            alignment: Alignment.topCenter,
+
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsetsGeometry.all(15.0),
+                child: switch (currentnode.typ()) {
+                  NodeType.classType => ClassView(key: key),
+                  NodeType.termType => TermView(key: key),
+                  NodeType.contextType => ContextView(key: key),
+                  _ => DetailsView(),
+                },
+              ),
+            ),
+          ),
         ),
       ],
     );

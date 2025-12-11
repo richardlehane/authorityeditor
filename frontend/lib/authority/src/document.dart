@@ -8,6 +8,7 @@ import 'dart:typed_data';
 import 'session.dart';
 import 'node.dart' show CurrentNode, NodeType;
 import 'tree.dart';
+import 'search.dart';
 
 final uuid = Uuid();
 
@@ -33,6 +34,7 @@ class Document {
   String title;
   String? path;
   List<TreeViewItem>? treeItems;
+  Search? query;
   int sessionIndex;
   int mutation;
   Ref selected;
@@ -95,10 +97,15 @@ class Document {
     return utf8.encode(toString());
   }
 
+  void rebuildTree() {
+    treeItems = treeFrom(Session().tree(sessionIndex, Counter()), selected);
+  }
+
   void edit(String stylesheet) {
     final changed = Session().edit(sessionIndex, stylesheet);
     if (changed) selected = (NodeType.termType, 0);
-    treeItems = treeFrom(Session().tree(sessionIndex, Counter()), selected);
+    query = null; // make sure no filter
+    rebuildTree();
     mutation++;
   }
 

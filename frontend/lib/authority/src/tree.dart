@@ -95,9 +95,12 @@ void markSelected(List<TreeViewItem>? tree, Ref ref) {
 
 int termClassLen(List<TreeViewItem>? tree) {
   if (tree == null) return 0;
-  if (tree.length < 3) return 0;
   var ret = 0;
-  tree.getRange(2, tree.length).forEach((i) => ret += _count(i));
+  for (final item in tree) {
+    if ((item.value.$1 as NodeType).like(NodeType.termType)) {
+      ret += _count(item);
+    }
+  }
   return ret;
 }
 
@@ -462,7 +465,11 @@ List<TreeViewItem> mutate(
 List<TreeViewItem>? flatten(List<TreeViewItem>? tree) {
   if (tree == null || tree.length < 3) return null;
   final List<TreeViewItem> ret = [];
-  tree.getRange(2, tree.length).forEach((i) => _append(ret, i));
+  for (final item in tree) {
+    if ((item.value.$1 as NodeType).like(NodeType.termType)) {
+      _append(ret, item);
+    }
+  }
   return ret;
 }
 
@@ -470,5 +477,23 @@ void _append(List<TreeViewItem> ret, TreeViewItem item) {
   ret.add(_copyItemWithoutChildren(item));
   for (final i in item.children) {
     _append(ret, i);
+  }
+}
+
+List<Ref> getDescendants(List<TreeViewItem>? tree, Ref ref) {
+  final List<Ref> ret = [];
+  final item = treeNth(ref, tree);
+  if (item != null) {
+    for (final item in item.children) {
+      _appendRef(ret, item);
+    }
+  }
+  return ret;
+}
+
+void _appendRef(List<Ref> ret, TreeViewItem item) {
+  ret.add(item.value as Ref);
+  for (final i in item.children) {
+    _appendRef(ret, i);
   }
 }

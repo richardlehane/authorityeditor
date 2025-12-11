@@ -58,23 +58,20 @@ class _NodeTitleState extends ConsumerState<NodeTitle> {
       },
       child: Row(
         children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
-              child: InfoLabel(
-                label: "Number",
-                child: TextBox(
-                  placeholder: "0.0.0",
-                  controller: itemnoController,
-                  onChanged: (value) => itemnoChanged = true,
-                ),
+          SizedBox(
+            width: 100.0,
+            child: InfoLabel(
+              label: "Number",
+              child: TextBox(
+                placeholder: "0.0.0",
+                controller: itemnoController,
+                onChanged: (value) => itemnoChanged = true,
               ),
             ),
           ),
           Expanded(
-            flex: 2,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(5.0, 10.0, 15.0, 10.0),
+              padding: EdgeInsets.only(left: 5.0),
               child: InfoLabel(
                 label: "Title",
                 child: TextBox(

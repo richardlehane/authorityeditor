@@ -12,45 +12,45 @@ class DetailsView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return SingleChildScrollView(
-      child: Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
-                child: Text(
-                  "Authority details",
-                  style: FluentTheme.of(context).typography.subtitle,
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                    child: SimpleText(label: "Title", name: "AuthorityTitle"),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(5.0, 10.0, 10.0, 10.0),
-                    child: SimpleText(label: "Scope", name: "Scope"),
-                  ),
-                ),
-                DateRange(),
-              ],
-            ),
-            Padding(padding: EdgeInsets.all(10.0), child: Ids()),
-            Padding(padding: EdgeInsets.all(10.0), child: Status()),
-            Padding(padding: EdgeInsets.all(10.0), child: LinkedTo()),
-            const Divider(),
-            Padding(padding: EdgeInsets.all(10.0), child: Comments()),
-          ],
+    return Column(
+      children: [
+        Center(
+          child: Text(
+            "Authority details",
+            style: FluentTheme.of(context).typography.subtitle,
+          ),
         ),
-      ),
+
+        Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: SimpleText(label: "Title", name: "AuthorityTitle"),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 10.0),
+          child: Row(
+            children: [
+              Expanded(child: SimpleText(label: "Scope", name: "Scope")),
+              Padding(padding: EdgeInsets.only(left: 5.0), child: DateRange()),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          child: Ids(),
+        ),
+        const Divider(),
+        Padding(
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          child: Status(),
+        ),
+        const Divider(),
+        Padding(
+          padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+          child: LinkedTo(),
+        ),
+        const Divider(),
+        Padding(padding: EdgeInsets.only(top: 10.0), child: Comments()),
+      ],
     );
   }
 }

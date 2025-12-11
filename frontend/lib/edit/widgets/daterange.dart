@@ -11,11 +11,11 @@ class DateRange extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      //mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           width: 100.0,
-          padding: EdgeInsets.fromLTRB(5.0, 10.0, 5.0, 10.0),
+          padding: EdgeInsets.only(right: 5.0),
           child: InfoLabel(
             label: "Start date",
             child: BaseText(
@@ -28,10 +28,10 @@ class DateRange extends ConsumerWidget {
             ),
           ),
         ),
-        InfoLabel(label: "circa", child: CircaStateful(dt: DateType.start)),
+        InfoLabel(label: "c.", child: CircaStateful(dt: DateType.start)),
         Container(
           width: 100.0,
-          padding: EdgeInsets.fromLTRB(5.0, 10.0, 15.0, 10.0),
+          padding: EdgeInsets.only(left: 5.0, right: 5.0),
           child: InfoLabel(
             label: "End date",
             child: BaseText(
@@ -44,13 +44,7 @@ class DateRange extends ConsumerWidget {
             ),
           ),
         ),
-        Padding(
-          padding: EdgeInsets.only(right: 10.0),
-          child: InfoLabel(
-            label: "circa",
-            child: CircaStateful(dt: DateType.end),
-          ),
-        ),
+        InfoLabel(label: "c.", child: CircaStateful(dt: DateType.end)),
       ],
     );
   }

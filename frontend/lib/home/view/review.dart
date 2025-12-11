@@ -9,10 +9,12 @@ class ReviewPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double height = MediaQuery.sizeOf(context).height - 108.5;
     final documents = ref.watch(documentsProvider);
     final tree = documents.documents[documents.current].treeItems;
     final len = termClassLen(tree);
+    final filtered = documents.documents[documents.current].query != null;
+    final double height =
+        MediaQuery.sizeOf(context).height - ((filtered) ? 156.5 : 108.5);
     return Column(
       children: [
         Container(
@@ -73,7 +75,10 @@ class ReviewPage extends ConsumerWidget {
           child: ListView.builder(
             itemCount: len,
             itemBuilder: (context, index) {
-              final ti = treeNth((NodeType.termType, index), tree);
+              final ti =
+                  filtered
+                      ? tree![index] // can't be null if we have an index
+                      : treeNth((NodeType.termType, index), tree);
               if (ti == null) return Row();
               final node = documents.documents[documents.current].asCurrent(
                 ti.value,

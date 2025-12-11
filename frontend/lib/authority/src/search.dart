@@ -96,6 +96,15 @@ enum MatchType {
   }
 }
 
+// bool equals(String a, String b) {
+
+// }
+
+bool _equals(bool caseSensitive, String a, String? b) {
+  if (caseSensitive || b == null) return a == b;
+  return a.toLowerCase() == b.toLowerCase();
+}
+
 class Match {
   MatchType typ = MatchType.textContains;
   dynamic value;
@@ -110,7 +119,7 @@ class Match {
     };
   }
 
-  bool apply(CurrentNode node) {
+  bool apply(CurrentNode node, {bool caseSensitive = false}) {
     // some tests will be true without checking node contents
     if (value == null || value == "") {
       switch (typ) {
@@ -126,15 +135,15 @@ class Match {
     // now let's test
     switch (typ) {
       case MatchType.titleEquals:
-        return value == node.get(nt.toTitle());
+        return _equals(caseSensitive, value, node.get(nt.toTitle()));
       case MatchType.titleContains:
-        return _contains(value, node.get(nt.toTitle()));
+        return _contains(caseSensitive, value, node.get(nt.toTitle()));
       case MatchType.itemNoEquals:
-        return value == node.get("itemno");
+        return _equals(caseSensitive, value, node.get("itemno"));
       case MatchType.itemNoContains:
-        return _contains(value, node.get("itemno"));
+        return _contains(caseSensitive, value, node.get("itemno"));
       case MatchType.textContains:
-        return _contains(value, node.asText(nt));
+        return _contains(caseSensitive, value, node.asText(nt));
       case MatchType.updatedSince:
         final dt = node.update();
         if (dt == null) return false;
@@ -169,7 +178,11 @@ class Match {
       case MatchType.hasCommentsAuthor:
         final cs = node.multiLen("Comment");
         for (var i = 0; i < cs; i++) {
-          if (node.multiGet("Comment", i, "author") == value) {
+          if (_equals(
+            caseSensitive,
+            value,
+            node.multiGet("Comment", i, "author"),
+          )) {
             return true;
           }
         }
@@ -195,18 +208,29 @@ List<int> retentions(CurrentNode node) {
   return ret;
 }
 
-bool _contains(String? needle, String? haystack) {
+bool _contains(bool caseSensitive, String? needle, String? haystack) {
   if (needle == null || needle.isEmpty) return true;
   if (haystack == null || haystack.isEmpty) return false;
-  return haystack.contains(needle);
+  if (caseSensitive) return haystack.contains(needle);
+  return haystack.toLowerCase().contains(needle.toLowerCase());
 }
 
 class Search {
+  bool allTabs;
   NodeType? scope;
   bool and;
+  bool descendants;
+  bool caseSensitive;
   List<Match> matches;
 
-  Search(this.matches, [this.and = true, this.scope]);
+  Search(
+    this.matches, [
+    this.and = false,
+    this.allTabs = false,
+    this.descendants = false,
+    this.caseSensitive = false,
+    this.scope,
+  ]);
 
   @override
   String toString() {
@@ -240,15 +264,26 @@ class Search {
     final candidates = flatten(doc.treeItems);
     if (candidates == null) return null;
     final List<TreeViewItem> results = [];
+    List<Ref>? desc;
     for (final candidate in candidates) {
       if (scope != null) {
         if (scope != candidate.value.$1) continue; // wrong node type
       }
+      if (desc != null) {
+        if (desc.contains(candidate.value)) {
+          results.add(candidate);
+          continue;
+        }
+        desc = null;
+      }
       bool allMatched = true;
       final n = doc.asCurrent(candidate.value);
       for (final match in matches) {
-        if (match.apply(n)) {
+        if (match.apply(n, caseSensitive: caseSensitive)) {
           if (!and) {
+            if (descendants && candidate.value.$1 == NodeType.termType) {
+              desc = getDescendants(doc.treeItems, candidate.value);
+            }
             results.add(candidate);
             break;
           }
@@ -257,7 +292,12 @@ class Search {
           if (and) break;
         }
       }
-      if (and && allMatched) results.add(candidate);
+      if (and && allMatched) {
+        if (descendants && candidate.value.$1 == NodeType.termType) {
+          desc = getDescendants(doc.treeItems, candidate.value);
+        }
+        results.add(candidate);
+      }
     }
     return results;
   }
@@ -281,7 +321,7 @@ Future<Search?> queryDialog(BuildContext context) async {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(right: 90.0),
+                        padding: EdgeInsets.only(right: 70.0),
                         child: InfoLabel(
                           label: "Scope",
                           child: Column(
@@ -331,13 +371,58 @@ Future<Search?> queryDialog(BuildContext context) async {
                           ),
                         ),
                       ),
-                      InfoLabel(
-                        label: "Boolean",
-                        child: ToggleSwitch(
-                          checked: query.and,
-                          onChanged: (v) => setState(() => query.and = v),
-                          content: Text(query.and ? 'And' : 'Or'),
-                        ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: ToggleSwitch(
+                              checked: query.allTabs,
+                              onChanged:
+                                  (v) => setState(() => query.allTabs = v),
+                              content: Text(
+                                query.allTabs ? 'All tabs' : 'This tab',
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: ToggleSwitch(
+                              checked: query.and,
+                              onChanged: (v) => setState(() => query.and = v),
+                              content: Text(
+                                query.and ? "'And' join" : "'Or' join",
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: ToggleSwitch(
+                              checked: query.caseSensitive,
+                              onChanged:
+                                  (v) =>
+                                      setState(() => query.caseSensitive = v),
+                              content: Text(
+                                query.caseSensitive
+                                    ? 'Case sensitive'
+                                    : 'Case insensitive',
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(2.0),
+                            child: ToggleSwitch(
+                              checked: query.descendants,
+                              onChanged:
+                                  (v) => setState(() => query.descendants = v),
+                              content: Text(
+                                query.descendants
+                                    ? 'Matches and descendants'
+                                    : 'Matches only',
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -346,7 +431,7 @@ Future<Search?> queryDialog(BuildContext context) async {
                     child: InfoLabel(
                       label: "Query",
                       child: SizedBox(
-                        height: 188.0,
+                        height: 187.0,
                         child: ListView(
                           children: List.generate(query.matches.length, (
                             index,

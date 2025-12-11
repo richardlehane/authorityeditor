@@ -29,6 +29,8 @@ final class AuthorityCommand extends ConsumerWidget {
               text: const Text('Open'),
               onPressed: () async {
                 FilePickerResult? result = await FilePicker.platform.pickFiles(
+                  type: FileType.custom,
+                  allowedExtensions: ["xml"],
                   withData: kIsWeb,
                 );
                 if (result != null) {
@@ -44,7 +46,7 @@ final class AuthorityCommand extends ConsumerWidget {
                       ref.read(documentsProvider).documents[documents.current];
                   await FilePicker.platform.saveFile(
                     fileName:
-                        (doc.title == "Untitled") ? "document.rda" : doc.title,
+                        (doc.title == "Untitled") ? "document.xml" : doc.title,
                     bytes: doc.bytes(),
                   );
                 },
@@ -60,6 +62,8 @@ final class AuthorityCommand extends ConsumerWidget {
                       null) {
                     String? path = await FilePicker.platform.saveFile(
                       dialogTitle: 'Please select an output file:',
+                      type: FileType.custom,
+                      allowedExtensions: ["xml"],
                     );
                     ref
                         .read(documentsProvider)
@@ -79,6 +83,8 @@ final class AuthorityCommand extends ConsumerWidget {
                 onPressed: () async {
                   String? path = await FilePicker.platform.saveFile(
                     dialogTitle: 'Please select an output file:',
+                    type: FileType.custom,
+                    allowedExtensions: ["xml"],
                   );
                   ref
                       .read(documentsProvider)
@@ -148,7 +154,26 @@ final class AuthorityCommand extends ConsumerWidget {
                 Navigator.of(context).pop();
                 final query = await queryDialog(context);
                 if (query != null) {
-                  ref.read(documentsProvider.notifier).applyFilter(query);
+                  if (!ref
+                          .read(documentsProvider.notifier)
+                          .applyFilter(query) &&
+                      context.mounted) {
+                    await displayInfoBar(
+                      context,
+                      duration: Duration(seconds: 1),
+                      builder: (context, close) {
+                        return InfoBar(
+                          title: const Text('Filter: '),
+                          content: const Text('No results'),
+                          action: IconButton(
+                            icon: const WindowsIcon(WindowsIcons.clear),
+                            onPressed: close,
+                          ),
+                          severity: InfoBarSeverity.error,
+                        );
+                      },
+                    );
+                  }
                 }
               },
             ),

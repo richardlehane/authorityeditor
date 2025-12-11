@@ -2,7 +2,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:authorityeditor/authority/authority.dart'
     as authority
-    show Document, View, Search;
+    show Document, View, Search, NodeType;
 
 part 'documents_provider.g.dart';
 
@@ -52,12 +52,38 @@ class Documents extends _$Documents {
     ref.notifyListeners();
   }
 
-  void applyFilter(authority.Search search) {
-    final results = search.apply(state.documents[state.current]);
-    if (results != null && results.isNotEmpty) {
-      state.documents[state.current].treeItems = results;
-      ref.notifyListeners();
+  bool applyFilter(authority.Search search) {
+    bool matched = false;
+    if (search.allTabs) {
+      for (final doc in state.documents) {
+        final results = search.apply(doc);
+        if (results != null && results.isNotEmpty) {
+          matched = true;
+          results[0].selected = true;
+          doc.treeItems = results;
+          doc.query = search;
+          doc.setCurrent(results[0].value);
+        }
+      }
+    } else {
+      final results = search.apply(state.documents[state.current]);
+      if (results != null && results.isNotEmpty) {
+        matched = true;
+        results[0].selected = true;
+        state.documents[state.current].treeItems = results;
+        state.documents[state.current].query = search;
+        state.documents[state.current].setCurrent(results[0].value);
+      }
     }
+    if (matched) ref.notifyListeners();
+    return matched;
+  }
+
+  void clearFilter() {
+    state.documents[state.current].query = null;
+    state.documents[state.current].setCurrent((authority.NodeType.termType, 0));
+    state.documents[state.current].rebuildTree();
+    ref.notifyListeners();
   }
 
   void viewChanged(String view) {

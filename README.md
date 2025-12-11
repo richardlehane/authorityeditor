@@ -32,13 +32,18 @@ From frontend folder
 
 ## Build for MS store
 
+Update msix version in pubspec.yaml
+
 dart run msix:create
+
+
+https://partner.microsoft.com/en-us/dashboard/home
 
 ## Web
 
 From frontend folder:
 
-`flutter build web --base-href "/nsw/"`
+`flutter build web --wasm --base-href "/nsw/"` // or without --wasm
 
 Copy build/web folder to sites/authorityeditor.com/nsw
 

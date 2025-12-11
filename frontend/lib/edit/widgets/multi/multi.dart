@@ -55,10 +55,12 @@ class Multi extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     int l = ref.watch(nodeProvider).multiLen(element);
-    final double height =
+    final maxHeight = MediaQuery.sizeOf(context).height - 78.5;
+    double height =
         (l == 0)
             ? _addEntryHeight
             : (l - 1) * viewHeight + formHeight + _addEntryHeight;
+    if (height > maxHeight) height = maxHeight;
     return SizedBox(
       height: height,
       child: InfoLabel(

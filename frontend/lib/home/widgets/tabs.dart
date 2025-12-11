@@ -4,6 +4,7 @@ import 'package:authorityeditor/home/provider/documents_provider.dart';
 
 import 'package:authorityeditor/home/view/review.dart';
 import 'package:authorityeditor/home/view/source.dart';
+import 'filtered.dart';
 import 'package:authorityeditor/edit/view/edit.dart';
 
 import 'package:authorityeditor/authority/authority.dart'
@@ -33,8 +34,8 @@ final class DocumentTabs extends ConsumerWidget {
             ref.read(documentsProvider.notifier).drop(index);
           },
           body: switch (documents.documents[index].view) {
-            authority.View.edit => EditPage(),
-            authority.View.review => ReviewPage(),
+            authority.View.edit => Filtered(body: EditPage()),
+            authority.View.review => Filtered(body: ReviewPage()),
             authority.View.source => SourcePage(),
           },
         );
