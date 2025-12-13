@@ -426,8 +426,8 @@ mixin Render {
           _toSpan(
             0,
             (ret.isEmpty)
-                ? "Transfer$transferTo"
-                : "Retain $ret, then transfer$transferTo",
+                ? "Transfer${transferTo ?? ''}"
+                : "Retain $ret, then transfer${transferTo ?? ''}",
           ),
         );
       default: // "Retain in agency"

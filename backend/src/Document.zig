@@ -128,6 +128,58 @@ pub fn drop(self: *Document, nt: tree.NodeType, idx: usize) void {
     xml.xmlFreeNode(node);
 }
 
+pub fn copy(self: *Document, nt: tree.NodeType, idx: usize) void {
+    if (nt == .Authority) return;
+    const node = lookup(self, nt, idx) orelse return;
+    // drop old copyNode if one exists
+    if (self.session.copyNode) |cn| {
+        xml.xmlUnlinkNode(cn);
+        xml.xmlFreeNode(cn);
+    }
+    self.session.copyNode = xml.xmlDocCopyNode(node, self.session.copyDoc, 1);
+}
+
+// this function is used for copying to avoiding duplicating the default namespace
+// which libxml2 seems to unavoidably do when doing a simple recursive copy, add
+fn duplicate(self: *Document, copyNode: xml.xmlNodePtr, newNode: xml.xmlNodePtr) void {
+    var attr = copyNode.*.properties;
+    while (attr != null) : (attr = attr.*.next) {
+        _ = xml.xmlSetProp(newNode, attr.*.name, xml.xmlGetProp(copyNode, attr.*.name));
+    }
+    var child = copyNode.*.children;
+    while (child != null) : (child = child.*.next) {
+        if (child.*.type == xml.XML_TEXT_NODE) {
+            _ = xml.xmlNodeSetContent(newNode, xml.xmlNodeGetContent(child));
+        }
+        if (child.*.type == xml.XML_ELEMENT_NODE) {
+            var cn = xml.xmlNewDocNode(self.doc, self.session.ns, child.*.name, null);
+            cn = xml.xmlAddChild(newNode, cn);
+            duplicate(self, child, cn);
+        }
+    }
+}
+
+pub fn pasteChild(self: *Document, nt: tree.NodeType, idx: usize) void {
+    if (self.session.copyNode) |cn| {
+        const parent = lookup(self, nt, idx) orelse return;
+        const newCopy = xml.xmlNewDocNode(self.doc, self.session.ns, cn.*.name, null);
+        duplicate(self, cn, newCopy);
+        _ = if (nt == .Authority)
+            elements.orderedInsert(parent, .Authority, newCopy)
+        else
+            xml.xmlAddChild(parent, newCopy);
+    }
+}
+
+pub fn pasteSibling(self: *Document, nt: tree.NodeType, idx: usize) void {
+    if (self.session.copyNode) |cn| {
+        const prev = lookup(self, nt, idx) orelse return;
+        const newCopy = xml.xmlNewDocNode(self.doc, self.session.ns, cn.*.name, null); // make a new copy within doc
+        duplicate(self, cn, newCopy);
+        _ = xml.xmlAddNextSibling(prev, newCopy);
+    }
+}
+
 pub fn addChild(self: *Document, ant: tree.NodeType, nt: tree.NodeType, idx: usize) void {
     const parent = lookup(self, nt, idx) orelse return;
     const node = xml.xmlNewDocNode(self.doc, self.session.ns, ant.toStr().ptr, null);
@@ -645,7 +697,6 @@ test "validate" {
     defer session.deinit();
     const idx = try session.load(example);
     const doc = session.get(idx);
-    defer doc.deinit();
     try testing.expect(doc.valid());
 }
 
@@ -661,7 +712,7 @@ test "empty" {
 test "load" {
     const session = try Session.init(testing.allocator);
     defer session.deinit();
-    const doc = try Document.load(session, "../data/SRNSW_example.xml");
+    const doc = try Document.load(session, example);
     defer doc.deinit();
     try doc.refreshTree();
     try testing.expectEqual(doc.tree_menu.items.len, 293);
@@ -730,6 +781,34 @@ test "drop" {
     doc.drop(.Term, 1);
     doc.drop(.Term, 0);
     try testing.expectEqualSlices(u8, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
+    try testing.expect(doc.valid());
+}
+
+test "paste child" {
+    const session = try Session.init(testing.allocator);
+    defer session.deinit();
+    const doc = try Document.empty(session);
+    const doc2 = try Document.empty(session);
+    defer doc.deinit();
+    defer doc2.deinit();
+    doc.addChild(.Context, .Authority, 0);
+    doc.copy(.Context, 0);
+    doc.pasteChild(.Authority, 0);
+    doc2.addChild(.Context, .Authority, 0);
+    doc2.copy(.Context, 0);
+    doc2.pasteSibling(.Context, 0);
+    try testing.expectEqualSlices(u8, std.mem.span(doc.toStr()), std.mem.span(doc2.toStr()));
+    try testing.expect(doc.valid());
+}
+
+test "paste sibling" {
+    const session = try Session.init(testing.allocator);
+    defer session.deinit();
+    const doc = try Document.empty(session);
+    defer doc.deinit();
+    doc.copy(.Term, 1);
+    doc.pasteSibling(.Term, 1);
+    // try testing.expectEqualSlices(u8, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
     try testing.expect(doc.valid());
 }
 

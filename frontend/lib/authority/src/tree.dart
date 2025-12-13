@@ -60,6 +60,7 @@ bool _shouldExpand(List<TreeNode> nodes) {
   return true;
 }
 
+// called in review view on select & swap to edit view
 void unmarkSelected(List<TreeViewItem>? tree, Ref ref) {
   if (tree == null) return;
   for (var i = 0; i < tree.length; i++) {
@@ -77,6 +78,7 @@ void unmarkSelected(List<TreeViewItem>? tree, Ref ref) {
   }
 }
 
+// called in review view on select & swap to edit view
 void markSelected(List<TreeViewItem>? tree, Ref ref) {
   if (tree == null) return;
   for (var i = 0; i < tree.length; i++) {
@@ -93,6 +95,7 @@ void markSelected(List<TreeViewItem>? tree, Ref ref) {
   }
 }
 
+// called in review view for list builder
 int termClassLen(List<TreeViewItem>? tree) {
   if (tree == null) return 0;
   var ret = 0;
@@ -112,6 +115,7 @@ int _count(TreeViewItem item) {
   return ret;
 }
 
+// converts the tree nodes provided by the XML backends to a tree view
 List<TreeViewItem> treeFrom(List<TreeNode> nodes, Ref selected) {
   final expanded = _shouldExpand(nodes);
   return List<TreeViewItem>.generate(
@@ -167,6 +171,8 @@ TreeViewItem makeItem(
   );
 }
 
+// traverses the Tree View to find the ref currently marked as selected in the tree
+// called in document.dart when setting current after adding child or sibling
 Ref? getSelected(List<TreeViewItem>? list) {
   if (list == null) return null;
   for (final element in list) {
@@ -257,23 +263,20 @@ TreeViewItem Function(int i) _moveGenerator(
   bool up,
 ) {
   return (int i) {
-    if (up) {
-      if (old[i].value.$1.like(ref.$1)) {
-        if (up && i < old.length - 1 && old[i].value == ref) {
-          i++;
-        } else if (old[i].value == ref) {
-          if (up) {
-            if (i > 0) i--;
-          } else {
-            if (i < old.length - 1) i++;
-          }
-        } else if (!up && i > 0 && old[i - 1].value == ref) {
-          i--;
-        }
-      }
-    }
     int index = ctr.next(old[i].value.$1);
     bool selected = ctr.isSelected();
+    if (old[i].value == ref) {
+      if (up) {
+        i--;
+      } else {
+        i++;
+      }
+    } else if (up && i < old.length - 1 && old[i + 1].value == ref) {
+      i++;
+    } else if (!up && i > 0 && old[i - 1].value == ref) {
+      i--;
+    }
+
     return _copyItemWithChildren(
       old[i],
       List.generate(

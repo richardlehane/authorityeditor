@@ -39,7 +39,7 @@ pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved:
         DLL_PROCESS_DETACH => {
             if (lpReserved != null and has_sess) {
                 has_sess = false;
-                unload();
+                sess.deinit();
             }
         },
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH => {},
@@ -48,14 +48,8 @@ pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved:
     return windows.TRUE;
 }
 
-export fn unload() void {
-    if (has_sess) {
-        has_sess = false;
-        for (sess.docs.items) |d| {
-            d.deinit();
-        }
-        sess.deinit();
-    }
+export fn unload(idx: u8) void {
+    return sess.unload(idx);
 }
 
 export fn freeStr(ptr: [*c]u8) void {
@@ -119,6 +113,20 @@ export fn setCurrent(idx: u8, nodeType: u8, nodeIdx: u16) void {
 export fn dropNode(idx: u8, nodeType: u8, nodeIdx: u16) void {
     const doc = sess.get(idx);
     doc.drop(@enumFromInt(nodeType), nodeIdx);
+}
+
+export fn copy(idx: u8, nodeType: u8, nodeIdx: u16) void {
+    const doc = sess.get(idx);
+    doc.copy(@enumFromInt(nodeType), nodeIdx);
+}
+
+export fn pasteChild(idx: u8, nodeType: u8, nodeIdx: u16) void {
+    const doc = sess.get(idx);
+    doc.pasteChild(@enumFromInt(nodeType), nodeIdx);
+}
+export fn pasteSibling(idx: u8, nodeType: u8, nodeIdx: u16) void {
+    const doc = sess.get(idx);
+    doc.pasteSibling(@enumFromInt(nodeType), nodeIdx);
 }
 
 export fn addChild(
@@ -307,7 +315,7 @@ const example = "../data/SRNSW_example.xml";
 test "validate" {
     sess = Session.init(testing.allocator) catch unreachable;
     has_sess = true;
-    defer unload();
+    defer sess.deinit();
     const idx = load(example);
     try testing.expect(valid(idx));
 }
@@ -315,7 +323,7 @@ test "validate" {
 test "free payload" {
     sess = Session.init(testing.allocator) catch unreachable;
     has_sess = true;
-    defer unload();
+    defer sess.deinit();
     const idx = load(example);
     setCurrent(idx, 3, 0);
     const payload = getParagraphs(idx, "TermDescription");

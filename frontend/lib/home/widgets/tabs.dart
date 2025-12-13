@@ -21,6 +21,9 @@ final class DocumentTabs extends ConsumerWidget {
       tabWidthBehavior: TabWidthBehavior.sizeToContent,
       closeButtonVisibility: CloseButtonVisibilityMode.always,
       currentIndex: documents.current,
+      onReorder: (idxa, idxb) {
+        ref.read(documentsProvider.notifier).reorder(idxa, idxb);
+      },
       onChanged: (index) {
         ref.read(documentsProvider.notifier).paneChanged(index);
       },

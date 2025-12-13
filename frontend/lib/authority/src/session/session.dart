@@ -40,6 +40,10 @@ class Session {
     return result;
   }
 
+  void unload(int index) {
+    return _bindings.unload(index);
+  }
+
   bool save(int index, String path) {
     final Pointer<Utf8> p = path.toNativeUtf8();
     final success = _bindings.save(index, p);
@@ -85,6 +89,14 @@ class Session {
 
   void dropNode(int index, Ref ref) =>
       _bindings.dropNode(index, ref.$1.index, ref.$2);
+
+  void copy(int index, Ref ref) => _bindings.copy(index, ref.$1.index, ref.$2);
+
+  void pasteChild(int index, Ref ref) =>
+      _bindings.pasteChild(index, ref.$1.index, ref.$2);
+
+  void pasteSibling(int index, Ref ref) =>
+      _bindings.pasteSibling(index, ref.$1.index, ref.$2);
 
   void addChild(int index, Ref ref, NodeType nt) =>
       _bindings.addChild(index, nt.index, ref.$1.index, ref.$2);

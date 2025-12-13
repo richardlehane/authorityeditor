@@ -1,4 +1,3 @@
-import 'package:authorityeditor/edit/provider/tree_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/edit/provider/node_provider.dart';

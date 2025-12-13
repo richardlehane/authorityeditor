@@ -118,4 +118,5 @@ msix_config:
   publisher: CN=90828A42-83C4-4770-ADB8-6ADC14A290E3
   msix_version: 0.0.1.0
   logo_path: assets\logo.png
+  file_extension: .xml
   store: true

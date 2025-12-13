@@ -19,7 +19,7 @@ final class DocumentsProvider extends $NotifierProvider<Documents, DocState> {
         argument: null,
         retry: null,
         name: r'documentsProvider',
-        isAutoDispose: false,
+        isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -40,7 +40,7 @@ final class DocumentsProvider extends $NotifierProvider<Documents, DocState> {
   }
 }
 
-String _$documentsHash() => r'1ccc43fbb1d5bcf7f99112197d75c6f3f396f142';
+String _$documentsHash() => r'2e8cc3a1f3976a0e05390d000887208768bc8f6c';
 
 abstract class _$Documents extends $Notifier<DocState> {
   DocState build();

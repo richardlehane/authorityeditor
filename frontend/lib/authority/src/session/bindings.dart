@@ -31,6 +31,8 @@ typedef EmptyNative = Uint8 Function();
 typedef Empty = int Function();
 typedef LoadNative = Uint8 Function(Pointer<Utf8>);
 typedef Load = int Function(Pointer<Utf8>);
+typedef UnloadNative = Void Function(Uint8);
+typedef Unload = void Function(int);
 typedef SaveNative = Bool Function(Uint8, Pointer<Utf8>);
 typedef Save = bool Function(int, Pointer<Utf8>);
 typedef TreeNative = Payload Function(Uint8);
@@ -41,6 +43,12 @@ typedef SetCurrentNative = Void Function(Uint8, Uint8, Uint16);
 typedef SetCurrent = void Function(int, int, int);
 typedef DropNodeNative = Void Function(Uint8, Uint8, Uint16);
 typedef DropNode = void Function(int, int, int);
+typedef CopyNative = Void Function(Uint8, Uint8, Uint16);
+typedef Copy = void Function(int, int, int);
+typedef PasteChildNative = Void Function(Uint8, Uint8, Uint16);
+typedef PasteChild = void Function(int, int, int);
+typedef PasteSiblingNative = Void Function(Uint8, Uint8, Uint16);
+typedef PasteSibling = void Function(int, int, int);
 typedef AddChildNative = Void Function(Uint8, Uint8, Uint8, Uint16);
 typedef AddChild = void Function(int, int, int, int);
 typedef AddSiblingNative = Void Function(Uint8, Uint8, Uint8, Uint16);
@@ -130,10 +138,14 @@ final class Bindings {
   late AsStr asStr;
   late Empty empty;
   late Load load;
+  late Unload unload;
   late Save save;
   late Tree tree;
   late SetCurrent setCurrent;
   late DropNode dropNode;
+  late Copy copy;
+  late PasteChild pasteChild;
+  late PasteSibling pasteSibling;
   late AddChild addChild;
   late AddSibling addSibling;
   late MoveUp moveUp;
@@ -176,6 +188,7 @@ final class Bindings {
     edit = dylib.lookupFunction<EditNative, Edit>('edit');
     empty = dylib.lookupFunction<EmptyNative, Empty>('empty');
     load = dylib.lookupFunction<LoadNative, Load>('load');
+    unload = dylib.lookupFunction<UnloadNative, Unload>('unload');
     save = dylib.lookupFunction<SaveNative, Save>('save');
     asStr = dylib.lookupFunction<AsStrNative, AsStr>('asStr');
     tree = dylib.lookupFunction<TreeNative, Tree>('tree');
@@ -183,6 +196,13 @@ final class Bindings {
       'setCurrent',
     );
     dropNode = dylib.lookupFunction<DropNodeNative, DropNode>('dropNode');
+    copy = dylib.lookupFunction<CopyNative, Copy>('copy');
+    pasteChild = dylib.lookupFunction<PasteChildNative, PasteChild>(
+      'pasteChild',
+    );
+    pasteSibling = dylib.lookupFunction<PasteSiblingNative, PasteSibling>(
+      'pasteSibling',
+    );
     addChild = dylib.lookupFunction<AddChildNative, AddChild>('addChild');
     addSibling = dylib.lookupFunction<AddSiblingNative, AddSibling>(
       'addSibling',

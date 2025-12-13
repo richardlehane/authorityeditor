@@ -32,8 +32,9 @@ const String _ns = "http://www.records.nsw.gov.au/schemas/RDA";
 bool _isAttr(String name) => name[0] == name[0].toLowerCase();
 
 class Session {
-  List<XmlDocument> documents = [];
+  List<XmlDocument?> documents = [];
   List<XmlElement?> nodes = [];
+  XmlElement? copyNode;
 
   // singleton
   Session._();
@@ -61,6 +62,11 @@ class Session {
     return _init(doc);
   }
 
+  void unload(int index) {
+    documents[index] = null;
+    nodes[index] = null;
+  }
+
   bool save(int index, String path) {
     File(path).writeAsStringSync(Session().toString(), flush: true);
     return true;
@@ -74,6 +80,7 @@ class Session {
   void transform(int index, String stylesheet, String outpath) {}
 
   List<TreeNode> tree(int index, Counter ctr) {
+    if (documents[index] == null) return [];
     ctr.next(NodeType.rootType);
     List<TreeNode> ret = [
       TreeNode((NodeType.rootType, 0), null, "Details", []),
@@ -81,15 +88,17 @@ class Session {
         (NodeType.none, 0),
         null,
         "Context",
-        _addContext(documents[index].rootElement, ctr),
+        _addContext(documents[index]!.rootElement, ctr),
       ),
     ];
-    ret.addAll(_addChildren(_termsClasses(documents[index].rootElement), ctr));
+    ret.addAll(_addChildren(_termsClasses(documents[index]!.rootElement), ctr));
     return ret;
   }
 
-  String asString(int index) =>
-      documents[index].toXmlString(pretty: true, indent: '\t');
+  String asString(int index) {
+    if (documents[index] == null) return "";
+    return documents[index]!.toXmlString(pretty: true, indent: '\t');
+  }
 
   void setCurrent(int index, Ref ref) {
     nodes[index] = _nth(documents[index], ref);
@@ -100,6 +109,33 @@ class Session {
     XmlElement? el = _nth(documents[index], ref);
     if (el == null) return;
     el.remove();
+  }
+
+  void copy(int index, Ref ref) {
+    XmlElement? el = _nth(documents[index], ref);
+    if (el == null) return;
+    copyNode = el.copy();
+  }
+
+  void pasteChild(int index, Ref ref) {
+    if (copyNode == null) return;
+    XmlElement? el = _nth(documents[index], ref);
+    if (el == null) return;
+    final copycopyNode = copyNode!.copy();
+    if (ref.$1 == NodeType.rootType) {
+      (int, int) p = _insertPos(el, "Context");
+      el.children.insert(p.$1, copycopyNode);
+      return;
+    }
+    el.children.add(copycopyNode);
+  }
+
+  void pasteSibling(int index, Ref ref) {
+    if (copyNode == null) return;
+    XmlElement? el = _nth(documents[index], ref);
+    if (el == null) return;
+    final copycopyNode = copyNode!.copy();
+    el.parentElement!.children.insert(_pos(el) + 1, copycopyNode);
   }
 
   void addChild(int index, Ref ref, NodeType nt) {

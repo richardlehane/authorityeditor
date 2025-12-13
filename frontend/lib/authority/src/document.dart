@@ -82,6 +82,10 @@ class Document {
     return Session().asString(sessionIndex);
   }
 
+  void unload() {
+    Session().unload(sessionIndex);
+  }
+
   bool save() {
     if (path == null) return false;
     return Session().save(sessionIndex, path!);
@@ -142,6 +146,24 @@ class Document {
     mutation++;
   }
 
+  void copy(Ref ref) {
+    Session().copy(sessionIndex, ref);
+  }
+
+  void pasteChild(Ref ref) {
+    Session().pasteChild(sessionIndex, ref);
+    mutation++;
+    rebuildTree();
+    // todo: select the new node
+  }
+
+  void pasteSibling(Ref ref) {
+    Session().pasteSibling(sessionIndex, ref);
+    mutation++;
+    rebuildTree();
+    // todo: select the new node
+  }
+
   void addChild(Ref ref, NodeType nt) {
     Session().addChild(sessionIndex, ref, nt);
     treeItems = mutate(
@@ -166,12 +188,14 @@ class Document {
     Session().moveUp(sessionIndex, ref);
     treeItems = mutate(treeItems!, TreeOp.up, ref, ctr: Counter(selected));
     mutation++;
+    // todo: select the moved node
   }
 
   void moveDown(Ref ref) {
     Session().moveDown(sessionIndex, ref);
     treeItems = mutate(treeItems!, TreeOp.down, ref, ctr: Counter(selected));
     mutation++;
+    // todo: select the moved node
   }
 
   void relabel(Ref ref, String? itemno, String? title) {

@@ -1,5 +1,8 @@
 import 'dart:io';
 import 'dart:ui';
+import 'package:authorityeditor/home/provider/documents_provider.dart';
+import 'package:file_picker/file_picker.dart' show PlatformFile;
+import 'package:path/path.dart' as path;
 import 'package:logging/logging.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import "package:flutter/services.dart";
@@ -10,7 +13,7 @@ import 'package:authorityeditor/authority/authority.dart' show outputDir;
 
 final log = Logger('AuthorityEditor');
 
-void main() async {
+void main(List<String> args) async {
   if (foundation.kIsWeb) {
     WidgetsFlutterBinding.ensureInitialized();
     BrowserContextMenu.disableContextMenu();
@@ -27,16 +30,39 @@ void main() async {
       entity.delete(recursive: true);
     }
   }
-  runApp(const ProviderScope(child: MyApp()));
+  final arg = (args.isNotEmpty) ? args[0] : null;
+  runApp(ProviderScope(child: MyApp(arg)));
 }
 
-class MyApp extends ConsumerStatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  final String? arg;
+  const MyApp(this.arg, {super.key});
+
   @override
-  ConsumerState<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context) {
+    return _EagerInitialization(child: AEApp(arg));
+  }
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _EagerInitialization extends ConsumerWidget {
+  const _EagerInitialization({required this.child});
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(documentsProvider);
+    return child;
+  }
+}
+
+class AEApp extends ConsumerStatefulWidget {
+  const AEApp(this.arg, {super.key});
+  final String? arg;
+  @override
+  ConsumerState<AEApp> createState() => _AEAppState();
+}
+
+class _AEAppState extends ConsumerState<AEApp> {
   late final AppLifecycleListener _listener;
 
   @override
@@ -47,6 +73,17 @@ class _MyAppState extends ConsumerState<MyApp> {
         return AppExitResponse.exit;
       },
     );
+    if (widget.arg != null) {
+      ref
+          .read(documentsProvider.notifier)
+          .load(
+            PlatformFile(
+              name: path.basename(widget.arg!),
+              path: widget.arg,
+              size: 0,
+            ),
+          );
+    }
   }
 
   @override

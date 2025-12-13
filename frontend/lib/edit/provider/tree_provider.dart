@@ -16,6 +16,39 @@ class Tree extends _$Tree {
     return documents.documents[documents.current].treeItems ?? [];
   }
 
+  bool filtered() {
+    final documents = ref.read(documentsProvider);
+    return documents.documents[documents.current].query != null;
+  }
+
+  authority.NodeType? clipboard() {
+    return ref.read(documentsProvider).clipboard;
+  }
+
+  void pasteChild(authority.Ref aref) {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].pasteChild(aref);
+    state = documents.documents[documents.current].treeItems ?? [];
+  }
+
+  void pasteSibling(authority.Ref aref) {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].pasteSibling(aref);
+    state = documents.documents[documents.current].treeItems ?? [];
+  }
+
+  void moveUp(authority.Ref aref) {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].moveUp(aref);
+    state = documents.documents[documents.current].treeItems ?? [];
+  }
+
+  void moveDown(authority.Ref aref) {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].moveDown(aref);
+    state = documents.documents[documents.current].treeItems ?? [];
+  }
+
   void addChild(authority.Ref aref, authority.NodeType nt) {
     final documents = ref.read(documentsProvider);
     documents.documents[documents.current].addChild(aref, nt);
