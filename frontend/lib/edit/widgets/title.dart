@@ -45,15 +45,15 @@ class _NodeTitleState extends ConsumerState<NodeTitle> {
           String? titleTxt = titleController.text;
           if (itemnoTxt.isEmpty) itemnoTxt = null;
           if (titleTxt.isEmpty) titleTxt = null;
-          if (itemnoChanged) ref.read(nodeProvider).set("itemno", itemnoTxt);
+          if (itemnoChanged) node.set("itemno", itemnoTxt);
           if (titleChanged) {
             node.set((widget.term) ? "TermTitle" : "ClassTitle", titleTxt);
           }
+          itemnoChanged = false;
+          titleChanged = false;
           ref
               .read(treeProvider.notifier)
               .relabel(node.ref, itemnoTxt, titleTxt);
-          itemnoChanged = false;
-          titleChanged = false;
         }
       },
       child: Row(

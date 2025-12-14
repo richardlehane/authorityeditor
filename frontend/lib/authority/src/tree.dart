@@ -5,7 +5,7 @@ import 'node.dart' show NodeType;
 
 typedef Ref = (NodeType, int);
 
-enum TreeOp { drop, child, sibling, up, down, relabel }
+enum TreeOp { child, sibling, up, down }
 
 class TreeNode {
   Ref ref = (NodeType.none, 0);
@@ -84,7 +84,7 @@ void markSelected(List<TreeViewItem>? tree, Ref ref) {
   for (var i = 0; i < tree.length; i++) {
     final element = tree[i];
     if (!ref.$1.like(element.value.$1)) continue;
-    if (element.value == ref) {
+    if (element.value.$2 == ref.$2) {
       element.selected = true;
       return;
     }
@@ -369,64 +369,79 @@ TreeViewItem Function(int i) _childGenerator(
   };
 }
 
-TreeViewItem Function(int i) _dropGenerator(
-  List<TreeViewItem> old,
-  Ref ref,
-  Counter ctr,
-) {
-  bool seen = false;
-
-  return (int i) {
-    if (old[i].value == ref) seen = true;
-    if (seen) i++;
-    int index = ctr.next(old[i].value.$1);
-    bool selected = ctr.isSelected();
-    return _copyItemWithChildren(
-      old[i],
-      List.generate(
-        _treeContains(old[i].children, ref)
-            ? old[i].children.length - 1
-            : old[i].children.length,
-        _dropGenerator(old[i].children, ref, ctr),
-      ),
-      index: index,
-      selected: selected,
-    );
-  };
-}
-
-TreeViewItem Function(int i) _relabelGenerator(
-  List<TreeViewItem> old,
+void relabelInPlace(
+  List<TreeViewItem> list,
   Ref ref,
   String? itemno,
   String? title,
 ) {
-  return (int i) {
-    return TreeViewItem(
-      leading: switch (old[i].value.$1) {
-        NodeType.termType => Icon(
-          FluentIcons.fabric_folder,
-          color: Colors.deepOrangeAccent,
-        ),
-        NodeType.classType => Icon(FluentIcons.page, color: Colors.blueGrey),
-        NodeType.contextType => Icon(FluentIcons.page_list, color: Colors.teal),
-        _ => null,
-      },
-      content:
-          (old[i].value == ref)
-              ? makeLabel(itemno, title, ref.$1)
-              : (old[i].content is Text)
-              ? Text((old[i].content as Text).data!)
-              : SizedBox(),
-      value: old[i].value,
-      selected: old[i].selected,
-      expanded: old[i].expanded,
-      children: List.generate(
-        old[i].children.length,
-        _relabelGenerator(old[i].children, ref, itemno, title),
-      ),
-    );
-  };
+  int? prev; // terms only
+  for (var i = 0; i < list.length; i++) {
+    final item = list[i];
+    // mutate this item only
+    if (item.value == ref) {
+      list[i] = TreeViewItem(
+        leading: item.leading,
+        content: makeLabel(itemno, title, ref.$1),
+        value: item.value,
+        selected: item.selected,
+        expanded: item.expanded,
+        children: item.children,
+      );
+    }
+    if (!(item.value.$1 as NodeType).like(ref.$1)) {
+      continue;
+    }
+    if (item.value.$1 == NodeType.termType && item.value.$2 < ref.$2) {
+      prev = i;
+    }
+    if (item.value.$2 > ref.$2 || i == list.length - 1) {
+      if (prev != null) {
+        relabelInPlace(list[prev].children, ref, itemno, title);
+      }
+      return;
+    }
+  }
+}
+
+// return true if the node we are dropping is selected
+bool dropInPlace(List<TreeViewItem>? list, Ref ref) {
+  if (list == null) {
+    return false;
+  }
+  for (var i = 0; i < list.length; i++) {
+    if (!(list[i].value.$1 as NodeType).like(ref.$1)) {
+      continue;
+    }
+    // mutate this item only
+    if (list[i].value == ref) {
+      final ret = list[i].selected ?? false;
+      list.removeAt(i);
+      return ret;
+    }
+    if (i == list.length - 1 || list[i + 1].value.$2 > ref.$2) {
+      return dropInPlace(list[i + 1].children, ref);
+    }
+  }
+  return false;
+}
+
+TreeViewItem? getItem(List<TreeViewItem> list, Ref ref) {
+  TreeViewItem? prev; // terms only
+  for (var i = 0; i < list.length; i++) {
+    final item = list[i];
+    if (item.value == ref) return item;
+    if (!(item.value.$1 as NodeType).like(ref.$1)) {
+      continue;
+    }
+    if (item.value.$1 == NodeType.termType && item.value.$2 < ref.$2) {
+      prev = item;
+    }
+    if (item.value.$2 > ref.$2 || i == list.length - 1) {
+      return (prev != null) ? getItem(prev.children, ref) : null;
+    }
+  }
+  return null;
 }
 
 // TODO: implement!
@@ -452,16 +467,6 @@ List<TreeViewItem> mutate(
       return List.generate(old.length, _moveGenerator(old, ref, ctr!, true));
     case TreeOp.down:
       return List.generate(old.length, _moveGenerator(old, ref, ctr!, false));
-    case TreeOp.relabel:
-      return List.generate(
-        old.length,
-        _relabelGenerator(old, ref, itemno, title),
-      );
-    default:
-      return List.generate(
-        _treeContains(old, ref) ? old.length - 1 : old.length,
-        _dropGenerator(old, ref, ctr!),
-      );
   }
 }
 

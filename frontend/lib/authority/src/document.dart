@@ -136,13 +136,15 @@ class Document {
 
   void dropNode(Ref ref) {
     Session().dropNode(sessionIndex, ref);
-    selected =
-        (ref.$2 == 0)
-            ? (ref.$1 == NodeType.contextType)
-                ? (NodeType.rootType, 0)
-                : (ref.$1, 0)
-            : (ref.$1, ref.$2 - 1);
-    treeItems = mutate(treeItems!, TreeOp.drop, ref, ctr: Counter(selected));
+    if (dropInPlace(treeItems, ref)) {
+      Ref selected =
+          (ref.$2 == 0)
+              ? (ref.$1 == NodeType.contextType)
+                  ? (NodeType.rootType, 0)
+                  : (ref.$1, 0)
+              : (ref.$1, ref.$2 - 1);
+      markSelected(treeItems, selected);
+    }
     mutation++;
   }
 
@@ -199,12 +201,15 @@ class Document {
   }
 
   void relabel(Ref ref, String? itemno, String? title) {
-    treeItems = mutate(
-      treeItems!,
-      TreeOp.relabel,
-      ref,
-      itemno: itemno,
-      title: title,
-    );
+    if (treeItems != null) {
+      relabelInPlace(treeItems!, ref, itemno, title);
+    }
+    // treeItems = mutate(
+    //   treeItems!,
+    //   TreeOp.relabel,
+    //   ref,
+    //   itemno: itemno,
+    //   title: title,
+    // );
   }
 }

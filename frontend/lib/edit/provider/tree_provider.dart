@@ -66,13 +66,20 @@ class Tree extends _$Tree {
   void relabel(authority.Ref aref, String? itemno, String? title) {
     final documents = ref.read(documentsProvider);
     documents.documents[documents.current].relabel(aref, itemno, title);
-    state = documents.documents[documents.current].treeItems ?? [];
+    //state = documents.documents[documents.current].treeItems ?? [];
+    state =
+        (documents.documents[documents.current].treeItems == null)
+            ? []
+            : [...documents.documents[documents.current].treeItems!];
   }
 
   void dropNode(authority.Ref aref) {
     final documents = ref.read(documentsProvider);
     documents.documents[documents.current].dropNode(aref);
     ref.read(nodeProvider.notifier).refresh();
-    state = documents.documents[documents.current].treeItems ?? [];
+    state =
+        (documents.documents[documents.current].treeItems == null)
+            ? []
+            : [...documents.documents[documents.current].treeItems!];
   }
 }
