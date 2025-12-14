@@ -5,7 +5,11 @@ import 'node.dart' show NodeType;
 
 typedef Ref = (NodeType, int);
 
-enum TreeOp { child, sibling, up, down }
+bool _match(Ref a, Ref b) {
+  return a.$1.like(b.$1) && a.$2 == b.$2;
+}
+
+enum TreeOp { child, sibling, up, down, drop }
 
 class TreeNode {
   Ref ref = (NodeType.none, 0);
@@ -45,7 +49,7 @@ class Counter {
   }
 
   bool isSelected() {
-    return thisNt == selected.$1 && count == selected.$2;
+    return thisNt.like(selected.$1) && count == selected.$2;
   }
 }
 
@@ -173,6 +177,7 @@ TreeViewItem makeItem(
 
 // traverses the Tree View to find the ref currently marked as selected in the tree
 // called in document.dart when setting current after adding child or sibling
+// needs to do a full traverse
 Ref? getSelected(List<TreeViewItem>? list) {
   if (list == null) return null;
   for (final element in list) {
@@ -238,17 +243,8 @@ TreeViewItem _copyItemWithChildren(
   bool expand = false,
 }) {
   return TreeViewItem(
-    leading: switch (old.value.$1) {
-      NodeType.termType => Icon(
-        FluentIcons.fabric_folder,
-        color: Colors.deepOrangeAccent,
-      ),
-      NodeType.classType => Icon(FluentIcons.page, color: Colors.blueGrey),
-      NodeType.contextType => Icon(FluentIcons.page_list, color: Colors.teal),
-      _ => null,
-    },
-    content:
-        (old.content is Text) ? Text((old.content as Text).data!) : SizedBox(),
+    leading: old.leading,
+    content: old.content,
     value: (index == null) ? old.value : (old.value.$1, index),
     selected: (selected == null) ? old.selected : selected,
     expanded: (expand) ? true : old.expanded,
@@ -369,6 +365,31 @@ TreeViewItem Function(int i) _childGenerator(
   };
 }
 
+TreeViewItem Function(int i) _dropGenerator(
+  List<TreeViewItem> old,
+  Ref ref,
+  Counter ctr,
+) {
+  bool seen = false;
+  return (int i) {
+    if (old[i].value == ref) seen = true;
+    if (seen) i++;
+    int index = ctr.next(old[i].value.$1);
+    bool selected = ctr.isSelected();
+    return _copyItemWithChildren(
+      old[i],
+      List.generate(
+        _treeContains(old[i].children, ref)
+            ? old[i].children.length - 1
+            : old[i].children.length,
+        _dropGenerator(old[i].children, ref, ctr),
+      ),
+      index: index,
+      selected: selected,
+    );
+  };
+}
+
 void relabelInPlace(
   List<TreeViewItem> list,
   Ref ref,
@@ -404,47 +425,21 @@ void relabelInPlace(
   }
 }
 
-// return true if the node we are dropping is selected
-bool dropInPlace(List<TreeViewItem>? list, Ref ref) {
-  if (list == null) {
-    return false;
-  }
+// if our ref may not have the right node type e.g. Class not Term, confirm with this function
+Ref? getSelectedRef(List<TreeViewItem>? list, Ref ref) {
+  if (list == null) return null;
   for (var i = 0; i < list.length; i++) {
-    if (!(list[i].value.$1 as NodeType).like(ref.$1)) {
+    if (!(list[i].value.$1).like(ref.$1)) {
       continue;
     }
-    // mutate this item only
-    if (list[i].value == ref) {
-      final ret = list[i].selected ?? false;
-      list.removeAt(i);
-      return ret;
-    }
+    if (_match(list[i].value, ref)) return list[i].value;
     if (i == list.length - 1 || list[i + 1].value.$2 > ref.$2) {
-      return dropInPlace(list[i + 1].children, ref);
-    }
-  }
-  return false;
-}
-
-TreeViewItem? getItem(List<TreeViewItem> list, Ref ref) {
-  TreeViewItem? prev; // terms only
-  for (var i = 0; i < list.length; i++) {
-    final item = list[i];
-    if (item.value == ref) return item;
-    if (!(item.value.$1 as NodeType).like(ref.$1)) {
-      continue;
-    }
-    if (item.value.$1 == NodeType.termType && item.value.$2 < ref.$2) {
-      prev = item;
-    }
-    if (item.value.$2 > ref.$2 || i == list.length - 1) {
-      return (prev != null) ? getItem(prev.children, ref) : null;
+      return getSelectedRef(list[i].children, ref);
     }
   }
   return null;
 }
 
-// TODO: implement!
 List<TreeViewItem> mutate(
   List<TreeViewItem> old,
   TreeOp op,
@@ -467,6 +462,11 @@ List<TreeViewItem> mutate(
       return List.generate(old.length, _moveGenerator(old, ref, ctr!, true));
     case TreeOp.down:
       return List.generate(old.length, _moveGenerator(old, ref, ctr!, false));
+    case TreeOp.drop:
+      return List.generate(
+        _treeContains(old, ref) ? old.length - 1 : old.length,
+        _dropGenerator(old, ref, ctr!),
+      );
   }
 }
 

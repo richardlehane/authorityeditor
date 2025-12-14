@@ -136,15 +136,14 @@ class Document {
 
   void dropNode(Ref ref) {
     Session().dropNode(sessionIndex, ref);
-    if (dropInPlace(treeItems, ref)) {
-      Ref selected =
-          (ref.$2 == 0)
-              ? (ref.$1 == NodeType.contextType)
-                  ? (NodeType.rootType, 0)
-                  : (ref.$1, 0)
-              : (ref.$1, ref.$2 - 1);
-      markSelected(treeItems, selected);
-    }
+    Ref select =
+        (ref.$2 == 0)
+            ? (ref.$1 == NodeType.contextType)
+                ? (NodeType.rootType, 0)
+                : (ref.$1, 0)
+            : (ref.$1, ref.$2 - 1);
+    treeItems = mutate(treeItems!, TreeOp.drop, ref, ctr: Counter(select));
+    setCurrent(getSelectedRef(treeItems, select) ?? select);
     mutation++;
   }
 

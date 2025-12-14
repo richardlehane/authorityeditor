@@ -34,7 +34,7 @@ From frontend folder
 
 Update msix version in pubspec.yaml
 
-dart run msix:create
+`dart run msix:create`
 
 
 https://partner.microsoft.com/en-us/dashboard/home

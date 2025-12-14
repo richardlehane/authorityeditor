@@ -40,7 +40,7 @@ final class TreeProvider extends $NotifierProvider<Tree, List<TreeViewItem>> {
   }
 }
 
-String _$treeHash() => r'8626b41f1c438302dd79f8e7170ca6e34ff46fc5';
+String _$treeHash() => r'69374d208c3b749c42d54a9289d1bc70c7ec0f4a';
 
 abstract class _$Tree extends $Notifier<List<TreeViewItem>> {
   List<TreeViewItem> build();

@@ -41,7 +41,7 @@ final class NodeProvider
   }
 }
 
-String _$nodeHash() => r'ccc503c6ee9e2d747cb399a46f8a6aab11a218ed';
+String _$nodeHash() => r'5354ca67d6873f5c2ca652438aef2656e6a5ce65';
 
 abstract class _$Node extends $Notifier<authority.CurrentNode> {
   authority.CurrentNode build();
