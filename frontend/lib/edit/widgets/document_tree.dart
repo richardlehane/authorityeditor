@@ -71,18 +71,17 @@ class DocumentTree extends ConsumerWidget {
               ref.read(nodeProvider.notifier).selectionChanged(item.value);
             },
             onSecondaryTap: (item, details) async {
-              if (item.value.$1 == NodeType.rootType) return;
               if (ref.read(treeProvider.notifier).filtered()) return;
               final targetContext = contextAttachKey.currentContext;
               if (targetContext == null) return;
               final move =
-                  (item.value.$1.like(NodeType.termType) ||
-                          item.value.$1 != NodeType.contextType)
-                      ? canMove(
+                  (item.value.$1 == NodeType.rootType ||
+                          item.value.$1 == NodeType.none)
+                      ? Movement.none
+                      : canMove(
                         item,
                         (item.depth == 0) ? treeItems : item.parent!.children,
-                      )
-                      : Movement.none;
+                      );
               contextController.showFlyout(
                 position: details.globalPosition,
                 barrierDismissible: true,

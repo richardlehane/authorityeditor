@@ -37,15 +37,15 @@ class _ContextTitleState extends ConsumerState<ContextTitle> {
           if (titleChanged) {
             node.set("ContextTitle", titleTxt);
           }
-          ref.read(treeProvider.notifier).relabel(node.ref, null, titleTxt);
           titleChanged = false;
+          ref.read(treeProvider.notifier).relabel(node.ref, null, titleTxt);
         }
       },
       child: InfoLabel(
         label: "Title",
         child: TextBox(
           controller: titleController,
-          onChanged: (value) => titleChanged = true,
+          onChanged: (value) => setState(() => titleChanged = true),
         ),
       ),
     );

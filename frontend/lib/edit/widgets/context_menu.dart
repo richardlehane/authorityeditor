@@ -1,6 +1,5 @@
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 import 'package:fluent_ui/fluent_ui.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:authorityeditor/edit/provider/tree_provider.dart';
 
@@ -14,6 +13,33 @@ Widget Function(BuildContext) contextBuilder(
   NodeType? clipboard,
   WidgetRef ref,
 ) {
+  // For top level details menu item, only option is to add "Function - Activity - Class"
+  if (value.$1 == NodeType.rootType) {
+    return (context) {
+      return MenuFlyout(
+        items: [
+          MenuFlyoutItem(
+            leading: const Icon(FluentIcons.fabric_new_folder),
+            text: const Text('Add Function-Activity-Class'),
+            onPressed: () {
+              ref.read(treeProvider.notifier).addFAC((NodeType.rootType, 0));
+            },
+          ),
+          if (clipboard != null && clipboard != NodeType.contextType)
+            MenuFlyoutItem(
+              leading: const Icon(FluentIcons.paste),
+              text: const Text('Paste child'),
+              onPressed: () {
+                ref.read(treeProvider.notifier).pasteChild((
+                  NodeType.rootType,
+                  0,
+                ));
+              },
+            ),
+        ],
+      );
+    };
+  }
   // For top level context menu, only option is to add context
   if (value.$1 == NodeType.none) {
     return (context) {

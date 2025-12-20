@@ -1,10 +1,11 @@
+import 'package:authorityeditor/authority/authority.dart';
 import 'package:fluent_ui/fluent_ui.dart' show TreeViewItem;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 import 'package:authorityeditor/edit/provider/node_provider.dart';
 import 'package:authorityeditor/authority/authority.dart'
     as authority
-    show Ref, NodeType;
+    show Ref, NodeType, topLevel;
 
 part 'tree_provider.g.dart';
 
@@ -23,6 +24,10 @@ class Tree extends _$Tree {
 
   authority.NodeType? clipboard() {
     return ref.read(documentsProvider).clipboard;
+  }
+
+  bool topLevel(authority.Ref aref) {
+    return authority.topLevel(state, aref);
   }
 
   void pasteChild(authority.Ref aref) {
@@ -46,6 +51,13 @@ class Tree extends _$Tree {
   void moveDown(authority.Ref aref) {
     final documents = ref.read(documentsProvider);
     documents.documents[documents.current].moveDown(aref);
+    state = documents.documents[documents.current].treeItems ?? [];
+  }
+
+  void addFAC(authority.Ref aref) {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].addFAC(aref);
+    ref.read(nodeProvider.notifier).refresh();
     state = documents.documents[documents.current].treeItems ?? [];
   }
 

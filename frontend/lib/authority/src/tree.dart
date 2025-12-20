@@ -234,7 +234,6 @@ TreeViewItem _copyItemWithoutChildren(TreeViewItem old) {
   );
 }
 
-// TODO: explore whether can just directly copy fields here, rather than recreating them??
 TreeViewItem _copyItemWithChildren(
   TreeViewItem old,
   List<TreeViewItem> list, {
@@ -260,7 +259,6 @@ TreeViewItem Function(int i) _moveGenerator(
 ) {
   return (int i) {
     int index = ctr.next(old[i].value.$1);
-    bool selected = ctr.isSelected();
     if (old[i].value == ref) {
       if (up) {
         i--;
@@ -280,7 +278,7 @@ TreeViewItem Function(int i) _moveGenerator(
         _moveGenerator(old[i].children, ref, ctr, up),
       ),
       index: index,
-      selected: selected,
+      selected: null,
     );
   };
 }
@@ -396,7 +394,6 @@ void relabelInPlace(
   String? itemno,
   String? title,
 ) {
-  int? prev; // terms only
   for (var i = 0; i < list.length; i++) {
     final item = list[i];
     // mutate this item only
@@ -409,20 +406,31 @@ void relabelInPlace(
         expanded: item.expanded,
         children: item.children,
       );
-    }
-    if (!(item.value.$1 as NodeType).like(ref.$1)) {
-      continue;
-    }
-    if (item.value.$1 == NodeType.termType && item.value.$2 < ref.$2) {
-      prev = i;
-    }
-    if (item.value.$2 > ref.$2 || i == list.length - 1) {
-      if (prev != null) {
-        relabelInPlace(list[prev].children, ref, itemno, title);
-      }
       return;
     }
+    if (ref.$1 == NodeType.contextType) {
+      if (item.value.$1 == NodeType.none) {
+        return relabelInPlace(item.children, ref, itemno, title);
+      }
+      continue;
+    } else if (!(item.value.$1 as NodeType).like(ref.$1)) {
+      continue;
+    }
+    if (i == list.length - 1 || list[i + 1].value.$2 > ref.$2) {
+      return relabelInPlace(item.children, ref, itemno, title);
+    }
   }
+}
+
+Ref? getLastNode(List<TreeViewItem>? list) {
+  if (list == null) return null;
+  final lastItem = list[list.length - 1];
+  Ref? ret = lastItem.value as Ref;
+  if (lastItem.children.isNotEmpty) {
+    ret = getLastNode(lastItem.children);
+    return ret;
+  }
+  return ret;
 }
 
 // if our ref may not have the right node type e.g. Class not Term, confirm with this function
@@ -504,4 +512,36 @@ void _appendRef(List<Ref> ret, TreeViewItem item) {
   for (final i in item.children) {
     _appendRef(ret, i);
   }
+}
+
+// for internal see references
+List<String>? getFunctions(List<TreeViewItem>? tree) {
+  if (tree == null) return null;
+  List<String> ret = [];
+  for (final item in tree) {
+    if (item.value.$1 == NodeType.termType) {
+      final content = (item.content as Text).data;
+      if (content != null) ret.add(content);
+    }
+  }
+  return ret;
+}
+
+List<String>? getActivities(List<TreeViewItem>? tree, String? function) {
+  if (tree == null || function == null) return null;
+  for (final item in tree) {
+    if (item.value.$1 == NodeType.termType) {
+      final content = (item.content as Text).data;
+      if (content == function) return getFunctions(item.children);
+    }
+  }
+  return null;
+}
+
+bool topLevel(List<TreeViewItem>? tree, Ref ref) {
+  if (tree == null) return false;
+  for (final item in tree) {
+    if (item.value == ref) return true;
+  }
+  return false;
 }

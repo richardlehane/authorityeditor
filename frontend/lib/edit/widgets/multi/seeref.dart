@@ -36,7 +36,11 @@ class SeeReference extends ConsumerWidget {
             InfoLabel(
               label: "Terms",
               labelStyle: FluentTheme.of(context).typography.caption!,
-              child: TermTitleRef(index: idx, element: element),
+              child: TermTitleRef(
+                index: idx,
+                element: element,
+                internalSeeRef: true,
+              ),
             ),
             SeeText(index: idx),
           ],

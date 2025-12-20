@@ -47,6 +47,11 @@ class _NodeTitleState extends ConsumerState<NodeTitle> {
           if (titleTxt.isEmpty) titleTxt = null;
           if (itemnoChanged) node.set("itemno", itemnoTxt);
           if (titleChanged) {
+            if (widget.term &&
+                titleTxt != null &&
+                ref.read(treeProvider.notifier).topLevel(node.ref)) {
+              titleTxt = titleTxt.toUpperCase();
+            }
             node.set((widget.term) ? "TermTitle" : "ClassTitle", titleTxt);
           }
           itemnoChanged = false;

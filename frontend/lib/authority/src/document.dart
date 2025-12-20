@@ -165,6 +165,22 @@ class Document {
     // todo: select the new node
   }
 
+  void addFAC(Ref ref) {
+    Session().addChild(sessionIndex, ref, NodeType.termType);
+    final lref = getLastNode(treeItems);
+    if (lref == null) return;
+    final tref = (NodeType.termType, lref.$2 + 1);
+    final tn = asCurrent(tref);
+    tn.set("type", "function");
+    Session().addChild(sessionIndex, tref, NodeType.termType);
+    final atref = (NodeType.termType, lref.$2 + 2);
+    final an = asCurrent(atref);
+    an.set("type", "activity");
+    Session().addChild(sessionIndex, atref, NodeType.classType);
+    setCurrent(tref);
+    rebuildTree();
+  }
+
   void addChild(Ref ref, NodeType nt) {
     Session().addChild(sessionIndex, ref, nt);
     treeItems = mutate(
@@ -175,40 +191,50 @@ class Document {
       nt: nt,
     );
     mutation++;
-    setCurrent(getSelected(treeItems!) ?? (NodeType.rootType, 0));
+    final nref =
+        (nt.like(NodeType.termType))
+            ? (nt, ref.$2 + 1)
+            : getSelected(treeItems!) ?? (NodeType.rootType, 0);
+    setCurrent(nref);
+    if (nt == NodeType.termType) {
+      Session().set(sessionIndex, "type", "activity");
+    }
   }
 
   void addSibling(Ref ref, NodeType nt) {
     Session().addSibling(sessionIndex, ref, nt);
     treeItems = mutate(treeItems!, TreeOp.sibling, ref, ctr: Counter(), nt: nt);
     mutation++;
-    setCurrent(getSelected(treeItems!) ?? (NodeType.rootType, 0));
+    final nref = getSelected(treeItems!) ?? (NodeType.rootType, 0);
+    setCurrent(nref);
+    if (nt == NodeType.termType) {
+      Session().set(
+        sessionIndex,
+        "type",
+        topLevel(treeItems, nref) ? "function" : "activity",
+      );
+    }
   }
 
   void moveUp(Ref ref) {
     Session().moveUp(sessionIndex, ref);
     treeItems = mutate(treeItems!, TreeOp.up, ref, ctr: Counter(selected));
     mutation++;
-    // todo: select the moved node
+    final nref = getSelected(treeItems!) ?? (NodeType.rootType, 0);
+    setCurrent(nref);
   }
 
   void moveDown(Ref ref) {
     Session().moveDown(sessionIndex, ref);
     treeItems = mutate(treeItems!, TreeOp.down, ref, ctr: Counter(selected));
     mutation++;
-    // todo: select the moved node
+    final nref = getSelected(treeItems!) ?? (NodeType.rootType, 0);
+    setCurrent(nref);
   }
 
   void relabel(Ref ref, String? itemno, String? title) {
     if (treeItems != null) {
       relabelInPlace(treeItems!, ref, itemno, title);
     }
-    // treeItems = mutate(
-    //   treeItems!,
-    //   TreeOp.relabel,
-    //   ref,
-    //   itemno: itemno,
-    //   title: title,
-    // );
   }
 }
