@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider/node_provider.dart';
 import 'multi.dart';
 import "../markup/markup.dart";
+import "textwidget.dart";
 
 class Comments extends Multi {
   const Comments({super.key})
@@ -34,13 +35,11 @@ class Comments extends Multi {
               labelStyle: FluentTheme.of(context).typography.caption!,
               child: SizedBox(
                 width: 140.0,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref
-                        .read(nodeProvider)
-                        .multiGet(element, idx, "author"),
-                  ),
-                  onChanged:
+                child: TextWidget(
+                  content: ref
+                      .read(nodeProvider)
+                      .multiGet(element, idx, "author"),
+                  cb:
                       (value) => ref
                           .read(nodeProvider)
                           .multiSet(element, idx, "author", value),

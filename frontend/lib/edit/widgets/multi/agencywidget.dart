@@ -1,6 +1,7 @@
 import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider/node_provider.dart';
+import 'textwidget.dart';
 
 class AgencyWidget extends ConsumerWidget {
   final String element;
@@ -17,13 +18,11 @@ class AgencyWidget extends ConsumerWidget {
             child: InfoLabel(
               label: "Agency name",
               labelStyle: FluentTheme.of(context).typography.caption!,
-              child: TextBox(
-                controller: TextEditingController(
-                  text: ref
-                      .read(nodeProvider)
-                      .multiGet(element, index, "Agency"),
-                ),
-                onChanged:
+              child: TextWidget(
+                content: ref
+                    .read(nodeProvider)
+                    .multiGet(element, index, "Agency"),
+                cb:
                     (value) => ref
                         .read(nodeProvider)
                         .multiSet(element, index, "Agency", value),
@@ -31,21 +30,22 @@ class AgencyWidget extends ConsumerWidget {
             ),
           ),
           Container(
-            width: 70.0,
+            width: 85.0,
             padding: EdgeInsets.only(left: 5.0),
             child: InfoLabel(
               label: "Agency no.",
               labelStyle: FluentTheme.of(context).typography.caption!,
-              child: TextBox(
-                controller: TextEditingController(
-                  text: ref
-                      .read(nodeProvider)
-                      .multiGet(element, index, "agencyno"),
+              child: NumberBox(
+                value: int.tryParse(
+                  ref.read(nodeProvider).multiGet(element, index, "agencyno") ??
+                      "",
                 ),
-                onChanged:
-                    (value) => ref
-                        .read(nodeProvider)
-                        .multiSet(element, index, "agencyno", value),
+                onChanged: (n) {
+                  ref
+                      .read(nodeProvider)
+                      .multiSet(element, index, "agencyno", n?.toString());
+                },
+                mode: SpinButtonPlacementMode.none,
               ),
             ),
           ),

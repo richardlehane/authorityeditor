@@ -29,6 +29,7 @@ pub fn followingSibling(parent: xml.xmlNodePtr, nt: tree.NodeType, el: []const u
         .Supersede => supersedeElements[0..],
         .SeeRef => seeRefElements[0..],
         .Draft => draftElements[0..],
+        .Amended => amendedElements[0..],
         .Submitted => submittedElements[0..],
         .Applying => applyingElements[0..],
         .None => unreachable,
@@ -110,6 +111,8 @@ const seeRefElements = [_][]const u8{
 };
 
 const draftElements = [_][]const u8{ "Agency", "Date" };
+
+const amendedElements = [_][]const u8{ "Agency", "Date", "AmendmentNote" };
 
 const submittedElements = [_][]const u8{ "Officer", "Position", "Agency", "Date" };
 

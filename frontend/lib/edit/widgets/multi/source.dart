@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider/node_provider.dart';
 import 'multi.dart';
+import "textwidget.dart";
 
 class Source extends Multi {
   const Source({super.key}) : super(label: "Sources", element: "Source");
@@ -24,11 +25,9 @@ class Source extends Multi {
             child: InfoLabel(
               label: "Source",
               labelStyle: FluentTheme.of(context).typography.caption!,
-              child: TextBox(
-                controller: TextEditingController(
-                  text: ref.read(nodeProvider).multiGet(element, idx, null),
-                ),
-                onChanged:
+              child: TextWidget(
+                content: ref.read(nodeProvider).multiGet(element, idx, null),
+                cb:
                     (value) => ref
                         .read(nodeProvider)
                         .multiSet(element, idx, null, value),
@@ -41,11 +40,9 @@ class Source extends Multi {
               child: InfoLabel(
                 label: "Web address (optional)",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref.read(nodeProvider).multiGet(element, idx, "url"),
-                  ),
-                  onChanged:
+                child: TextWidget(
+                  content: ref.read(nodeProvider).multiGet(element, idx, "url"),
+                  cb:
                       (value) => ref
                           .read(nodeProvider)
                           .multiSet(element, idx, "url", value),

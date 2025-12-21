@@ -409,8 +409,9 @@ pub fn multiEmpty(self: *Document, name: []const u8, idx: usize) bool {
     if (std.mem.eql(u8, name, "SeeReference")) {
         const ttr = tree.childN(el, "TermTitleRef", 0);
         if (ttr != null and !tree.empty(ttr.?)) return false;
-        el = tree.childN(el, "IDRef", 0) orelse return true;
-        return tree.contentEquals(el, "28");
+        const idr = tree.childN(el, "IDRef", 0) orelse return true;
+        if (tree.empty(idr)) return true;
+        return tree.contentEquals(idr, "28");
     }
     return tree.empty(el);
 }
@@ -933,8 +934,9 @@ test "multi" {
     try testing.expect(doc.multiAdd("Status", "Draft") == 0);
     try testing.expect(doc.multiAdd("Status", "Issued") == 1);
     try testing.expect(doc.multiAdd("Status", "Submitted") == 2);
+    try testing.expect(doc.multiAdd("Status", "Amended") == 3);
     doc.multiDrop("Status", 1);
-    try testing.expect(doc.multiLen("Status") == 2);
+    try testing.expect(doc.multiLen("Status") == 3);
     try testing.expect(doc.multiAdd("LinkedTo", null) == 0);
     try testing.expect(doc.multiAdd("LinkedTo", null) == 1);
     try testing.expect(doc.multiAdd("LinkedTo", null) == 2);
@@ -988,5 +990,54 @@ test "multi set and get" {
     result = doc.multiGet("Status", 0, "agencyno");
     try testing.expectEqualSlices(u8, "294", std.mem.span(result));
     tree.freeStr(result);
+    try testing.expect(doc.multiAdd("Status", "Amended") == 1);
+    doc.multiSet("Status", 1, "agencyno", "294");
+    doc.multiSet("Status", 1, "Agency", "Wild dog");
+    doc.multiSet("Status", 1, "version", "2.0");
+    doc.multiSet("Status", 1, "Date", "2025-11-04");
+    doc.multiSetParagraphs("Status", 1, "AmendmentNote", &[_]u8{
+        1,
+        1,
+        0,
+        11,
+        0,
+        'S',
+        'u',
+        'p',
+        'e',
+        'r',
+        's',
+        'e',
+        'd',
+        'e',
+        'd',
+        0,
+    });
+    result = doc.multiGet("Status", 1, "agencyno");
+    try testing.expectEqualSlices(u8, "294", std.mem.span(result));
+    tree.freeStr(result);
+    result = doc.multiGet("Status", 1, "version");
+    try testing.expectEqualSlices(u8, "2.0", std.mem.span(result));
+    tree.freeStr(result);
+    const para = doc.multiGetParagraphs("Status", 1, "AmendmentNote").?;
+    try testing.expectEqualSlices(u8, &[_]u8{
+        1,
+        1,
+        0,
+        11,
+        0,
+        'S',
+        'u',
+        'p',
+        'e',
+        'r',
+        's',
+        'e',
+        'd',
+        'e',
+        'd',
+        0,
+    }, para);
+    testing.allocator.free(para);
     try testing.expect(doc.valid());
 }

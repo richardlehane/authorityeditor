@@ -6,6 +6,7 @@ import 'termtitleref.dart';
 import 'entry.dart';
 import 'ga28.dart';
 import 'idwidget.dart';
+import "textwidget.dart";
 
 const double _addEntryHeight = 60.0;
 // Two types:
@@ -71,13 +72,11 @@ class SeeReference extends ConsumerWidget {
               child: InfoLabel(
                 label: "Authority title",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref
-                        .read(nodeProvider)
-                        .multiGet(element, idx, "AuthorityTitleRef"),
-                  ),
-                  onChanged:
+                child: TextWidget(
+                  content: ref
+                      .read(nodeProvider)
+                      .multiGet(element, idx, "AuthorityTitleRef"),
+                  cb:
                       (value) => ref
                           .read(nodeProvider)
                           .multiSet(element, idx, "AuthorityTitleRef", value),
@@ -95,13 +94,11 @@ class SeeReference extends ConsumerWidget {
               child: InfoLabel(
                 label: "Item no.",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref
-                        .read(nodeProvider)
-                        .multiGet(element, idx, "ItemNoRef"),
-                  ),
-                  onChanged:
+                child: TextWidget(
+                  content: ref
+                      .read(nodeProvider)
+                      .multiGet(element, idx, "ItemNoRef"),
+                  cb:
                       (value) => ref
                           .read(nodeProvider)
                           .multiSet(element, idx, "ItemNoRef", value),
@@ -219,20 +216,11 @@ class SeeText extends ConsumerWidget {
         child: InfoLabel(
           label: "See text",
           labelStyle: FluentTheme.of(context).typography.caption!,
-          child: TextBox(
+          child: TextWidget(
             placeholder: "for records relating to...",
-            controller: TextEditingController(
-              text: ref.read(nodeProvider).multiGet(element, index, "SeeText"),
-            ),
-            onChanged: (value) {
-              ref
-                  .read(nodeProvider)
-                  .multiSet(
-                    element,
-                    index,
-                    "SeeText",
-                    value.isEmpty ? null : value,
-                  );
+            content: ref.read(nodeProvider).multiGet(element, index, "SeeText"),
+            cb: (value) {
+              ref.read(nodeProvider).multiSet(element, index, "SeeText", value);
             },
           ),
         ),

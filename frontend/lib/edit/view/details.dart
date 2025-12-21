@@ -20,16 +20,13 @@ class DetailsView extends ConsumerWidget {
             style: FluentTheme.of(context).typography.subtitle,
           ),
         ),
-
-        Padding(
-          padding: EdgeInsets.only(top: 10.0),
-          child: SimpleText(label: "Title", name: "AuthorityTitle"),
-        ),
         Padding(
           padding: EdgeInsets.only(top: 10.0),
           child: Row(
             children: [
-              Expanded(child: SimpleText(label: "Scope", name: "Scope")),
+              Expanded(
+                child: SimpleText(label: "Title", name: "AuthorityTitle"),
+              ),
               Padding(padding: EdgeInsets.only(left: 5.0), child: DateRange()),
             ],
           ),

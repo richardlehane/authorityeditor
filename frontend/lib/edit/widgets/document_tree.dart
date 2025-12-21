@@ -33,7 +33,6 @@ Movement canMove(TreeViewItem item, List<TreeViewItem> siblings) {
   bool down = false;
   if (siblings.length < 2) return Movement.none;
   if (item.depth == 0) {
-    debugPrint("we're at the top\n");
     if (siblings.length < 4) return Movement.none;
     if (siblings[2].value != item.value) up = true;
   } else {

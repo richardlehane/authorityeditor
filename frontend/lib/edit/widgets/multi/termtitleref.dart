@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider/node_provider.dart';
 import '../../provider/tree_provider.dart';
 import 'package:authorityeditor/authority/authority.dart';
+import "textwidget.dart";
 
 class TermTitleRef extends ConsumerStatefulWidget {
   final int index;
@@ -30,7 +31,7 @@ class _TermTitleRefState extends ConsumerState<TermTitleRef> {
 
   @override
   Widget build(BuildContext context) {
-    final width = (widget.internalSeeRef) ? 250.0 : 150.0;
+    final width = (widget.internalSeeRef) ? 250.0 : 100.0;
     return SizedBox(
       width: termlen * width + 28.0,
       height: 32,
@@ -59,7 +60,7 @@ class _TermTitleRefState extends ConsumerState<TermTitleRef> {
           }
           return Container(
             height: 50,
-            width: 250,
+            width: width,
             padding: EdgeInsets.only(right: (idx < termlen - 1) ? 5.0 : 0.0),
             child:
                 (widget.internalSeeRef && idx < 2)
@@ -67,7 +68,6 @@ class _TermTitleRefState extends ConsumerState<TermTitleRef> {
                       index: widget.index,
                       element: widget.element,
                       termIndex: idx,
-
                       cb: (value) {
                         if (value == null || value.isEmpty) {
                           setState(() {
@@ -93,15 +93,12 @@ class _TermTitleRefState extends ConsumerState<TermTitleRef> {
                         }
                       },
                     )
-                    : TextBox(
-                      controller: TextEditingController(
-                        // TODO: make this stateful to allow disposal of text controller
-                        text: ref
-                            .read(nodeProvider)
-                            .termsRefGet(widget.element, widget.index, idx),
-                      ),
-                      onChanged: (value) {
-                        if (value.isEmpty) {
+                    : TextWidget(
+                      content: ref
+                          .read(nodeProvider)
+                          .termsRefGet(widget.element, widget.index, idx),
+                      cb: (value) {
+                        if (value == null) {
                           setState(() {
                             ref
                                 .read(nodeProvider)
@@ -132,7 +129,6 @@ class _TermTitleRefState extends ConsumerState<TermTitleRef> {
   }
 }
 
-// TODO make this stateful and a TapRegion. State only maintains starting and current value
 class InternalRef extends ConsumerStatefulWidget {
   final int index;
   final String element;
@@ -186,6 +182,7 @@ class _InternalRefState extends ConsumerState<InternalRef> {
     return TapRegion(
       onTapOutside: (PointerDownEvent ev) {
         if (changed) {
+          changed = false;
           widget.cb(term);
         }
       },

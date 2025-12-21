@@ -904,6 +904,8 @@ const seeRefElements = [
 
 const draftElements = ["Agency", "Date"];
 
+const amendedElements = ["Agency", "Date", "AmendmentNote"];
+
 const submittedElements = ["Officer", "Position", "Agency", "Date"];
 
 const applyingElements = ["Agency", "StartDate", "EndDate"];
@@ -924,6 +926,7 @@ const applyingElements = ["Agency", "StartDate", "EndDate"];
     "SupersededBy" => supersedeElements,
     "SeeReference" => seeRefElements,
     "Draft" || "Issued" => draftElements,
+    "Amended" => amendedElements,
     "Submitted" => submittedElements,
     "Applying" => applyingElements,
     _ => [],

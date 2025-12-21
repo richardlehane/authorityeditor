@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider/node_provider.dart';
 import 'combo.dart';
+import "textwidget.dart";
 
 const _fullControls = [
   "FA",
@@ -51,11 +52,9 @@ class IDWidget extends ConsumerWidget {
           child: InfoLabel(
             label: "Number",
             labelStyle: FluentTheme.of(context).typography.caption!,
-            child: TextBox(
-              controller: TextEditingController(
-                text: ref.read(nodeProvider).multiGet(element, idx, sub),
-              ),
-              onChanged:
+            child: TextWidget(
+              content: ref.read(nodeProvider).multiGet(element, idx, sub),
+              cb:
                   (value) =>
                       ref.read(nodeProvider).multiSet(element, idx, sub, value),
             ),

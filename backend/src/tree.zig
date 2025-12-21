@@ -99,6 +99,7 @@ pub const NodeType = enum(u8) {
     Supersede,
     SeeRef,
     Draft,
+    Amended,
     Submitted,
     Applying,
 
@@ -111,6 +112,7 @@ pub const NodeType = enum(u8) {
         if (equals(a, "PartSupersedes") or equals(a, "Supersedes") or equals(a, "PartSupersededBy") or equals(a, "SupersededBy")) return .Supersede;
         if (equals(a, "SeeReference")) return .SeeRef;
         if (equals(a, "Draft") or equals(a, "Issued")) return .Draft;
+        if (equals(a, "Amended")) return .Amended;
         if (equals(a, "Submitted")) return .Submitted;
         if (equals(a, "Applying")) return .Applying;
         return .None;

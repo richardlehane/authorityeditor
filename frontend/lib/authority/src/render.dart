@@ -218,6 +218,8 @@ mixin Render {
         return _statusSupersede(st, index);
       case StatusKind.draft:
         return _statusDraft(st, index);
+      case StatusKind.amended:
+        return _statusAmended(st, index);
       case StatusKind.submitted:
         return _statusSubmitted(st, index);
       case StatusKind.applying:
@@ -275,6 +277,41 @@ mixin Render {
       } else {
         ret.add(_toSpan(0, " $date"));
       }
+    }
+    return ret;
+  }
+
+  List<TextSpan> _statusAmended(StatusType st, int index) {
+    List<TextSpan> ret = [_toSpan(0, st.toString())];
+    String? version = multiGet(st.toElement(), index, "version");
+    String? agency = _agency(
+      multiGet(st.toElement(), index, "Agency"),
+      multiGet(st.toElement(), index, "agencyno"),
+    );
+    String? date = _formatDate(
+      _parseDate(multiGet(st.toElement(), index, "Date")),
+    );
+    List<XmlElement>? note = multiGetParagraphs(
+      st.toElement(),
+      index,
+      "AmendmentNote",
+    );
+    if (version != null) ret.add(_toSpan(0, " v.$version"));
+    if (agency != null) ret.add(_toSpan(0, ", $agency"));
+    if (date != null) {
+      if (ret.length > 1) {
+        ret.add(_toSpan(0, ", $date"));
+      } else {
+        ret.add(_toSpan(0, " $date"));
+      }
+    }
+    if (note != null) {
+      if (ret.length > 1) {
+        ret.add(_toSpan(0, ", "));
+      } else {
+        ret.add(_toSpan(0, " "));
+      }
+      ret.addAll(_renderParas(note));
     }
     return ret;
   }

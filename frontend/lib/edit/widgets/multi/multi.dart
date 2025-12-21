@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'entry.dart';
 import '../../provider/node_provider.dart';
+import "textwidget.dart";
 
 const double _addEntryHeight = 60.0; // height of add button
 // Two types:
@@ -31,10 +32,11 @@ class Multi extends ConsumerWidget {
       int flags,
       Function(int) cb,
     ) {
-      return TextBox(
-        controller: TextEditingController(
-          text: ref.read(nodeProvider).multiGet(element, idx, sub),
-        ),
+      return TextWidget(
+        content: ref.read(nodeProvider).multiGet(element, idx, sub),
+        cb:
+            (value) =>
+                ref.read(nodeProvider).multiSet(element, idx, sub, value),
       );
     }
 

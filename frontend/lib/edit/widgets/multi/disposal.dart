@@ -4,6 +4,7 @@ import '../../provider/node_provider.dart';
 import 'multi.dart';
 import 'combo.dart';
 import "../markup/markup.dart";
+import "textwidget.dart";
 
 const List<String> disposalActions = [
   "",
@@ -224,11 +225,11 @@ List<Widget> _disposalChildren(
         padding: EdgeInsetsGeometry.only(left: 5.0),
         child: InfoLabel(
           label: "Transfer to",
-          child: TextBox(
-            controller: TextEditingController(
-              text: ref.read(nodeProvider).multiGet(element, idx, "TransferTo"),
-            ),
-            onChanged:
+          child: TextWidget(
+            content: ref
+                .read(nodeProvider)
+                .multiGet(element, idx, "TransferTo"),
+            cb:
                 (value) => ref
                     .read(nodeProvider)
                     .multiSet(element, idx, "TransferTo", value),

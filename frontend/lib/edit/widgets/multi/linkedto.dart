@@ -2,6 +2,7 @@ import 'package:fluent_ui/fluent_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../provider/node_provider.dart';
 import 'multi.dart';
+import "textwidget.dart";
 
 class LinkedTo extends Multi {
   const LinkedTo({super.key}) : super(label: "Linked to", element: "LinkedTo");
@@ -31,9 +32,6 @@ class LinkedTo extends Multi {
                     [
                           "linking table",
                           "index",
-                          "mandate",
-                          "business unit",
-                          "agency classification scheme",
                           "SRNSW appraisal objective",
                           "SRNSW function",
                           "SRNSW activity",
@@ -57,12 +55,9 @@ class LinkedTo extends Multi {
               child: InfoLabel(
                 label: "Link",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref.read(nodeProvider).multiGet(element, idx, null),
-                  ),
-                  //onChanged: (value) => ref.read(nodeProvider).mark(name),//
-                  onChanged:
+                child: TextWidget(
+                  content: ref.read(nodeProvider).multiGet(element, idx, null),
+                  cb:
                       (value) => ref
                           .read(nodeProvider)
                           .multiSet(element, idx, null, value),

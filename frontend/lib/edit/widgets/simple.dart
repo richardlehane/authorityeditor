@@ -38,6 +38,7 @@ class _SimpleTextState extends ConsumerState<SimpleText> {
     return TapRegion(
       onTapOutside: (PointerDownEvent ev) {
         if (changed) {
+          changed = false;
           String? val = controller.text;
           if (val.isEmpty) val = null;
           ref.read(nodeProvider).set(widget.name, val);

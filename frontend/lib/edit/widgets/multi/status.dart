@@ -9,6 +9,8 @@ import '../../provider/node_provider.dart';
 import 'package:authorityeditor/authority/authority.dart'
     show StatusType, StatusKind;
 import 'package:intl/intl.dart' show DateFormat;
+import "textwidget.dart";
+import "../markup/markup.dart";
 
 const double _addEntryHeight = 60.0;
 // Two types:
@@ -42,24 +44,90 @@ class Status extends ConsumerWidget {
             _calendar(context, ref, st, idx),
             Container(
               padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
-              width: 70.0,
+              width: 80.0,
               child: InfoLabel(
                 label: "Version",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref
-                        .read(nodeProvider)
-                        .multiGet(st.toElement(), idx, "version"),
+                child: NumberBox(
+                  value: int.tryParse(
+                    ref
+                            .read(nodeProvider)
+                            .multiGet(st.toElement(), idx, "version") ??
+                        "",
                   ),
-                  onChanged:
-                      (value) => ref
-                          .read(nodeProvider)
-                          .multiSet(st.toElement(), idx, "version", value),
+                  onChanged: (n) {
+                    ref
+                        .read(nodeProvider)
+                        .multiSet(
+                          st.toElement(),
+                          idx,
+                          "version",
+                          n?.toString(),
+                        );
+                  },
+                  mode: SpinButtonPlacementMode.none,
                 ),
               ),
             ),
             AgencyWidget(element: element, index: idx),
+          ],
+        ),
+        StatusKind.amended => Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _calendar(context, ref, st, idx),
+            Container(
+              padding: EdgeInsets.fromLTRB(5.0, 0, 5.0, 0),
+              width: 80.0,
+              child: InfoLabel(
+                label: "Version",
+                labelStyle: FluentTheme.of(context).typography.caption!,
+                child: TextWidget(
+                  placeholder: "2.0",
+                  content: ref
+                      .read(nodeProvider)
+                      .multiGet(st.toElement(), idx, "version"),
+
+                  cb: (n) {
+                    ref
+                        .read(nodeProvider)
+                        .multiSet(st.toElement(), idx, "version", n);
+                  },
+                ),
+              ),
+            ),
+            SizedBox(
+              width: 200.0,
+              child: AgencyWidget(element: element, index: idx),
+            ),
+            Expanded(
+              child: Padding(
+                padding: EdgeInsetsGeometry.only(left: 5.0),
+                child: InfoLabel(
+                  label: "Comment",
+                  labelStyle: FluentTheme.of(context).typography.caption!,
+                  child: Markup(
+                    paras: ref
+                        .read(nodeProvider)
+                        .multiGetParagraphs(
+                          st.toElement(),
+                          idx,
+                          "AmendmentNote",
+                        ),
+                    cb:
+                        (paras) => ref
+                            .read(nodeProvider)
+                            .multiSetParagraphs(
+                              st.toElement(),
+                              idx,
+                              "AmendmentNote",
+                              paras,
+                            ),
+                    height: 42,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
         StatusKind.issued => Row(
@@ -83,13 +151,11 @@ class Status extends ConsumerWidget {
                 labelStyle: FluentTheme.of(context).typography.caption!,
                 child: SizedBox(
                   width: 160.0,
-                  child: TextBox(
-                    controller: TextEditingController(
-                      text: ref
-                          .read(nodeProvider)
-                          .multiGet(st.toElement(), idx, "Officer"),
-                    ),
-                    onChanged:
+                  child: TextWidget(
+                    content: ref
+                        .read(nodeProvider)
+                        .multiGet(st.toElement(), idx, "Officer"),
+                    cb:
                         (value) => ref
                             .read(nodeProvider)
                             .multiSet(st.toElement(), idx, "Officer", value),
@@ -104,13 +170,11 @@ class Status extends ConsumerWidget {
                 labelStyle: FluentTheme.of(context).typography.caption!,
                 child: SizedBox(
                   width: 160.0,
-                  child: TextBox(
-                    controller: TextEditingController(
-                      text: ref
-                          .read(nodeProvider)
-                          .multiGet(st.toElement(), idx, "Position"),
-                    ),
-                    onChanged:
+                  child: TextWidget(
+                    content: ref
+                        .read(nodeProvider)
+                        .multiGet(st.toElement(), idx, "Position"),
+                    cb:
                         (value) => ref
                             .read(nodeProvider)
                             .multiSet(st.toElement(), idx, "Position", value),
@@ -210,13 +274,11 @@ class Status extends ConsumerWidget {
               child: InfoLabel(
                 label: "Authority title",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref
-                        .read(nodeProvider)
-                        .multiGet(st.toElement(), idx, "AuthorityTitleRef"),
-                  ),
-                  onChanged:
+                child: TextWidget(
+                  content: ref
+                      .read(nodeProvider)
+                      .multiGet(st.toElement(), idx, "AuthorityTitleRef"),
+                  cb:
                       (value) => ref
                           .read(nodeProvider)
                           .multiSet(
@@ -239,13 +301,11 @@ class Status extends ConsumerWidget {
               child: InfoLabel(
                 label: "Item no.",
                 labelStyle: FluentTheme.of(context).typography.caption!,
-                child: TextBox(
-                  controller: TextEditingController(
-                    text: ref
-                        .read(nodeProvider)
-                        .multiGet(st.toElement(), idx, "ItemNoRef"),
-                  ),
-                  onChanged:
+                child: TextWidget(
+                  content: ref
+                      .read(nodeProvider)
+                      .multiGet(st.toElement(), idx, "ItemNoRef"),
+                  cb:
                       (value) => ref
                           .read(nodeProvider)
                           .multiSet(st.toElement(), idx, "ItemNoRef", value),
@@ -258,22 +318,14 @@ class Status extends ConsumerWidget {
                 child: InfoLabel(
                   label: "Part text",
                   labelStyle: FluentTheme.of(context).typography.caption!,
-                  child: TextBox(
-                    controller: TextEditingController(
-                      text: ref
-                          .read(nodeProvider)
-                          .multiGet(st.toElement(), idx, "PartText"),
-                    ),
-                    //onChanged: (value) => ref.read(nodeProvider).mark(name),//
-                    onChanged: (value) {
+                  child: TextWidget(
+                    content: ref
+                        .read(nodeProvider)
+                        .multiGet(st.toElement(), idx, "PartText"),
+                    cb: (value) {
                       ref
                           .read(nodeProvider)
-                          .multiSet(
-                            st.toElement(),
-                            idx,
-                            "PartText",
-                            value.isEmpty ? null : value,
-                          );
+                          .multiSet(st.toElement(), idx, "PartText", value);
                     },
                   ),
                 ),
@@ -378,13 +430,13 @@ class Status extends ConsumerWidget {
                               .read(nodeProvider.notifier)
                               .multiAdd(element, "Applying"),
                     ),
-                    MenuFlyoutItem(
-                      text: const Text('Partly Supersedes'),
-                      onPressed:
-                          () => ref
-                              .read(nodeProvider.notifier)
-                              .multiAdd(element, "PartSupersedes"),
-                    ),
+                    // MenuFlyoutItem(
+                    //   text: const Text('Partly Supersedes'),
+                    //   onPressed:
+                    //       () => ref
+                    //           .read(nodeProvider.notifier)
+                    //           .multiAdd(element, "PartSupersedes"),
+                    // ),
                     MenuFlyoutItem(
                       text: const Text('Supersedes'),
                       onPressed:
@@ -392,34 +444,34 @@ class Status extends ConsumerWidget {
                               .read(nodeProvider.notifier)
                               .multiAdd(element, "Supersedes"),
                     ),
-                    MenuFlyoutItem(
-                      text: const Text('Partly Superseded By'),
-                      onPressed:
-                          () => ref
-                              .read(nodeProvider.notifier)
-                              .multiAdd(element, "PartSupersededBy"),
-                    ),
-                    MenuFlyoutItem(
-                      text: const Text('Superseded By'),
-                      onPressed:
-                          () => ref
-                              .read(nodeProvider.notifier)
-                              .multiAdd(element, "SupersededBy"),
-                    ),
-                    MenuFlyoutItem(
-                      text: const Text('Review'),
-                      onPressed:
-                          () => ref
-                              .read(nodeProvider.notifier)
-                              .multiAdd(element, "Review"),
-                    ),
-                    MenuFlyoutItem(
-                      text: const Text('Expired'),
-                      onPressed:
-                          () => ref
-                              .read(nodeProvider.notifier)
-                              .multiAdd(element, "Expired"),
-                    ),
+                    // MenuFlyoutItem(
+                    //   text: const Text('Partly Superseded By'),
+                    //   onPressed:
+                    //       () => ref
+                    //           .read(nodeProvider.notifier)
+                    //           .multiAdd(element, "PartSupersededBy"),
+                    // ),
+                    // MenuFlyoutItem(
+                    //   text: const Text('Superseded By'),
+                    //   onPressed:
+                    //       () => ref
+                    //           .read(nodeProvider.notifier)
+                    //           .multiAdd(element, "SupersededBy"),
+                    // ),
+                    // MenuFlyoutItem(
+                    //   text: const Text('Review'),
+                    //   onPressed:
+                    //       () => ref
+                    //           .read(nodeProvider.notifier)
+                    //           .multiAdd(element, "Review"),
+                    // ),
+                    // MenuFlyoutItem(
+                    //   text: const Text('Expired'),
+                    //   onPressed:
+                    //       () => ref
+                    //           .read(nodeProvider.notifier)
+                    //           .multiAdd(element, "Expired"),
+                    // ),
                     MenuFlyoutItem(
                       text: const Text('Revoked'),
                       onPressed:

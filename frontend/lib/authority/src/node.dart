@@ -19,7 +19,16 @@ enum DateType {
 
 enum SeeRefType { none, local, ga28, other }
 
-enum StatusKind { none, date, supersede, draft, submitted, applying, issued }
+enum StatusKind {
+  none,
+  date,
+  supersede,
+  draft,
+  submitted,
+  applying,
+  issued,
+  amended,
+}
 
 enum StatusType {
   none,
@@ -43,11 +52,12 @@ enum StatusType {
       submitted => StatusKind.submitted,
       applying => StatusKind.applying,
       issued => StatusKind.issued,
+      amended => StatusKind.amended,
       partsupersedes ||
       supersedes ||
       partsupersededby ||
       supersededby => StatusKind.supersede,
-      approved || amended || review || expired || revoked => StatusKind.date,
+      approved || review || expired || revoked => StatusKind.date,
       none => StatusKind.none,
     };
   }
