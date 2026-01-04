@@ -191,10 +191,7 @@ class Document {
       nt: nt,
     );
     mutation++;
-    final nref =
-        (nt.like(NodeType.termType))
-            ? (nt, ref.$2 + 1)
-            : getSelected(treeItems!) ?? (NodeType.rootType, 0);
+    final nref = getSelected(treeItems!) ?? (NodeType.rootType, 0);
     setCurrent(nref);
     if (nt == NodeType.termType) {
       Session().set(sessionIndex, "type", "activity");

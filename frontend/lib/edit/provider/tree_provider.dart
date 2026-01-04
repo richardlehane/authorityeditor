@@ -44,12 +44,14 @@ class Tree extends _$Tree {
   void moveUp(authority.Ref aref) {
     final documents = ref.read(documentsProvider);
     documents.documents[documents.current].moveUp(aref);
+    ref.read(nodeProvider.notifier).refresh();
     state = documents.documents[documents.current].treeItems ?? [];
   }
 
   void moveDown(authority.Ref aref) {
     final documents = ref.read(documentsProvider);
     documents.documents[documents.current].moveDown(aref);
+    ref.read(nodeProvider.notifier).refresh();
     state = documents.documents[documents.current].treeItems ?? [];
   }
 

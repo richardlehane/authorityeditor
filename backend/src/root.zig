@@ -308,6 +308,8 @@ test {
     _ = @import("Document.zig");
     _ = @import("tree.zig");
     _ = @import("paragraph.zig");
+    _ = @import("transform.zig");
+    _ = @import("header.zig");
 }
 
 const example = "../data/SRNSW_example.xml";

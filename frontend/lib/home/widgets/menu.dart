@@ -7,6 +7,7 @@ import 'dart:ui' show AppExitType;
 import 'package:open_file/open_file.dart';
 import 'package:authorityeditor/home/provider/documents_provider.dart';
 import 'package:authorityeditor/authority/authority.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 final class AuthorityCommand extends ConsumerWidget {
   const AuthorityCommand({super.key});
@@ -40,17 +41,31 @@ final class AuthorityCommand extends ConsumerWidget {
             ),
             if (kIsWeb)
               MenuFlyoutItem(
-                text: const Text('Download'),
+                text: const Text('Open example'),
                 onPressed: () async {
-                  final doc =
-                      ref.read(documentsProvider).documents[documents.current];
-                  await FilePicker.platform.saveFile(
-                    fileName:
-                        (doc.title == "Untitled") ? "document.xml" : doc.title,
-                    bytes: doc.bytes(),
+                  final example = await rootBundle.load(
+                    'assets/SRNSW_example.xml',
                   );
+                  final f = PlatformFile(
+                    name: "example.xml",
+                    size: example.lengthInBytes,
+                    bytes: example.buffer.asUint8List(),
+                  );
+                  ref.read(documentsProvider.notifier).load(f);
                 },
               ),
+            MenuFlyoutItem(
+              text: const Text('Download'),
+              onPressed: () async {
+                final doc =
+                    ref.read(documentsProvider).documents[documents.current];
+                await FilePicker.platform.saveFile(
+                  fileName:
+                      (doc.title == "Untitled") ? "document.xml" : doc.title,
+                  bytes: doc.bytes(),
+                );
+              },
+            ),
             if (!kIsWeb)
               MenuFlyoutItem(
                 text: const Text('Save'),

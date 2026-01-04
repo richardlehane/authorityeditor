@@ -163,4 +163,63 @@ const List<(String, List<String>)> justifications = [
       "Records document significant impacts of government decisions on the environment.",
     ],
   ),
+  (
+    "Superseded - State archives (Appraisal objective 1)",
+    [
+      "Records document the establishment, structure and functions of the [Government / organisation].",
+      "Records establish the nature and extent of the [Government’s / organisation’s] [jurisdiction / obligations / responsibilities / powers].",
+      "Records document the passing and promulgation of legislation.",
+      "Records provide evidence of legal delegations to perform duties and functions of State.",
+      "Records document [judgments / rulings / decisions] determining the extent of jurisdictions and powers.",
+      "Records document agreements between governments.",
+    ],
+  ),
+  (
+    "Superseded - State archives (Appraisal objective 2)",
+    [
+      "Records provide evidence of key [decisions / activities] influencing the [administration of government / governance of the people of NSW].",
+      "Records document the [background to / basis for / outcomes of] key [decisions / activities] influencing the [administration of government / governance of the people of NSW].",
+      "Records document the [formulation / determination] of policy across the whole of government.",
+      "Records document the [formulation / determination / implementation] of [high level policy / strategic management decisions] [across sectors / within the organisation].",
+      "Records document the [monitoring / analysis / review] of policy affecting key government functions.",
+      "Records provide evidence of major reforms of the State’s [political / administrative] [structures / institutions].",
+      "Records document the [development / implementation / review] of legislation.",
+    ],
+  ),
+  (
+    "Superseded - State archives (Appraisal objective 3)",
+    [
+      "Records are essential for the [establishment / protection] of fundamental rights and entitlements of [individuals / groups] within the community.",
+      "Records are essential for the ongoing administration of the State.",
+      "Records establish the existence of [individuals / groups].",
+      "Records establish the rights of [individuals / groups] to [participate in the affairs of the State / make claim to entitlements provided by the State / make claim to protection provided by the State].",
+      "Records document the registration of births, deaths and marriages.",
+      "Records document the administration of [title or interests in land / real property].",
+      "Records document the administration of probate.",
+    ],
+  ),
+  (
+    "Superseded - State archives (Appraisal objective 4)",
+    [
+      "Records substantially contribute to [the existing body of knowledge / an understanding] of aspects of the [history / society / culture / people] of NSW.",
+      "Records relate to [events / persons / places / social phenomena / environmental phenomena / cultural phenomena] of significance to the [broader community / State of NSW / nation].",
+      "Records document the [planning / management] of major [infrastructure / development] projects.",
+      "Records document the [planning / management] of the State’s economic resources.",
+      "Records document the [planning / management / staging] of significant [cultural events / celebrations].",
+      "Records document the [identification / development / management] of [sites / objects] of [conservation / cultural / heritage] significance.",
+      "Records provide evidence of the [works / activities] of [individuals who/ organisations that] have significantly contributed to society.",
+    ],
+  ),
+  (
+    "Superseded - State archives (Appraisal objective 5)",
+    [
+      "Records contain information [essential for / contributing to] the [protection / physical well being / social benefit] of [current / future] generations.",
+      "Records document the impact of government activities on [the environment / the community / individuals within the community].",
+      "Records document the nature of people’s interaction with [government / their environment].",
+      "Records form a significant [collection / analysis] of data to assist effective [planning / decision-making] in relation to issues affecting [the community / resource management / the environment / the provision of essential services].",
+      "Records document [representations / appeals] against the [decisions / actions] of [government / the legislature].",
+      "Records document individual case management where the government [functions / programs] had far-reaching [impact / influence] on the [lives of individuals within the community / environment / development of the State and its resources].",
+      "Records document [environmental / economic / social] conditions within the State [at a particular point in time / over time].",
+    ],
+  ),
 ];

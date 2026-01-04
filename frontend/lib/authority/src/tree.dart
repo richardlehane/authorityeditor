@@ -520,8 +520,10 @@ List<String>? getFunctions(List<TreeViewItem>? tree) {
   List<String> ret = [];
   for (final item in tree) {
     if (item.value.$1 == NodeType.termType) {
-      final content = (item.content as Text).data;
-      if (content != null) ret.add(content);
+      if (item.content is Text) {
+        final content = (item.content as Text).data;
+        if (content != null) ret.add(content);
+      }
     }
   }
   return ret;
@@ -531,8 +533,10 @@ List<String>? getActivities(List<TreeViewItem>? tree, String? function) {
   if (tree == null || function == null) return null;
   for (final item in tree) {
     if (item.value.$1 == NodeType.termType) {
-      final content = (item.content as Text).data;
-      if (content == function) return getFunctions(item.children);
+      if (item.content is Text) {
+        final content = (item.content as Text).data;
+        if (content == function) return getFunctions(item.children);
+      }
     }
   }
   return null;

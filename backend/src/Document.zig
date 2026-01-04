@@ -743,10 +743,10 @@ test "transform" {
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
-    doc.transform("../frontend/assets/stylesheets/word_approved_authority.xsl", "word.xml");
-    //const stat = try std.fs.cwd().statFile("preview.html");
-    // try testing.expect(stat.size == 2025);
-    try std.fs.cwd().deleteFile("word.xml");
+    doc.transform("../frontend/assets/stylesheets/preview_authority.xsl", "preview.html");
+    const stat = try std.fs.cwd().statFile("preview.html");
+    try testing.expect(stat.size == 4998);
+    try std.fs.cwd().deleteFile("preview.html");
 }
 
 test "edit" {
@@ -766,10 +766,10 @@ test "current" {
     const doc = try Document.load(session, example);
     defer doc.deinit();
     doc.setCurrent(.Context, 3);
-    try testing.expectEqualSlices(u8, std.mem.span(xml.xmlNodeGetContent(tree.childN(doc.current.?, "ContextTitle", 0).?)), "About the records held by the organisation");
+    try testing.expectEqualStrings(std.mem.span(xml.xmlNodeGetContent(tree.childN(doc.current.?, "ContextTitle", 0).?)), "About the records held by the organisation");
     doc.setCurrent(.Class, 4);
     const itemno = xml.xmlGetProp(doc.current.?, "itemno");
-    try testing.expectEqualSlices(u8, std.mem.span(itemno), "3.6.1");
+    try testing.expectEqualStrings(std.mem.span(itemno), "3.6.1");
     try testing.expect(doc.valid());
 }
 
@@ -781,7 +781,7 @@ test "drop" {
     doc.drop(.Class, 2);
     doc.drop(.Term, 1);
     doc.drop(.Term, 0);
-    try testing.expectEqualSlices(u8, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
+    try testing.expectEqualStrings("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
     try testing.expect(doc.valid());
 }
 
@@ -798,7 +798,7 @@ test "paste child" {
     doc2.addChild(.Context, .Authority, 0);
     doc2.copy(.Context, 0);
     doc2.pasteSibling(.Context, 0);
-    try testing.expectEqualSlices(u8, std.mem.span(doc.toStr()), std.mem.span(doc2.toStr()));
+    try testing.expectEqualStrings(std.mem.span(doc.toStr()), std.mem.span(doc2.toStr()));
     try testing.expect(doc.valid());
 }
 
@@ -809,7 +809,7 @@ test "paste sibling" {
     defer doc.deinit();
     doc.copy(.Term, 1);
     doc.pasteSibling(.Term, 1);
-    // try testing.expectEqualSlices(u8, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
+    // try testing.expectEqualStrings("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
     try testing.expect(doc.valid());
 }
 
@@ -822,7 +822,7 @@ test "add child" {
     doc.addChild(.Context, .Authority, 0);
     doc.drop(.Term, 0);
     doc.drop(.Context, 0);
-    try testing.expectEqualSlices(u8, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
+    try testing.expectEqualStrings("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
     try testing.expect(doc.valid());
 }
 
@@ -837,7 +837,7 @@ test "add sibling" {
     doc.drop(.Term, 0);
     doc.drop(.Context, 0);
     doc.drop(.Context, 0);
-    try testing.expectEqualSlices(u8, "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
+    try testing.expectEqualStrings("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<Authority xmlns=\"http://www.records.nsw.gov.au/schemas/RDA\"/>\n", std.mem.span(doc.toStr()));
     try testing.expect(doc.valid());
 }
 
@@ -872,10 +872,10 @@ test "get and set" {
     doc.setCurrent(.Class, 3);
     doc.set("itemno", "1.<&.2");
     var result = doc.get("itemno");
-    try testing.expectEqualSlices(u8, "1.<&.2", std.mem.span(result));
+    try testing.expectEqualStrings("1.<&.2", std.mem.span(result));
     tree.freeStr(result);
     result = doc.get("itemno");
-    try testing.expectEqualSlices(u8, "1.<&.2", std.mem.span(result));
+    try testing.expectEqualStrings("1.<&.2", std.mem.span(result));
     tree.freeStr(result);
     doc.setCurrent(.Class, 2);
     doc.set("itemno", null);
@@ -884,13 +884,13 @@ test "get and set" {
     doc.setCurrent(.Class, 3);
     doc.set("ClassTitle", "The ides of &march");
     result = doc.get("ClassTitle");
-    try testing.expectEqualSlices(u8, "The ides of &march", std.mem.span(result));
+    try testing.expectEqualStrings("The ides of &march", std.mem.span(result));
     tree.freeStr(result);
     doc.addSibling(.Term, .Class, 3);
     doc.setCurrent(.Term, 4);
     doc.set("TermTitle", "The ides of &march");
     result = doc.get("TermTitle");
-    try testing.expectEqualSlices(u8, "The ides of &march", std.mem.span(result));
+    try testing.expectEqualStrings("The ides of &march", std.mem.span(result));
     tree.freeStr(result);
     doc.set("TermTitle", null);
     try testing.expect(doc.get("TermTitle") == null);
@@ -908,10 +908,10 @@ test "dates" {
     doc.setDate(.end, "2000");
     doc.setCirca(.end, false);
     var result = doc.getDate(.start);
-    try testing.expectEqualSlices(u8, "1900", std.mem.span(result));
+    try testing.expectEqualStrings("1900", std.mem.span(result));
     tree.freeStr(result);
     result = doc.getDate(.end);
-    try testing.expectEqualSlices(u8, "2000", std.mem.span(result));
+    try testing.expectEqualStrings("2000", std.mem.span(result));
     tree.freeStr(result);
     try testing.expect(doc.getCirca(.start));
     try testing.expect(!doc.getCirca(.end));
@@ -921,7 +921,7 @@ test "dates" {
     defer doc2.deinit();
     doc.setDate(.start, null);
     doc.setCirca(.start, false);
-    try testing.expectEqualSlices(u8, std.mem.span(doc.toStr()), std.mem.span(doc2.toStr()));
+    try testing.expectEqualStrings(std.mem.span(doc.toStr()), std.mem.span(doc2.toStr()));
     try testing.expect(doc.valid());
 }
 
@@ -963,32 +963,32 @@ test "multi set and get" {
     doc.multiSet("ID", 0, "control", "AR");
     doc.multiSet("ID", 0, null, "28");
     var result = doc.multiGet("ID", 0, null);
-    try testing.expectEqualSlices(u8, "28", std.mem.span(result));
+    try testing.expectEqualStrings("28", std.mem.span(result));
     tree.freeStr(result);
     doc.multiSet("ID", 0, null, "29");
     result = doc.multiGet("ID", 0, null);
-    try testing.expectEqualSlices(u8, "29", std.mem.span(result));
+    try testing.expectEqualStrings("29", std.mem.span(result));
     tree.freeStr(result);
     result = doc.multiGet("ID", 0, "control");
-    try testing.expectEqualSlices(u8, "AR", std.mem.span(result));
+    try testing.expectEqualStrings("AR", std.mem.span(result));
     tree.freeStr(result);
     try testing.expect(doc.multiAdd("Status", "Issued") == 0);
     doc.multiSet("Status", 0, "agencyno", "294");
     doc.multiSet("Status", 0, "Agency", "Wild dog");
     result = doc.multiGet("Status", 0, "agencyno");
-    try testing.expectEqualSlices(u8, "294", std.mem.span(result));
+    try testing.expectEqualStrings("294", std.mem.span(result));
     tree.freeStr(result);
     result = doc.multiGet("Status", 0, "Agency");
-    try testing.expectEqualSlices(u8, "Wild dog", std.mem.span(result));
+    try testing.expectEqualStrings("Wild dog", std.mem.span(result));
     tree.freeStr(result);
     doc.multiSet("Status", 0, "Date", "2025-11-04");
     result = doc.multiGet("Status", 0, "Date");
-    try testing.expectEqualSlices(u8, "2025-11-04", std.mem.span(result));
+    try testing.expectEqualStrings("2025-11-04", std.mem.span(result));
     tree.freeStr(result);
     doc.multiSet("Status", 0, "Date", null);
     doc.multiSet("Status", 0, "Agency", null);
     result = doc.multiGet("Status", 0, "agencyno");
-    try testing.expectEqualSlices(u8, "294", std.mem.span(result));
+    try testing.expectEqualStrings("294", std.mem.span(result));
     tree.freeStr(result);
     try testing.expect(doc.multiAdd("Status", "Amended") == 1);
     doc.multiSet("Status", 1, "agencyno", "294");
@@ -1014,13 +1014,13 @@ test "multi set and get" {
         0,
     });
     result = doc.multiGet("Status", 1, "agencyno");
-    try testing.expectEqualSlices(u8, "294", std.mem.span(result));
+    try testing.expectEqualStrings("294", std.mem.span(result));
     tree.freeStr(result);
     result = doc.multiGet("Status", 1, "version");
-    try testing.expectEqualSlices(u8, "2.0", std.mem.span(result));
+    try testing.expectEqualStrings("2.0", std.mem.span(result));
     tree.freeStr(result);
     const para = doc.multiGetParagraphs("Status", 1, "AmendmentNote").?;
-    try testing.expectEqualSlices(u8, &[_]u8{
+    try testing.expectEqualStrings(&[_]u8{
         1,
         1,
         0,
