@@ -148,6 +148,7 @@ class MarkupTextEditingController extends TextEditingController {
     for (; start < end; start++) {
       _markup[start] = markupValue;
     }
+    edited = true;
   }
 
   String _prependBullet(String t) => "$bullet $t";
@@ -173,7 +174,7 @@ class MarkupTextEditingController extends TextEditingController {
       if (selection.start >= text.characters.length) {
         return;
       } // return without adding bullet if at the end of the line
-      String edited = text;
+      String editedTxt = text;
       bool alreadyBulleted = false;
       for (var off = selection.end - 1; off >= 0; off--) {
         if (text[off] == bullet) {
@@ -182,41 +183,43 @@ class MarkupTextEditingController extends TextEditingController {
         if (text[off] == "\n" || off == 0) {
           if (!alreadyBulleted) {
             _markup.insertAll(off, [0, 0]);
-            edited =
+            editedTxt =
                 (off == 0)
-                    ? _prependBullet(edited)
-                    : _insertBullet(edited, off + 1);
+                    ? _prependBullet(editedTxt)
+                    : _insertBullet(editedTxt, off + 1);
           }
           alreadyBulleted = false;
           if (off < selection.start) break;
         }
       }
       _listUpdateOperation = true;
-      text = edited;
+      text = editedTxt;
+      edited = true;
       return;
     }
     // deleting
-    String edited = text;
+    String editedTxt = text;
     for (var off = selection.end; off >= 0; off--) {
-      if (off >= edited.length) continue;
-      if (edited[off] == "\n" && off < selection.start) break;
-      if (edited[off] == bullet) {
-        if (off + 1 < edited.length && edited[off + 1] == " ") {
+      if (off >= editedTxt.length) continue;
+      if (editedTxt[off] == "\n" && off < selection.start) break;
+      if (editedTxt[off] == bullet) {
+        if (off + 1 < editedTxt.length && editedTxt[off + 1] == " ") {
           _markup.removeRange(off, off + 2);
-          edited =
-              edited.substring(0, off) +
-              edited.substring(off + 2, edited.length);
+          editedTxt =
+              editedTxt.substring(0, off) +
+              editedTxt.substring(off + 2, editedTxt.length);
         } else {
           _markup.removeAt(off);
-          edited =
-              edited.substring(0, off) +
-              edited.substring(off + 1, edited.length);
+          editedTxt =
+              editedTxt.substring(0, off) +
+              editedTxt.substring(off + 1, editedTxt.length);
         }
       }
     }
-    if (edited != text) {
+    if (editedTxt != text) {
       _listUpdateOperation = true;
-      text = edited;
+      edited = true;
+      text = editedTxt;
     }
   }
 

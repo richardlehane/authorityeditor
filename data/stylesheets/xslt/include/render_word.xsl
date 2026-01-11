@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:rda="http://www.records.nsw.gov.au/schemas/RDA"
-                xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-                xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint"
-                version="1.0">
+    xmlns:rda="http://www.records.nsw.gov.au/schemas/RDA"
+    xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    version="1.0">
     <xsl:template match="rda:Paragraph">
         <w:p>
             <xsl:apply-templates />
@@ -22,7 +21,7 @@
             <xsl:when test="@url">
                 <xsl:choose>
                     <xsl:when test="(contains(@url,'http://'))">
-                        <w:hlink w:dest="{@url}">
+                        <w:hyperlink w:tooltip="{@url}">
                             <w:r>
                                 <w:rPr>
                                     <w:rStyle w:val="Hyperlink" />
@@ -30,7 +29,7 @@
                                 </w:rPr>
                                 <xsl:apply-templates />
                             </w:r>
-                        </w:hlink>
+                        </w:hyperlink>
                     </xsl:when>
                     <xsl:otherwise>
                         <w:hlink w:dest="http://{@url}">
@@ -64,14 +63,13 @@
                 <xsl:text disable-output-escaping="yes">&lt;w:p&gt;</xsl:text>
             </xsl:if>
             <w:pPr>
-                <w:listPr>
+                <w:pStyle w:val="ListParagraph" />
+                <w:keepNext w:val="0" />
+                <w:widowControl w:val="0" />
+                <w:numPr>
                     <w:ilvl w:val="0" />
-                    <w:ilfo w:val="1" />
-                    <wx:t wx:val="·"
-                          wx:wTabBefore="360"
-                          wx:wTabAfter="270" />
-                    <wx:font wx:val="Symbol" />
-                </w:listPr>
+                    <w:numId w:val="1" />
+                </w:numPr>
             </w:pPr>
             <xsl:apply-templates />
             <xsl:if test="following-sibling::rda:Item">
@@ -84,33 +82,25 @@
     </xsl:template>
     <xsl:template match="text()">
         <w:r>
-            <w:t>
-                <xsl:value-of select="." />
-            </w:t>
+            <w:t xml:space="preserve"><xsl:value-of select="." /></w:t>
         </w:r>
     </xsl:template>
     <xsl:template match="rda:SeeReference">
         <xsl:if test="$SHOWSEEREF='true' or not(rda:IDRef)">
             <w:p>
                 <w:r>
-                    <w:t>
-                        <xsl:text>See </xsl:text>
-                    </w:t>
+                    <w:t xml:space="preserve"><xsl:text>See </xsl:text></w:t>
                 </w:r>
                 <xsl:if test="rda:IDRef">
                     <xsl:choose>
                         <xsl:when test="rda:IDRef/@control = 'GA' or rda:IDRef/@control = 'GDA'">
                             <w:r>
-                                <w:t>
-                                    <xsl:text>General Retention and Disposal Authority </xsl:text>
-                                </w:t>
+                                <w:t xml:space="preserve"><xsl:text>General Retention and Disposal Authority </xsl:text></w:t>
                             </w:r>
                         </xsl:when>
                         <xsl:otherwise>
                             <w:r>
-                                <w:t>
-                                    <xsl:text>Functional Retention and Disposal Authority </xsl:text>
-                                </w:t>
+                                <w:t xml:space="preserve"><xsl:text>Functional Retention and Disposal Authority </xsl:text></w:t>
                             </w:r>
                         </xsl:otherwise>
                     </xsl:choose>
@@ -120,10 +110,7 @@
                         <w:rPr>
                             <w:i />
                         </w:rPr>
-                        <w:t>
-                            <xsl:value-of select="rda:AuthorityTitleRef" />
-                            <xsl:text />
-                        </w:t>
+                        <w:t xml:space="preserve"><xsl:value-of select="concat(rda:AuthorityTitleRef, ' ')" /></w:t>
                     </w:r>
                 </xsl:if>
                 <xsl:for-each select="rda:TermTitleRef">
@@ -131,20 +118,12 @@
                         <w:rPr>
                             <w:b />
                         </w:rPr>
-                        <w:t>
-                            <xsl:if test="position() >1">
-                                <xsl:text>- </xsl:text>
-                            </xsl:if>
-                            <xsl:value-of select="." />
-                            <xsl:text />
-                        </w:t>
+                        <w:t xml:space="preserve"><xsl:if test="position() >1"><xsl:text>- </xsl:text></xsl:if><xsl:value-of select="concat(., ' ')" /></w:t>
                     </w:r>
                 </xsl:for-each>
                 <xsl:if test="rda:ItemNoRef">
                     <w:r>
-                        <w:t>
-                            <xsl:value-of select="concat(rda:ItemNoRef, ' ')" />
-                        </w:t>
+                        <w:t xml:space="preserve"><xsl:value-of select="concat(rda:ItemNoRef, ' ')" /></w:t>
                     </w:r>
                 </xsl:if>
                 <xsl:if test="rda:SeeText">

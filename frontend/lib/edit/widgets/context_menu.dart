@@ -80,7 +80,6 @@ Widget Function(BuildContext) contextBuilder(
         },
       ),
       MenuFlyoutItem(
-        leading: const Icon(FluentIcons.fabric_new_folder),
         text: const Text('Add sibling term'),
         onPressed: () {
           ref.read(treeProvider.notifier).addSibling(value, NodeType.termType);
@@ -94,7 +93,6 @@ Widget Function(BuildContext) contextBuilder(
         },
       ),
       MenuFlyoutItem(
-        leading: const Icon(FluentIcons.page_add),
         text: const Text('Add sibling class'),
         onPressed: () {
           ref.read(treeProvider.notifier).addSibling(value, NodeType.classType);
@@ -145,7 +143,10 @@ Widget Function(BuildContext) contextBuilder(
     if (clipboard.like(value.$1)) {
       items.add(
         MenuFlyoutItem(
-          leading: const Icon(FluentIcons.paste),
+          leading:
+              (value.$1 == NodeType.termType)
+                  ? null
+                  : const Icon(FluentIcons.paste),
           text: const Text('Paste sibling'),
           onPressed: () {
             ref.read(treeProvider.notifier).pasteSibling(value);
