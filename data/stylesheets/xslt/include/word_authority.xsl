@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:rda="http://www.records.nsw.gov.au/schemas/RDA"
-                xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
-                version="1.0">
+    xmlns:rda="http://www.records.nsw.gov.au/schemas/RDA"
+    xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    version="1.0">
     <xsl:include href="disposal_word.xsl" />
     <xsl:include href="render_word.xsl" />
     <xsl:template name="render_authority">
@@ -11,7 +11,7 @@
     <xsl:template match="rda:Term">
         <xsl:variable name="number">
             <xsl:number format="1"
-                        value="position()" />
+                value="position()" />
         </xsl:variable>
         <w:p>
             <w:pPr>
@@ -28,12 +28,12 @@
                 </xsl:choose>
             </w:pPr>
             <w:bookmarkStart w:id="{$number}"
-                             w:name="{generate-id(.)}" />
+                w:name="{generate-id(.)}" />
             <xsl:if test="ancestor-or-self::rda:Term[rda:ID]">
                 <xsl:variable name="id">
                     <xsl:call-template name="local_id">
                         <xsl:with-param name="node"
-                                        select="." />
+                            select="." />
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:if test="$id != $RDANO">
@@ -72,47 +72,47 @@
             <w:p>
                 <w:pPr>
                     <w:spacing w:before="0"
-                               w:after="0" />
+                        w:after="0" />
                 </w:pPr>
             </w:p>
             <xsl:text disable-output-escaping="yes">&lt;w:tbl&gt;</xsl:text>
             <w:tblPr>
                 <w:tblW w:w="9072"
-                        w:type="dxa" />
+                    w:type="dxa" />
                 <w:jc w:val="center" />
                 <w:tblBorders>
                     <w:top w:val="single"
-                           w:sz="6"
-                           w:space="0"
-                           w:color="auto" />
+                        w:sz="6"
+                        w:space="0"
+                        w:color="auto" />
                     <w:left w:val="single"
-                            w:sz="6"
-                            w:space="0"
-                            w:color="auto" />
+                        w:sz="6"
+                        w:space="0"
+                        w:color="auto" />
                     <w:bottom w:val="single"
-                              w:sz="6"
-                              w:space="0"
-                              w:color="auto" />
+                        w:sz="6"
+                        w:space="0"
+                        w:color="auto" />
                     <w:right w:val="single"
-                             w:sz="6"
-                             w:space="0"
-                             w:color="auto" />
+                        w:sz="6"
+                        w:space="0"
+                        w:color="auto" />
                     <w:insideH w:val="single"
-                               w:sz="6"
-                               w:space="0"
-                               w:color="auto" />
+                        w:sz="6"
+                        w:space="0"
+                        w:color="auto" />
                     <w:insideV w:val="single"
-                               w:sz="6"
-                               w:space="0"
-                               w:color="auto" />
+                        w:sz="6"
+                        w:space="0"
+                        w:color="auto" />
                 </w:tblBorders>
                 <w:tblLook w:val="0000"
-                           w:firstRow="0"
-                           w:lastRow="0"
-                           w:firstColumn="0"
-                           w:lastColumn="0"
-                           w:noHBand="0"
-                           w:noVBand="0" />
+                    w:firstRow="0"
+                    w:lastRow="0"
+                    w:firstColumn="0"
+                    w:lastColumn="0"
+                    w:noHBand="0"
+                    w:noVBand="0" />
             </w:tblPr>
             <w:tblGrid>
                 <w:gridCol w:w="992" />
@@ -127,12 +127,14 @@
             <w:tc>
                 <w:tcPr>
                     <w:tcW w:w="992"
-                           w:type="dxa" />
-                    <w:shd w:val="clear"
-                           w:color="auto"
-                           w:fill="F2F2F2"
-                           w:themeFill="background1"
-                           w:themeFillShade="F2" />
+                        w:type="dxa" />
+                    <xsl:if test="$SHOWJUSTIFICATION='true'">
+                        <w:shd w:val="clear"
+                            w:color="auto"
+                            w:fill="F2F2F2"
+                            w:themeFill="background1"
+                            w:themeFillShade="F2" />
+                    </xsl:if>
                 </w:tcPr>
                 <w:p>
                     <w:pPr>
@@ -144,7 +146,7 @@
                                 <xsl:variable name="id">
                                     <xsl:call-template name="local_id">
                                         <xsl:with-param name="node"
-                                                        select="." />
+                                            select="." />
                                     </xsl:call-template>
                                 </xsl:variable>
                                 <xsl:if test="$id != $RDANO">
@@ -172,12 +174,14 @@
             <w:tc>
                 <w:tcPr>
                     <w:tcW w:w="5812"
-                           w:type="dxa" />
-                    <w:shd w:val="clear"
-                           w:color="auto"
-                           w:fill="F2F2F2"
-                           w:themeFill="background1"
-                           w:themeFillShade="F2" />
+                        w:type="dxa" />
+                    <xsl:if test="$SHOWJUSTIFICATION='true'">
+                        <w:shd w:val="clear"
+                            w:color="auto"
+                            w:fill="F2F2F2"
+                            w:themeFill="background1"
+                            w:themeFillShade="F2" />
+                    </xsl:if>
                 </w:tcPr>
                 <xsl:if test="rda:ClassTitle">
                     <w:p>
@@ -201,23 +205,25 @@
             <w:tc>
                 <w:tcPr>
                     <w:tcW w:w="2268"
-                           w:type="dxa" />
-                    <w:shd w:val="clear"
-                           w:color="auto"
-                           w:fill="F2F2F2"
-                           w:themeFill="background1"
-                           w:themeFillShade="F2" />
+                        w:type="dxa" />
+                    <xsl:if test="$SHOWJUSTIFICATION='true'">
+                        <w:shd w:val="clear"
+                            w:color="auto"
+                            w:fill="F2F2F2"
+                            w:themeFill="background1"
+                            w:themeFillShade="F2" />
+                    </xsl:if>
                 </w:tcPr>
                 <xsl:if test="not(rda:Disposal[not(rda:DisposalCondition='Automated')])">
                     <w:p />
                 </xsl:if>
                 <xsl:call-template name="disposal_action">
                     <xsl:with-param name="disposals"
-                                    select="rda:Disposal" />
+                        select="rda:Disposal" />
                 </xsl:call-template>
             </w:tc>
         </w:tr>
-        <xsl:if test="rda:Justification">
+        <xsl:if test="$SHOWJUSTIFICATION='true' and rda:Justification">
             <w:tr>
                 <w:trPr>
                     <w:jc w:val="center" />
@@ -225,7 +231,7 @@
                 <w:tc>
                     <w:tcPr>
                         <w:tcW w:w="9072"
-                               w:type="dxa" />
+                            w:type="dxa" />
                         <w:gridSpan w:val="3" />
                     </w:tcPr>
                     <xsl:for-each select="rda:Justification">
@@ -238,7 +244,7 @@
                                     <w:r>
                                         <w:rPr>
                                             <w:rFonts w:ascii="Public Sans"
-                                                      w:hAnsi="Public Sans" />
+                                                w:hAnsi="Public Sans" />
                                             <w:b />
                                         </w:rPr>
                                         <w:t>Basis for decision</w:t>

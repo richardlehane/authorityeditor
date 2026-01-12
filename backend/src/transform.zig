@@ -155,12 +155,12 @@ test "approved" {
             testing.allocator.free(buf);
         }
     }
-    // const session = try Session.init(testing.allocator);
-    // defer session.deinit();
-    // const doc = try Document.load(session, "../data/examples/FA313 Premier and Cabinet 2025.xml");
-    // defer doc.deinit();
-    // xml.exsltCommonRegister();
-    // insertTransformed(doc, "../data/stylesheets/xslt/draft.xsl", out, "word/document.xml");
+    const session = try Session.init(testing.allocator);
+    defer session.deinit();
+    const doc = try Document.load(session, "../data/examples/FA313 Premier and Cabinet 2025.xml");
+    defer doc.deinit();
+    xml.exsltCommonRegister();
+    insertTransformed(doc, "../data/stylesheets/xslt/approved.xsl", out, "word/document.xml");
     // insertTransformed(doc, "../data/stylesheets/xslt/draft_header_two.xsl", out, "word/header2.xml");
     // insertTransformed(doc, "../data/stylesheets/xslt/draft_header_three.xsl", out, "word/header3.xml");
 }
