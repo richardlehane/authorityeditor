@@ -91,9 +91,10 @@ class Document {
     return Session().save(sessionIndex, path!);
   }
 
-  bool saveAs(String? p) {
-    if (p == null) return false;
-    path = p;
+  bool saveAs(String? sp) {
+    if (sp == null) return false;
+    if (p.extension(sp).isEmpty) sp += ".xml";
+    path = sp;
     return save();
   }
 

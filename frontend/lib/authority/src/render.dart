@@ -441,7 +441,7 @@ mixin Render {
       if (period == null) return "until $trigger";
       unit ??= "years"; // should not reach
       String ret =
-          (unit == "1")
+          (period == "1")
               ? "$period ${unit.substring(0, unit.length - 1)}"
               : "$period $unit";
       if (trigger == null) return "minimum of $ret";

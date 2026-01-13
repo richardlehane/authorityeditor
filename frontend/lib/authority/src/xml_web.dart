@@ -68,7 +68,8 @@ class Session {
   }
 
   bool save(int index, String path) {
-    File(path).writeAsStringSync(Session().toString(), flush: true);
+    if (documents[index] == null) return false;
+    File(path).writeAsStringSync(documents[index]!.toXmlString(), flush: true);
     return true;
   }
 

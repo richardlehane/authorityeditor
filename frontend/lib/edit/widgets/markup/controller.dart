@@ -20,12 +20,16 @@ class MarkupTextEditingController extends TextEditingController {
   final List<String> _urls;
   bool _listUpdateOperation =
       false; // flag that the update is related to a listUpdate
+  int _listUpdatePosition = 0;
 
   // Ensure markup and text stay synchronized
   // Return true if button states need updating
   bool update() {
     if (_listUpdateOperation) {
       _listUpdateOperation = false;
+      selection = TextSelection.fromPosition(
+        TextPosition(offset: _listUpdatePosition),
+      );
       return false;
     }
 
@@ -158,6 +162,7 @@ class MarkupTextEditingController extends TextEditingController {
 
   void _addListBullet() {
     _listUpdateOperation = true;
+    _listUpdatePosition = selection.start + 2;
     if (selection.start == text.characters.length) {
       _markup.addAll([0, 0, 0]);
       text = _appendBullet(text);
@@ -169,11 +174,9 @@ class MarkupTextEditingController extends TextEditingController {
 
   void updateList(bool value) {
     listToggled = value;
+    _listUpdatePosition = selection.end;
     // adding a list
     if (value) {
-      if (selection.start >= text.characters.length) {
-        return;
-      } // return without adding bullet if at the end of the line
       String editedTxt = text;
       bool alreadyBulleted = false;
       for (var off = selection.end - 1; off >= 0; off--) {
@@ -182,6 +185,7 @@ class MarkupTextEditingController extends TextEditingController {
         }
         if (text[off] == "\n" || off == 0) {
           if (!alreadyBulleted) {
+            _listUpdatePosition += 2;
             _markup.insertAll(off, [0, 0]);
             editedTxt =
                 (off == 0)
@@ -203,6 +207,7 @@ class MarkupTextEditingController extends TextEditingController {
       if (off >= editedTxt.length) continue;
       if (editedTxt[off] == "\n" && off < selection.start) break;
       if (editedTxt[off] == bullet) {
+        _listUpdatePosition -= 2;
         if (off + 1 < editedTxt.length && editedTxt[off + 1] == " ") {
           _markup.removeRange(off, off + 2);
           editedTxt =

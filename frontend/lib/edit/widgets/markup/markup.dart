@@ -26,7 +26,6 @@ class _MarkupState extends State<Markup> {
       (widget.paras == null)
           ? MarkupTextEditingController()
           : MarkupTextEditingController.fromXML(widget.paras!);
-  final FocusNode focusNode = FocusNode();
 
   ToggleButtonsState toggleButtonsState = ToggleButtonsState.none;
   bool listButtonState = false;
@@ -38,7 +37,6 @@ class _MarkupState extends State<Markup> {
     setState(() {
       toggleButtonsState = toggleButtonsState.alter(value);
       markupTextEditingController.updateSelection(toggleButtonsState, url: url);
-      focusNode.requestFocus();
     });
   }
 
@@ -46,7 +44,6 @@ class _MarkupState extends State<Markup> {
     setState(() {
       listButtonState = value;
       markupTextEditingController.updateList(listButtonState);
-      focusNode.requestFocus();
     });
   }
 
@@ -62,7 +59,6 @@ class _MarkupState extends State<Markup> {
   void appendStocks(String txt) {
     setState(() {
       markupTextEditingController.append(txt);
-      focusNode.requestFocus();
     });
   }
 
@@ -76,7 +72,6 @@ class _MarkupState extends State<Markup> {
 
   @override
   void dispose() {
-    focusNode.dispose();
     markupTextEditingController.dispose();
     super.dispose();
   }
@@ -94,21 +89,22 @@ class _MarkupState extends State<Markup> {
       },
       child: Column(
         children: [
-          MarkupToolbar(
-            toggleButtonsState: toggleButtonsState,
-            listButtonState: listButtonState,
-            updateToggleButtonsStateOnButtonPressed:
-                updateToggleButtonsStateOnButtonPressed,
-            updateListButtonStateOnButtonPressed:
-                updateListButtonStateOnButtonPressed,
-            appendJustification: widget.justification ? appendStocks : null,
-            compact: widget.height < 150.0 ? true : false,
-            justification: widget.justification,
+          TextFieldTapRegion(
+            child: MarkupToolbar(
+              toggleButtonsState: toggleButtonsState,
+              listButtonState: listButtonState,
+              updateToggleButtonsStateOnButtonPressed:
+                  updateToggleButtonsStateOnButtonPressed,
+              updateListButtonStateOnButtonPressed:
+                  updateListButtonStateOnButtonPressed,
+              appendJustification: widget.justification ? appendStocks : null,
+              compact: widget.height < 150.0 ? true : false,
+              justification: widget.justification,
+            ),
           ),
           SizedBox(
             height: widget.height,
             child: TextBox(
-              focusNode: focusNode,
               maxLines: null,
               controller: markupTextEditingController,
             ),
