@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                xmlns:rda="http://www.records.nsw.gov.au/schemas/RDA"
-                version="1.0">
+    xmlns:rda="http://www.records.nsw.gov.au/schemas/RDA"
+    version="1.0">
     <xsl:output method="text"
-                encoding="UTF-8" />
+        encoding="UTF-8" />
     <xsl:include href="include/stocks.xsl" />
     <xsl:include href="include/render_txt.xsl" />
     <xsl:include href="include/disposal_txt.xsl" />
     <xsl:include href="include/disposal_common.xsl" />
     <xsl:variable name="newline">
-        <xsl:text />
+        <xsl:text>&#13;&#10;</xsl:text>
     </xsl:variable>
     <xsl:variable name="tab">
-        <xsl:text />
+        <xsl:text>&#9;</xsl:text>
     </xsl:variable>
     <xsl:template match="rda:Authority">
         <xsl:call-template name="field_titles" />
@@ -42,20 +42,20 @@
         <xsl:variable name="id">
             <xsl:call-template name="local_id">
                 <xsl:with-param name="node"
-                                select="." />
+                    select="." />
             </xsl:call-template>
         </xsl:variable>
         <xsl:variable name="no">
             <xsl:call-template name="pad_itemno">
                 <xsl:with-param name="suffix"
-                                select="@itemno" />
+                    select="@itemno" />
             </xsl:call-template>
         </xsl:variable>
         <xsl:value-of select="concat($id, '-', $no)" />
         <xsl:value-of select="$tab" />
         <xsl:call-template name="build_address">
             <xsl:with-param name="node"
-                            select="." />
+                select="." />
         </xsl:call-template>
         <xsl:value-of select="$tab" />
         <xsl:for-each select="rda:ClassDescription">
@@ -64,9 +64,9 @@
         <xsl:value-of select="$tab" />
         <xsl:call-template name="disposal_action">
             <xsl:with-param name="disposals"
-                            select="rda:Disposal" />
+                select="rda:Disposal" />
             <xsl:with-param name="is_text"
-                            select="'true'" />
+                select="'true'" />
         </xsl:call-template>
         <xsl:value-of select="$tab" />
         <!-- xsl:call-template name="custody">
@@ -78,30 +78,30 @@
         <xsl:value-of select="$tab" / -->
         <xsl:call-template name="simple">
             <xsl:with-param name="disposals"
-                            select="rda:Disposal" />
+                select="rda:Disposal" />
             <xsl:with-param name="action"
-                            select="'simple_action'" />
+                select="'simple_action'" />
         </xsl:call-template>
         <xsl:value-of select="$tab" />
         <xsl:call-template name="simple">
             <xsl:with-param name="disposals"
-                            select="rda:Disposal" />
+                select="rda:Disposal" />
             <xsl:with-param name="action"
-                            select="'simple_years'" />
+                select="'simple_years'" />
         </xsl:call-template>
         <xsl:value-of select="$tab" />
         <xsl:call-template name="simple">
             <xsl:with-param name="disposals"
-                            select="rda:Disposal" />
+                select="rda:Disposal" />
             <xsl:with-param name="action"
-                            select="'simple_months'" />
+                select="'simple_months'" />
         </xsl:call-template>
         <xsl:value-of select="$tab" />
         <xsl:call-template name="simple">
             <xsl:with-param name="disposals"
-                            select="rda:Disposal" />
+                select="rda:Disposal" />
             <xsl:with-param name="action"
-                            select="'simple_trigger'" />
+                select="'simple_trigger'" />
         </xsl:call-template>
         <xsl:value-of select="$tab" />
         <xsl:value-of select="$newline" />
