@@ -23,6 +23,10 @@ typedef FreePayloadNative = Void Function(Int32, Pointer<Uint8>);
 typedef FreePayload = void Function(int, Pointer<Uint8>);
 typedef ValidNative = Bool Function(Uint8);
 typedef Valid = bool Function(int);
+typedef DocxNative =
+    Void Function(Uint8, Uint8, Pointer<Utf8>, Pointer<Utf8>, Pointer<Utf8>);
+typedef Docx =
+    void Function(int, int, Pointer<Utf8>, Pointer<Utf8>, Pointer<Utf8>);
 typedef TransformNative = Void Function(Uint8, Pointer<Utf8>, Pointer<Utf8>);
 typedef Transform = void Function(int, Pointer<Utf8>, Pointer<Utf8>);
 typedef EditNative = Bool Function(Uint8, Pointer<Utf8>);
@@ -133,6 +137,7 @@ final class Bindings {
   late FreeStr freeStr;
   late FreePayload freePayload;
   late Valid valid;
+  late Docx docx;
   late Transform transform;
   late Edit edit;
   late AsStr asStr;
@@ -184,6 +189,7 @@ final class Bindings {
       'freePayload',
     );
     valid = dylib.lookupFunction<ValidNative, Valid>('valid');
+    docx = dylib.lookupFunction<DocxNative, Docx>('docx');
     transform = dylib.lookupFunction<TransformNative, Transform>('transform');
     edit = dylib.lookupFunction<EditNative, Edit>('edit');
     empty = dylib.lookupFunction<EmptyNative, Empty>('empty');

@@ -68,6 +68,16 @@ class Session {
     return result;
   }
 
+  void docx(int index, int typ, String outputdir, String outputname) {
+    final Pointer<Utf8> s = stylesheetsDir.toNativeUtf8();
+    final Pointer<Utf8> d = outputdir.toNativeUtf8();
+    final Pointer<Utf8> o = outputname.toNativeUtf8();
+    _bindings.docx(index, typ, s, d, o);
+    malloc.free(s);
+    malloc.free(d);
+    malloc.free(o);
+  }
+
   void transform(int index, String stylesheet, String outpath) {
     final stylesheetAbs = path.join(stylesheetsDir, stylesheet);
     final Pointer<Utf8> s = stylesheetAbs.toNativeUtf8();

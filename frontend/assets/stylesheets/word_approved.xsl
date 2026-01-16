@@ -5002,38 +5002,40 @@
                     </w:pPr>
                 </w:p>
                 <!-- TOC section -->
-                <xsl:call-template name="render_contents" />
-                <w:p>
-                    <w:pPr>
-                        <w:rPr>
-                            <w:b />
-                        </w:rPr>
-                        <w:sectPr>
-                            <w:headerReference w:type="default"
-                                r:id="rId16" /> <!--header2-->
-                            <w:footerReference w:type="default"
-                                r:id="rId17" /> <!--footer4-->
-                            <w:headerReference w:type="first"
-                                r:id="rId18" /> <!--header3-->
-                            <w:footerReference w:type="first"
-                                r:id="rId19" /> <!--footer5-->
-                            <w:pgSz w:w="11907"
-                                w:h="16840"
-                                w:code="9" />
-                            <w:pgMar w:top="1418"
-                                w:right="1418"
-                                w:bottom="1418"
-                                w:left="1418"
-                                w:header="567"
-                                w:footer="567"
-                                w:gutter="0" />
-                            <w:paperSrc w:first="7"
-                                w:other="7" />
-                            <w:cols w:space="720" />
-                            <w:titlePg />
-                        </w:sectPr>
-                    </w:pPr>
-                </w:p>
+                <xsl:if test="count(//rda:Term)&gt;5">
+                    <xsl:call-template name="render_contents" />
+                    <w:p>
+                        <w:pPr>
+                            <w:rPr>
+                                <w:b />
+                            </w:rPr>
+                            <w:sectPr>
+                                <w:headerReference w:type="default"
+                                    r:id="rId16" /> <!--header2-->
+                                <w:footerReference w:type="default"
+                                    r:id="rId17" /> <!--footer4-->
+                                <w:headerReference w:type="first"
+                                    r:id="rId18" /> <!--header3-->
+                                <w:footerReference w:type="first"
+                                    r:id="rId19" /> <!--footer5-->
+                                <w:pgSz w:w="11907"
+                                    w:h="16840"
+                                    w:code="9" />
+                                <w:pgMar w:top="1418"
+                                    w:right="1418"
+                                    w:bottom="1418"
+                                    w:left="1418"
+                                    w:header="567"
+                                    w:footer="567"
+                                    w:gutter="0" />
+                                <w:paperSrc w:first="7"
+                                    w:other="7" />
+                                <w:cols w:space="720" />
+                                <w:titlePg />
+                            </w:sectPr>
+                        </w:pPr>
+                    </w:p>
+                </xsl:if>
                 <!-- authority section-->
                 <xsl:call-template name="render_authority" />
                 <w:sectPr>

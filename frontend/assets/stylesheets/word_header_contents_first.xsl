@@ -127,16 +127,18 @@
             <w:p>
                 <w:pPr>
                     <w:pStyle w:val="Heading4" />
-                    <xsl:choose>
-                        <xsl:when test="$atype = 'ar'">
-                            <w:tab w:val="right"
-                                w:pos="10205" />
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <w:tab w:val="right"
-                                w:pos="9072" />
-                        </xsl:otherwise>
-                    </xsl:choose>
+                    <w:tabs>
+                        <xsl:choose>
+                            <xsl:when test="$atype = 'ar'">
+                                <w:tab w:val="right"
+                                    w:pos="10205" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <w:tab w:val="right"
+                                    w:pos="9072" />
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </w:tabs>
                     <w:rPr>
                         <w:bCs />
                     </w:rPr>

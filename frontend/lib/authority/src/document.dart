@@ -114,6 +114,14 @@ class Document {
     mutation++;
   }
 
+  String docx(int typ) {
+    final filename = Base58Encode(uuid.v1obj().toBytes());
+    final outName = "$filename.docx";
+    final outFile = p.join(outputDir, outName);
+    Session().docx(sessionIndex, typ, outputDir, outName);
+    return outFile;
+  }
+
   String transform(String stylesheet, String extension) {
     final filename = Base58Encode(uuid.v1obj().toBytes());
     final outFile = p.join(outputDir, "$filename.$extension");

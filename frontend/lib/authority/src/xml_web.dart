@@ -78,6 +78,8 @@ class Session {
 
   bool edit(int index, String stylesheet) => true;
 
+  void docx(int index, int typ, String outputdir, String outputname) {}
+
   void transform(int index, String stylesheet, String outpath) {}
 
   List<TreeNode> tree(int index, Counter ctr) {

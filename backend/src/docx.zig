@@ -186,6 +186,9 @@ fn linkIdx(list: []xml.xmlNodePtr, link: []const u8) ?usize {
 }
 
 test "approved" {
+    std.fs.cwd().deleteFile("approved.docx") catch |err| {
+        try testing.expectEqual(error.FileNotFound, err);
+    };
     const outdir = try std.fs.cwd().realpathAlloc(std.testing.allocator, ".");
     defer std.testing.allocator.free(outdir);
     const styledir = try std.fs.cwd().realpathAlloc(std.testing.allocator, "../frontend/assets/stylesheets");
