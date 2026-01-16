@@ -96,10 +96,7 @@ class Status extends ConsumerWidget {
                 ),
               ),
             ),
-            SizedBox(
-              width: 200.0,
-              child: AgencyWidget(element: element, index: idx),
-            ),
+            AgencyWidget(element: element, index: idx),
             Expanded(
               child: Padding(
                 padding: EdgeInsetsGeometry.only(left: 5.0),

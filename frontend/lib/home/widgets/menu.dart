@@ -223,6 +223,14 @@ final class AuthorityCommand extends ConsumerWidget {
                 },
               ),
               MenuFlyoutItem(
+                text: const Text('Sort linked tos'),
+                onPressed: () {
+                  ref
+                      .read(documentsProvider.notifier)
+                      .edit("edit_sortlinkedtos.xsl");
+                },
+              ),
+              MenuFlyoutItem(
                 text: const Text('Sort terms'),
                 onPressed: () {
                   ref

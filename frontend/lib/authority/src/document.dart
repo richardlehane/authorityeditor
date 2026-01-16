@@ -78,8 +78,8 @@ class Document {
   }
 
   @override
-  String toString() {
-    return Session().asString(sessionIndex);
+  String toString([bool pretty = true]) {
+    return Session().asString(sessionIndex, pretty);
   }
 
   void unload() {
@@ -99,7 +99,7 @@ class Document {
   }
 
   Uint8List bytes() {
-    return utf8.encode(toString());
+    return utf8.encode(toString(false));
   }
 
   void rebuildTree() {

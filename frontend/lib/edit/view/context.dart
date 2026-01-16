@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../widgets/multi/source.dart';
 import '../widgets/multi/comments.dart';
 
-const contextTypes = ["appraisal report", "background", "issue"];
+const contextTypes = ["background", "issue", "legacy"];
 
 class ContextView extends ConsumerWidget {
   const ContextView({super.key});

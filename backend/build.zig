@@ -314,7 +314,7 @@ pub fn build(b: *std.Build) void {
     });
     lib_mod.addImport("xml", xml_mod);
     lib_mod.addImport("miniz", miniz_mod);
-    lib_mod.addAnonymousImport("rda_schema", .{ .root_source_file = b.path("../data/SRNSW_RDA_permissive.xsd") });
+    lib_mod.addAnonymousImport("rda_schema", .{ .root_source_file = b.path("../frontend/assets/SRNSW_RDA_permissive.xsd") });
 
     const lib = b.addLibrary(.{
         .linkage = .dynamic,

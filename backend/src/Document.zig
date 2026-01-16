@@ -7,6 +7,7 @@ const xml = @import("xml");
 const miniz = @import("miniz");
 const Session = @import("Session.zig");
 const paragraph = @import("paragraph.zig");
+const docx = @import("docx.zig");
 
 const Document = @This();
 const max_file = 100 * 1_048_576; //100MB
@@ -69,7 +70,6 @@ pub fn deinit(self: *Document) void {
 }
 
 pub fn transform(self: *Document, stylesheet_path: [*c]const u8, output_path: [*c]const u8) void {
-    xml.exsltCommonRegister();
     const stylesheet: xml.xsltStylesheetPtr = xml.xsltParseStylesheetFile(stylesheet_path);
     defer xml.xsltFreeStylesheet(stylesheet);
     const result: xml.xmlDocPtr = xml.xsltApplyStylesheet(stylesheet, self.doc, null);
@@ -77,9 +77,12 @@ pub fn transform(self: *Document, stylesheet_path: [*c]const u8, output_path: [*
     _ = xml.xsltSaveResultToFilename(output_path, result, stylesheet, 0);
 }
 
+pub fn transformx(doc: *Document, typ: u8, stylesheet_dir: []const u8, output_dir: []const u8, output_name: []const u8) void {
+    return docx.transform(doc, typ, stylesheet_dir, output_dir, output_name) catch {};
+}
+
 // returns true if current node has changed
 pub fn edit(self: *Document, stylesheet_path: [*c]const u8) bool {
-    xml.exsltCommonRegister();
     const stylesheet: xml.xsltStylesheetPtr = xml.xsltParseStylesheetFile(stylesheet_path);
     defer xml.xsltFreeStylesheet(stylesheet);
     const result: xml.xmlDocPtr = xml.xsltApplyStylesheet(stylesheet, self.doc, null);
@@ -479,6 +482,7 @@ pub fn multiAddSeeRef(self: *Document, srt: elements.SeeRefType) void {
             _ = xml.xmlNodeAddContent(idref, "28");
             const titleref = xml.xmlNewChild(seeref, null, "AuthorityTitleRef", null);
             _ = xml.xmlNodeAddContent(titleref, "Administrative records");
+            _ = xml.xmlNewChild(seeref, null, "TermTitleRef", null);
         },
         .other => {
             _ = xml.xmlNewChild(seeref, null, "IDRef", null);
@@ -691,7 +695,7 @@ fn isAttr(nm: []const u8) bool {
 }
 
 // Tests
-const example = "../data/SRNSW_example.xml";
+const example = "../frontend/assets/SRNSW_example.xml";
 
 test "validate" {
     const session = try Session.init(testing.allocator);
@@ -716,7 +720,7 @@ test "load" {
     const doc = try Document.load(session, example);
     defer doc.deinit();
     try doc.refreshTree();
-    try testing.expectEqual(doc.tree_menu.items.len, 293);
+    try testing.expectEqual(doc.tree_menu.items.len, 153);
 }
 
 test "toStr" {
@@ -735,7 +739,7 @@ test "tree" {
     const doc = try Document.load(session, example);
     defer doc.deinit();
     try doc.refreshTree();
-    try testing.expectEqual(doc.tree_menu.items.len, 293);
+    try testing.expectEqual(doc.tree_menu.items.len, 153);
 }
 
 test "transform" {
@@ -765,7 +769,7 @@ test "current" {
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
-    doc.setCurrent(.Context, 3);
+    doc.setCurrent(.Context, 1);
     try testing.expectEqualStrings(std.mem.span(xml.xmlNodeGetContent(tree.childN(doc.current.?, "ContextTitle", 0).?)), "About the records held by the organisation");
     doc.setCurrent(.Class, 4);
     const itemno = xml.xmlGetProp(doc.current.?, "itemno");

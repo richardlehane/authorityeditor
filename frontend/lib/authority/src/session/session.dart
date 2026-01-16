@@ -77,7 +77,8 @@ class Session {
     malloc.free(o);
   }
 
-  String asString(int index) {
+  // pretty argument ignored by native binding, always pretty
+  String asString(int index, bool pretty) {
     final messageUtf8 = _bindings.asStr(index);
     final message = messageUtf8.toDartString();
     _bindings.freeStr(messageUtf8);

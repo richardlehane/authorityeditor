@@ -34,6 +34,7 @@ pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved:
                 freefn = xml.xmlFree orelse null;
                 sess = Session.init(global_allocator) catch return windows.FALSE;
                 has_sess = true;
+                xml.exsltCommonRegister();
             }
         },
         DLL_PROCESS_DETACH => {
@@ -64,6 +65,11 @@ export fn freePayload(length: i32, ptr: [*c]u8) void {
 export fn valid(idx: u8) bool {
     const doc = sess.get(idx);
     return doc.valid();
+}
+
+export fn docx(idx: u8, typ: u8, stylesheet_dir: [*c]const u8, output_dir: [*c]const u8, output_name: [*c]const u8) void {
+    const doc = sess.get(idx);
+    return doc.transformx(typ, std.mem.span(stylesheet_dir), std.mem.span(output_dir), std.mem.span(output_name));
 }
 
 export fn transform(idx: u8, stylesheet: [*c]const u8, output: [*c]const u8) void {
@@ -304,15 +310,16 @@ export fn termsRefSet(idx: u8, name: [*c]const u8, midx: u16, tidx: u16, value: 
 }
 
 test {
+    xml.exsltCommonRegister();
     _ = @import("Session.zig");
     _ = @import("Document.zig");
     _ = @import("tree.zig");
     _ = @import("paragraph.zig");
-    _ = @import("transform.zig");
+    _ = @import("docx.zig");
     _ = @import("header.zig");
 }
 
-const example = "../data/SRNSW_example.xml";
+const example = "../frontend/assets/SRNSW_example.xml";
 
 test "validate" {
     sess = Session.init(testing.allocator) catch unreachable;

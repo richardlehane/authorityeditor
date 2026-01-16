@@ -29,8 +29,8 @@ void main() {
     expect(valid, true);
   });
   test('print the doc', () {
-    final str = rda.asString(doc);
-    expect(str.length, 11022);
+    final str = rda.asString(doc, true);
+    expect(str.length, 11906);
   });
   test('tree', () {
     final tree = rda.tree(doc, Counter());

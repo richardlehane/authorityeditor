@@ -41,10 +41,10 @@ class _GA28State extends ConsumerState<GA28> {
                   .map((opt) => ComboBoxItem(value: opt, child: Text(opt)))
                   .toList(),
           onChanged: (u) {
-            ref
-                .read(nodeProvider)
-                .termsRefSet("SeeReference", widget.index, 0, u!);
             setState(() {
+              ref
+                  .read(nodeProvider)
+                  .termsRefSet("SeeReference", widget.index, 0, u!);
               function = u;
               if (activity != null) {
                 ref
@@ -66,15 +66,23 @@ class _GA28State extends ConsumerState<GA28> {
                     .map((opt) => ComboBoxItem(value: opt, child: Text(opt)))
                     .toList(),
             onChanged: (u) {
-              ref
-                  .read(nodeProvider)
-                  .termsRefSet(
-                    "SeeReference",
-                    widget.index,
-                    1,
-                    (u!.isNotEmpty) ? u : null,
-                  );
               setState(() {
+                if (ref
+                        .read(nodeProvider)
+                        .termsRefLen("SeeReference", widget.index) <
+                    2) {
+                  ref
+                      .read(nodeProvider)
+                      .termsRefAdd("SeeReference", widget.index);
+                }
+                ref
+                    .read(nodeProvider)
+                    .termsRefSet(
+                      "SeeReference",
+                      widget.index,
+                      1,
+                      (u!.isNotEmpty) ? u : null,
+                    );
                 activity = u;
               });
             },

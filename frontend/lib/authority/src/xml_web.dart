@@ -96,9 +96,10 @@ class Session {
     return ret;
   }
 
-  String asString(int index) {
+  String asString(int index, bool pretty) {
     if (documents[index] == null) return "";
-    return documents[index]!.toXmlString(pretty: true, indent: '\t');
+    String? indent = (pretty) ? '\t' : null;
+    return documents[index]!.toXmlString(pretty: pretty, indent: indent);
   }
 
   void setCurrent(int index, Ref ref) {
@@ -468,6 +469,7 @@ class Session {
         XmlElement(XmlName("AuthorityTitleRef"), [], [
           XmlText("Administrative records"),
         ], false),
+        XmlElement(XmlName("TermTitleRef"), [], [], false),
       ], false),
       SeeRefType.other => XmlElement(XmlName("SeeReference"), [], [
         XmlElement(XmlName("IDRef"), [], [], false),

@@ -80,6 +80,6 @@ test "compress" {
 test "load" {
     const session = try Session.init(testing.allocator);
     defer session.deinit();
-    const idx = try session.load("../data/SRNSW_example.xml");
+    const idx = try session.load("../frontend/assets/SRNSW_example.xml");
     session.unload(idx);
 }
