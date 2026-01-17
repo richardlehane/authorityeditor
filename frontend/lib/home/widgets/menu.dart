@@ -54,18 +54,19 @@ final class AuthorityCommand extends ConsumerWidget {
                   ref.read(documentsProvider.notifier).load(f);
                 },
               ),
-            MenuFlyoutItem(
-              text: const Text('Download'),
-              onPressed: () async {
-                final doc =
-                    ref.read(documentsProvider).documents[documents.current];
-                await FilePicker.platform.saveFile(
-                  fileName:
-                      (doc.title == "Untitled") ? "document.xml" : doc.title,
-                  bytes: doc.bytes(),
-                );
-              },
-            ),
+            if (kIsWeb)
+              MenuFlyoutItem(
+                text: const Text('Download'),
+                onPressed: () async {
+                  final doc =
+                      ref.read(documentsProvider).documents[documents.current];
+                  await FilePicker.platform.saveFile(
+                    fileName:
+                        (doc.title == "Untitled") ? "document.xml" : doc.title,
+                    bytes: doc.bytes(),
+                  );
+                },
+              ),
             if (!kIsWeb)
               MenuFlyoutItem(
                 text: const Text('Save'),

@@ -118,7 +118,7 @@ msix_config:
   publisher_display_name: Richard Lehane
   identity_name: RichardLehane.AuthorityEditor
   publisher: CN=90828A42-83C4-4770-ADB8-6ADC14A290E3
-  msix_version: 1.0.1.0
+  msix_version: 1.1.0.0
   logo_path: assets\logo.png
   file_extension: .xml
   store: true
