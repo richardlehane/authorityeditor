@@ -114,6 +114,14 @@ class Document {
     mutation++;
   }
 
+  // Types are:
+  // appraisalReport 0,
+  // approved 1,
+  // comments 2,
+  // draft 3,
+  // consultation 4,
+  // index 5,
+  // mapping 6
   String docx(int typ) {
     final filename = Base58Encode(uuid.v1obj().toBytes());
     final outName = "$filename.docx";

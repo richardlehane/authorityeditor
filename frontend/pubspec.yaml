@@ -84,6 +84,7 @@ flutter:
      - assets/authority.dll
      - assets/stylesheets/
      - assets/stylesheets/include/
+     - assets/stylesheets/docx/
      - assets/SRNSW_example.xml
 
   # An image asset can refer to one or more resolution-specific "variants", see

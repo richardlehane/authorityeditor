@@ -309,12 +309,12 @@ final class AuthorityCommand extends ConsumerWidget {
                 },
               ),
               MenuFlyoutItem(
-                text: const Text('Linking table'),
+                text: const Text('Mapping table'),
                 onPressed: () {
                   final filePath = ref
                       .read(documentsProvider)
                       .documents[documents.current]
-                      .transform("preview_linking_table.xsl", "html");
+                      .transform("preview_mapping_table.xsl", "html");
                   OpenFile.open(filePath);
                 },
               ),
@@ -371,18 +371,7 @@ final class AuthorityCommand extends ConsumerWidget {
                   final filePath = ref
                       .read(documentsProvider)
                       .documents[documents.current]
-                      .transform("word_appraisal_report.xsl", "doc");
-                  OpenFile.open(filePath);
-                },
-              ),
-              MenuFlyoutItem(
-                leading: const Icon(FluentIcons.text_document),
-                text: const Text('Appraisal report pt 1'),
-                onPressed: () {
-                  final filePath = ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
-                      .transform("word_appraisal_report_pt1.xsl", "doc");
+                      .docx(0);
                   OpenFile.open(filePath);
                 },
               ),
@@ -393,7 +382,7 @@ final class AuthorityCommand extends ConsumerWidget {
                   final filePath = ref
                       .read(documentsProvider)
                       .documents[documents.current]
-                      .transform("word_approved_authority.xsl", "doc");
+                      .docx(1);
                   OpenFile.open(filePath);
                 },
               ),
@@ -404,18 +393,7 @@ final class AuthorityCommand extends ConsumerWidget {
                   final filePath = ref
                       .read(documentsProvider)
                       .documents[documents.current]
-                      .transform("word_draft_authority.xsl", "doc");
-                  OpenFile.open(filePath);
-                },
-              ),
-              MenuFlyoutItem(
-                leading: const Icon(FluentIcons.text_document),
-                text: const Text('Comments'),
-                onPressed: () {
-                  final filePath = ref
-                      .read(documentsProvider)
-                      .documents[documents.current]
-                      .transform("word_comments.xsl", "doc");
+                      .docx(3);
                   OpenFile.open(filePath);
                 },
               ),
@@ -426,10 +404,22 @@ final class AuthorityCommand extends ConsumerWidget {
                   final filePath = ref
                       .read(documentsProvider)
                       .documents[documents.current]
-                      .transform("word_consultation.xsl", "doc");
+                      .docx(4);
                   OpenFile.open(filePath);
                 },
               ),
+              MenuFlyoutItem(
+                leading: const Icon(FluentIcons.text_document),
+                text: const Text('Comments'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .docx(2);
+                  OpenFile.open(filePath);
+                },
+              ),
+
               MenuFlyoutItem(
                 leading: const Icon(FluentIcons.text_document),
                 text: const Text('Index'),
@@ -437,7 +427,18 @@ final class AuthorityCommand extends ConsumerWidget {
                   final filePath = ref
                       .read(documentsProvider)
                       .documents[documents.current]
-                      .transform("word_index.xsl", "doc");
+                      .docx(5);
+                  OpenFile.open(filePath);
+                },
+              ),
+              MenuFlyoutItem(
+                leading: const Icon(FluentIcons.text_document),
+                text: const Text('Mapping table'),
+                onPressed: () {
+                  final filePath = ref
+                      .read(documentsProvider)
+                      .documents[documents.current]
+                      .docx(6);
                   OpenFile.open(filePath);
                 },
               ),

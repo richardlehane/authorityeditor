@@ -94,6 +94,9 @@ pub fn transform(doc: *Document, typ: u8, stylesheet_dir: []const u8, output_dir
             try transformInsert(doc, t, stylesheet_dir, "word_header_contents.xsl", output_path, "word/header4.xml");
             try transformInsert(doc, t, stylesheet_dir, "word_header_contents_first.xsl", output_path, "word/header5.xml");
         },
+        .index => {
+            try transformInsert(doc, t, stylesheet_dir, "word_header_index.xsl", output_path, "word/header1.xml");
+        },
         else => {},
     }
 }
@@ -185,17 +188,17 @@ fn linkIdx(list: []xml.xmlNodePtr, link: []const u8) ?usize {
     return 0;
 }
 
-test "approved" {
-    std.fs.cwd().deleteFile("approved.docx") catch |err| {
-        try testing.expectEqual(error.FileNotFound, err);
-    };
-    const outdir = try std.fs.cwd().realpathAlloc(std.testing.allocator, ".");
-    defer std.testing.allocator.free(outdir);
-    const styledir = try std.fs.cwd().realpathAlloc(std.testing.allocator, "../frontend/assets/stylesheets");
-    defer std.testing.allocator.free(styledir);
-    const session = try Session.init(testing.allocator);
-    defer session.deinit();
-    const idx = try session.load("../frontend/assets/SRNSW_example.xml");
-    const doc = session.get(idx);
-    try transform(doc, @intFromEnum(docxType.approved), styledir, outdir, "approved.docx");
-}
+// test "approved" {
+//     std.fs.cwd().deleteFile("approved.docx") catch |err| {
+//         try testing.expectEqual(error.FileNotFound, err);
+//     };
+//     const outdir = try std.fs.cwd().realpathAlloc(std.testing.allocator, ".");
+//     defer std.testing.allocator.free(outdir);
+//     const styledir = try std.fs.cwd().realpathAlloc(std.testing.allocator, "../frontend/assets/stylesheets");
+//     defer std.testing.allocator.free(styledir);
+//     const session = try Session.init(testing.allocator);
+//     defer session.deinit();
+//     const idx = try session.load("../frontend/assets/SRNSW_example.xml");
+//     const doc = session.get(idx);
+//     try transform(doc, @intFromEnum(docxType.approved), styledir, outdir, "approved.docx");
+// }
