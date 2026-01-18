@@ -611,7 +611,7 @@
                                         <w:szCs w:val="22" />
                                     </w:rPr>
                                     <w:t>
-                                        <xsl:value-of select="(rda:ID/@control='AR')[last()]" />
+                                        <xsl:value-of select="(rda:ID[@control='AR'])[last()]" />
                                     </w:t>
                                 </w:r>
                             </w:p>
