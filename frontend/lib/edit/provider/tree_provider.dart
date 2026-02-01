@@ -29,6 +29,33 @@ class Tree extends _$Tree {
     return authority.topLevel(state, aref);
   }
 
+  void expandFrom(authority.Ref aref) {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].expandFrom(aref);
+    state =
+        (documents.documents[documents.current].treeItems == null)
+            ? []
+            : [...documents.documents[documents.current].treeItems!];
+  }
+
+  void expandAll() {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].expandAll();
+    state =
+        (documents.documents[documents.current].treeItems == null)
+            ? []
+            : [...documents.documents[documents.current].treeItems!];
+  }
+
+  void collapseAll() {
+    final documents = ref.read(documentsProvider);
+    documents.documents[documents.current].collapseAll();
+    state =
+        (documents.documents[documents.current].treeItems == null)
+            ? []
+            : [...documents.documents[documents.current].treeItems!];
+  }
+
   void pasteChild(authority.Ref aref) {
     final documents = ref.read(documentsProvider);
     documents.documents[documents.current].pasteChild(aref);

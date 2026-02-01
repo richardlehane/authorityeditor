@@ -64,6 +64,32 @@ bool _shouldExpand(List<TreeNode> nodes) {
   return true;
 }
 
+void expandTree(List<TreeViewItem>? tree) {
+  if (tree == null) return;
+  for (var i = 0; i < tree.length; i++) {
+    tree[i].expanded = true;
+    expandTree(tree[i].children);
+  }
+}
+
+void collapseTree(List<TreeViewItem>? tree) {
+  if (tree == null) return;
+  for (var i = 0; i < tree.length; i++) {
+    tree[i].expanded = false;
+    collapseTree(tree[i].children);
+  }
+}
+
+void expandTreeFrom(List<TreeViewItem> tree, Ref ref) {
+  for (var i = 0; i < tree.length; i++) {
+    if (tree[i].value == ref) {
+      tree[i].expanded = true;
+      expandTree(tree[i].children);
+      return;
+    }
+  }
+}
+
 // called in review view on select & swap to edit view
 void unmarkSelected(List<TreeViewItem>? tree, Ref ref) {
   if (tree == null) return;

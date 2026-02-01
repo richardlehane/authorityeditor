@@ -251,4 +251,22 @@ class Document {
       relabelInPlace(treeItems!, ref, itemno, title);
     }
   }
+
+  void expandFrom(Ref ref) {
+    if (treeItems != null) {
+      expandTreeFrom(treeItems!, ref);
+    }
+  }
+
+  void expandAll() {
+    if (treeItems != null) {
+      expandTree(treeItems!);
+    }
+  }
+
+  void collapseAll() {
+    if (treeItems != null) {
+      collapseTree(treeItems!);
+    }
+  }
 }

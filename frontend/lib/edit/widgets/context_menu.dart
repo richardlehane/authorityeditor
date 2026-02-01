@@ -19,12 +19,27 @@ Widget Function(BuildContext) contextBuilder(
       return MenuFlyout(
         items: [
           MenuFlyoutItem(
+            leading: const Icon(FluentIcons.expand_all),
+            text: const Text('Expand all'),
+            onPressed: () {
+              ref.read(treeProvider.notifier).expandAll();
+            },
+          ),
+          MenuFlyoutItem(
+            leading: const Icon(FluentIcons.collapse_all),
+            text: const Text('Collapse all'),
+            onPressed: () {
+              ref.read(treeProvider.notifier).collapseAll();
+            },
+          ),
+          MenuFlyoutItem(
             leading: const Icon(FluentIcons.fabric_new_folder),
             text: const Text('Add Function-Activity-Class'),
             onPressed: () {
               ref.read(treeProvider.notifier).addFAC((NodeType.rootType, 0));
             },
           ),
+
           if (clipboard != null && clipboard != NodeType.contextType)
             MenuFlyoutItem(
               leading: const Icon(FluentIcons.paste),
@@ -72,6 +87,14 @@ Widget Function(BuildContext) contextBuilder(
   }
   List<MenuFlyoutItem> items = switch (value.$1) {
     NodeType.termType => [
+      if (ref.read(treeProvider.notifier).topLevel(value))
+        MenuFlyoutItem(
+          leading: const Icon(FluentIcons.expand_all),
+          text: const Text('Expand all'),
+          onPressed: () {
+            ref.read(treeProvider.notifier).expandFrom(value);
+          },
+        ),
       MenuFlyoutItem(
         leading: const Icon(FluentIcons.fabric_new_folder),
         text: const Text('Add child term'),
