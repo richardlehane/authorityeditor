@@ -29,7 +29,7 @@
             </w:pPr>
             <w:bookmarkStart w:id="{$number}"
                 w:name="{generate-id(.)}" />
-            <xsl:if test="$APPRAISALREPORT = 'false'">
+            <xsl:if test="$SEQNUMBERING = 'false'">
                 <xsl:if test="ancestor-or-self::rda:Term[rda:ID]">
                     <xsl:variable name="id">
                         <xsl:call-template name="local_id">
@@ -164,7 +164,7 @@
                     <w:r>
                         <w:t>
                             <xsl:choose>
-                                <xsl:when test="$APPRAISALREPORT = 'true'">
+                                <xsl:when test="$SEQNUMBERING = 'true'">
                                     <xsl:number level="any" />
                                 </xsl:when>
                                 <xsl:otherwise>
@@ -274,7 +274,7 @@
                                         <w:rPr>
                                             <w:b />
                                         </w:rPr>
-                                        <w:t>Basis for decision</w:t>
+                                        <w:t>Basis for determination</w:t>
                                     </w:r>
                                 </w:p>
                             </xsl:if>

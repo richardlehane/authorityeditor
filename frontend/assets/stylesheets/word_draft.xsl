@@ -13,6 +13,10 @@
     <xsl:variable name="APPRAISALREPORT">
         <xsl:value-of select="'false'" />
     </xsl:variable>
+    <!-- in appraisal report only, use sequential numbering if 10 or fewer classes-->
+    <xsl:variable name="SEQNUMBERING">
+        <xsl:value-of select="'false'" />
+    </xsl:variable>
     <xsl:variable name="SHOWJUSTIFICATION">
         <xsl:value-of select="'true'" />
     </xsl:variable>
