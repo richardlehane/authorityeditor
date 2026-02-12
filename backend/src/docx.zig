@@ -58,10 +58,10 @@ pub fn transform(doc: *Document, typ: u8, stylesheet_dir: []const u8, output_dir
     const rels_path = try std.fs.path.joinZ(doc.session.allocator, &[_][]const u8{ stylesheet_dir, "docx", rels });
     defer doc.session.allocator.free(rels_path);
     // copy template
-    const indir = try std.fs.openDirAbsolute(stylesheet_dir, .{});
-    const templ_dir = try indir.openDir("docx", .{});
-    const outdir = try std.fs.openDirAbsolute(output_dir, .{});
-    try templ_dir.copyFile(templ, outdir, output_name, .{});
+    const indir = try std.Io.Dir.openDirAbsolute(doc.session.io, stylesheet_dir, .{});
+    const templ_dir = try indir.openDir(doc.session.io, "docx", .{});
+    const outdir = try std.Io.Dir.openDirAbsolute(doc.session.io, output_dir, .{});
+    try templ_dir.copyFile(templ, outdir, output_name, doc.session.io, .{});
     // create document.xml
     const result = stylesheetTransform(doc, t, stylesheet_path);
     const relations = try setRelations(doc.session.allocator, rels_path, result);
@@ -196,7 +196,7 @@ fn linkIdx(list: []xml.xmlNodePtr, link: []const u8) ?usize {
 //     defer std.testing.allocator.free(outdir);
 //     const styledir = try std.fs.cwd().realpathAlloc(std.testing.allocator, "../frontend/assets/stylesheets");
 //     defer std.testing.allocator.free(styledir);
-//     const session = try Session.init(testing.allocator);
+//     const session = try Session.init(testing.io, testing.allocator);
 //     defer session.deinit();
 //     const idx = try session.load("../frontend/assets/SRNSW_example.xml");
 //     const doc = session.get(idx);

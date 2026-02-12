@@ -10,6 +10,7 @@ pub const Payload = extern struct { length: i32, data: ?[*]u8 };
 const max_file = 100 * 1_048_576; //100MB
 
 const global_allocator = std.heap.c_allocator;
+var threaded: std.Io.Threaded = undefined;
 var sess: *Session = undefined;
 var has_sess: bool = false;
 var freefn: ?*const fn (?*anyopaque) callconv(.c) void = null;
@@ -19,20 +20,14 @@ const DLL_PROCESS_DETACH: windows.DWORD = 0;
 const DLL_THREAD_ATTACH: windows.DWORD = 2;
 const DLL_THREAD_DETACH: windows.DWORD = 3;
 
-// just for debugging
-fn dump(name: []const u8, str: []const u8) void {
-    const file = std.fs.cwd().createFile(name, .{}) catch unreachable;
-    defer file.close();
-    file.writeAll(str) catch unreachable;
-}
-
 pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: ?windows.LPVOID) callconv(std.builtin.CallingConvention.winapi) windows.BOOL {
     _ = hinstDLL;
     switch (dwReason) {
         DLL_PROCESS_ATTACH => {
             if (!has_sess) {
                 freefn = xml.xmlFree orelse null;
-                sess = Session.init(global_allocator) catch return windows.FALSE;
+                threaded = .init(global_allocator, .{ .environ = std.process.Environ.empty });
+                sess = Session.init(threaded.io(), global_allocator) catch return windows.FALSE;
                 has_sess = true;
                 xml.exsltCommonRegister();
             }
@@ -41,6 +36,7 @@ pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved:
             if (lpReserved != null and has_sess) {
                 has_sess = false;
                 sess.deinit();
+                threaded.deinit();
             }
         },
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH => {},
@@ -322,7 +318,7 @@ test {
 const example = "../frontend/assets/SRNSW_example.xml";
 
 test "validate" {
-    sess = Session.init(testing.allocator) catch unreachable;
+    sess = Session.init(testing.io, testing.allocator) catch unreachable;
     has_sess = true;
     defer sess.deinit();
     const idx = load(example);
@@ -330,7 +326,7 @@ test "validate" {
 }
 
 test "free payload" {
-    sess = Session.init(testing.allocator) catch unreachable;
+    sess = Session.init(testing.io, testing.allocator) catch unreachable;
     has_sess = true;
     defer sess.deinit();
     const idx = load(example);

@@ -237,7 +237,7 @@ test "serialise" {
         \\  <Paragraph><Source /></Paragraph>
         \\</Test> 
     ;
-    const session = try Session.init(testing.allocator);
+    const session = try Session.init(testing.io, testing.allocator);
     defer session.deinit();
 
     const xdoc = xml.xmlReadMemory(test_para.ptr, @intCast(test_para.len), null, "utf-8", xml.XML_PARSE_NOBLANKS | xml.XML_PARSE_RECOVER | xml.XML_PARSE_NOERROR | xml.XML_PARSE_NOWARNING);

@@ -10,6 +10,7 @@ const Session = @This();
 const srnsw_schema = @embedFile("rda_schema");
 
 // a Session
+io: std.Io,
 allocator: Allocator,
 schema: xml.xmlSchemaPtr,
 ns: *xml.xmlNs,
@@ -17,11 +18,12 @@ copyDoc: xml.xmlDocPtr,
 copyNode: ?xml.xmlNodePtr,
 docs: std.ArrayList(?*Document),
 
-pub fn init(allocator: Allocator) !*Session {
+pub fn init(io: std.Io, allocator: Allocator) !*Session {
     const schema_ctx: xml.xmlSchemaParserCtxtPtr = xml.xmlSchemaNewMemParserCtxt(srnsw_schema, srnsw_schema.len);
     defer xml.xmlSchemaFreeParserCtxt(schema_ctx);
     const ptr = try allocator.create(Session);
     ptr.* = .{
+        .io = io,
         .allocator = allocator,
         .schema = xml.xmlSchemaParse(schema_ctx),
         .ns = xml.xmlNewNs(null, "http://www.records.nsw.gov.au/schemas/RDA", null),
@@ -74,11 +76,11 @@ pub fn deinit(self: *Session) void {
 test "compress" {
     const status = miniz.mz_zip_add_mem_to_archive_file_in_place("test.zip", "test.txt", "test", 5, "comment", 7, miniz.MZ_BEST_COMPRESSION);
     try testing.expect(status == 1);
-    try std.fs.cwd().deleteFile("test.zip");
+    try std.Io.Dir.cwd().deleteFile(testing.io, "test.zip");
 }
 
 test "load" {
-    const session = try Session.init(testing.allocator);
+    const session = try Session.init(testing.io, testing.allocator);
     defer session.deinit();
     const idx = try session.load("../frontend/assets/SRNSW_example.xml");
     session.unload(idx);
