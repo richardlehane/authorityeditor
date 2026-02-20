@@ -63,7 +63,7 @@ const List<(String, List<String>)> justifications = [
   (
     "Basis for determination",
     [
-      "Basis for determination\nBuilding the archives policy:\nPrecedent: Confirms Board decision of \nBenchmark: \nJustification/Remarks:",
+      "Building the archives policy:\nPrecedent: Confirms Board decision of \nBenchmark: \nJustification/Remarks:",
     ],
   ),
   (

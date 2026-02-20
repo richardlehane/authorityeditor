@@ -70,13 +70,17 @@ class MarkupTextEditingController extends TextEditingController {
             : selection.start; // selection.start may be -1 if no selection
     // Text was deleted - delete markup
     if (markupLength > textLength) {
-      _markup.removeRange(cursor, cursor + markupLength - textLength);
+      int delCount = markupLength - textLength;
+      if (cursor + delCount > markupLength) cursor = markupLength - delCount;
+      _markup.removeRange(cursor, cursor + delCount);
     } else if (markupLength < textLength) {
       // Text was added - add markup
       int addCount = textLength - markupLength;
       int currentStyle = buttonsState.toInt();
       if (cursor < markupLength) {
-        _markup.insertAll(cursor, List.filled(addCount, currentStyle));
+        int pos = cursor - addCount;
+        if (pos < 0) pos = 0;
+        _markup.insertAll(pos, List.filled(addCount, currentStyle));
       } else {
         _markup.addAll(List.filled(addCount, currentStyle));
       }
@@ -186,7 +190,8 @@ class MarkupTextEditingController extends TextEditingController {
         if (text[off] == "\n" || off == 0) {
           if (!alreadyBulleted) {
             _listUpdatePosition += 2;
-            _markup.insertAll(off, [0, 0]);
+            int pos = (off == 0) ? 0 : off + 1;
+            _markup.insertAll(pos, [0, 0]);
             editedTxt =
                 (off == 0)
                     ? _prependBullet(editedTxt)
@@ -207,13 +212,14 @@ class MarkupTextEditingController extends TextEditingController {
       if (off >= editedTxt.length) continue;
       if (editedTxt[off] == "\n" && off < selection.start) break;
       if (editedTxt[off] == bullet) {
-        _listUpdatePosition -= 2;
         if (off + 1 < editedTxt.length && editedTxt[off + 1] == " ") {
+          _listUpdatePosition -= 2;
           _markup.removeRange(off, off + 2);
           editedTxt =
               editedTxt.substring(0, off) +
               editedTxt.substring(off + 2, editedTxt.length);
         } else {
+          _listUpdatePosition -= 1;
           _markup.removeAt(off);
           editedTxt =
               editedTxt.substring(0, off) +
@@ -273,7 +279,7 @@ class MarkupTextEditingController extends TextEditingController {
 
       if (txt.trim().isEmpty) return; // kill blank text nodes
       buf.write(txt);
-      m.addAll(List.filled(txt.length, style));
+      m.addAll(List.filled(txt.characters.length, style));
     }
 
     bool first = true;
@@ -320,77 +326,79 @@ class MarkupTextEditingController extends TextEditingController {
     XmlElement thisPara = XmlElement(XmlName("Paragraph"));
     XmlElement thisList = XmlElement(XmlName("List"));
     XmlElement thisItem = XmlElement(XmlName("Item"));
+    bool newLine = true; // we start on a new line
     bool inList = false;
-    bool firstChar = true;
     int style = 0;
     Iterator<int> it = _markup.iterator;
     CharacterRange cr = text.characters.iterator;
 
+    outer:
     while (cr.moveNext()) {
       it.moveNext();
-      // new lines mean - new paragraphs or new list items
-      if (cr.current == "\n" || firstChar) {
-        if (!firstChar) {
-          cr.moveNext();
-        }
-        // Add a list item if needed
+      if (cr.current == "\n" || cr.current == '\r' || cr.current == '\r\n') {
+        newLine = true;
+        continue;
+      }
+      // eat leading whitespace
+      if (newLine) {
+        if (cr.current == ' ' || cr.current == '\t') continue;
+      }
+      // new lines mean: new list items or new paragraphs
+      if (newLine) {
+        newLine = false;
+        // Check if this line is a list item
         if (cr.current == bullet) {
-          if (!firstChar) {
-            it.moveNext();
+          // skip space(s) following the bullet
+          while (true) {
+            if (!cr.moveNext()) break outer;
+            if (cr.current == ' ' || cr.current == '\t') {
+              it.moveNext();
+            } else {
+              cr.moveBack();
+              break;
+            }
           }
+          // Commit previous list item
           if (inList) {
-            thisItem.children.add(
-              _toNode(style, buf.toString()),
-            ); // commit the previous list item
+            thisItem.children.add(_toNode(style, buf.toString()));
             thisList.children.add(thisItem);
             buf.clear();
             thisItem = XmlElement(XmlName("Item")); // make a new item
           } else {
             if (buf.isNotEmpty) {
-              // commit paragraph contents up to the list element if needed
+              // Commit paragraph contents up to the list element if needed
               thisPara.children.add(_toNode(style, buf.toString()));
               buf.clear();
             }
             inList = true;
           }
-          // skip the space following the bullet
-          cr.moveNext();
-          if (cr.current == " ") {
-            it.moveNext();
-          } else {
-            cr.moveBack();
-          }
-          firstChar = false;
+          // We're an item, now let's keep going
           continue;
         }
-        if (!firstChar) {
-          cr.moveBack();
-          // not a bullet!
-
-          if (inList) {
-            inList = false;
-            // commit the list
-            thisItem.children.add(_toNode(style, buf.toString()));
-            buf.clear(); // commit the previous list item
-            thisList.children.add(thisItem); // does this need to use copy??
-            thisPara.children.add(thisList);
-            ret.add(thisPara);
-            thisPara = XmlElement(XmlName("Paragraph"));
-            thisList = XmlElement(XmlName("List"));
-            thisItem = XmlElement(XmlName("Item"));
-          } else {
-            // not a list, commit the para
+        // We're not an item, first character is not a bullet
+        if (inList) {
+          inList = false;
+          // commit the list
+          thisItem.children.add(_toNode(style, buf.toString()));
+          buf.clear(); // commit the previous list item
+          thisList.children.add(thisItem); // does this need to use copy??
+          thisPara.children.add(thisList);
+          ret.add(thisPara);
+          thisPara = XmlElement(XmlName("Paragraph"));
+          thisList = XmlElement(XmlName("List"));
+          thisItem = XmlElement(XmlName("Item"));
+        } else {
+          if (buf.isNotEmpty) {
+            // not a list, commit the para, if there's any content to commit
             thisPara.children.add(_toNode(style, buf.toString()));
             buf.clear();
             ret.add(thisPara);
             thisPara = XmlElement(XmlName("Paragraph"));
           }
-          firstChar = false;
-          continue;
         }
-        firstChar = false;
       }
-      // if style is the same, write to buf and continue; else commit buf contents to item or para
+      // Now write the current char to the buffer.
+      // if style is the same, just write, otherwise commit buf contents to item or para
       if (it.current == style) {
         buf.write(cr.current);
       } else {
