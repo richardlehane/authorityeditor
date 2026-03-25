@@ -337,7 +337,7 @@ mixin Render {
   List<TextSpan> _statusSubmitted(StatusType st, int index) {
     List<TextSpan> ret = [_toSpan(0, st.toString())];
     String? officer = multiGet(st.toElement(), index, "Officer");
-    String? position = multiGet(st.toElement(), index, "Officer");
+    String? position = multiGet(st.toElement(), index, "Position");
     String? agency = _agency(
       multiGet(st.toElement(), index, "Agency"),
       multiGet(st.toElement(), index, "agencyno"),
