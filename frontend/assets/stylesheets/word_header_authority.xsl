@@ -89,14 +89,7 @@
                 </xsl:if>
                 <w:r>
                     <w:t>
-                        <xsl:choose>
-                            <xsl:when test="$atype = 'authority'">
-                                <xsl:value-of select="rda:AuthorityTitle" />
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="$AGENCY_NAMES" />
-                            </xsl:otherwise>
-                        </xsl:choose>
+                        <xsl:value-of select="rda:AuthorityTitle" />
                     </w:t>
                 </w:r>
             </w:p>
