@@ -63,7 +63,6 @@
                 <xsl:text disable-output-escaping="yes">&lt;w:p&gt;</xsl:text>
             </xsl:if>
             <w:pPr>
-                <w:pStyle w:val="ListParagraph" />
                 <w:keepNext w:val="0" />
                 <w:widowControl w:val="0" />
                 <w:numPr>

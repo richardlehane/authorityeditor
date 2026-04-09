@@ -23,6 +23,7 @@
                     </xsl:when>
                     <xsl:otherwise>
                         <w:pStyle w:val="Heading2" />
+                        <w:pageBreakBefore />
                         <w:spacing w:after="0" />
                     </xsl:otherwise>
                 </xsl:choose>
