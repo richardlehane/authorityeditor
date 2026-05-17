@@ -2,7 +2,7 @@
     .name = .authority,
     .version = "0.0.0",
     .fingerprint = 0x4af96afcfa76c2a7,
-    .minimum_zig_version = "0.17.0-dev.87+9b177a7d2",
+    .minimum_zig_version = "0.16.0",
     .dependencies = .{
         .libxml2 = .{
             .url = "https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.13.5/libxml2-v2.13.5.tar.gz",
@@ -13,9 +13,9 @@
             .hash = "N-V-__8AAIZj-wABWPrhmSvU0mK8aCyZneOHJC_HJEDMgsw1",
         },
         .miniz = .{
-          .url = "https://github.com/richgel999/miniz/releases/download/3.0.2/miniz-3.0.2.zip",
-          .hash = "N-V-__8AAEznBgA2IJu6nHlNhEA_PuUhTFkC2d2TkLxuKGfe",
-          .lazy = false,
+            .url = "https://github.com/richgel999/miniz/releases/download/3.0.2/miniz-3.0.2.zip",
+            .hash = "N-V-__8AAEznBgA2IJu6nHlNhEA_PuUhTFkC2d2TkLxuKGfe",
+            .lazy = false,
         },
     },
     .paths = .{
