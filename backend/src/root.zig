@@ -5,6 +5,9 @@ const Session = @import("Session.zig");
 const Document = @import("Document.zig");
 const xml = @import("xml");
 
+pub const TRUE: c_int = 1;
+pub const FALSE: c_int = 0;
+
 pub const Payload = extern struct { length: i32, data: ?[*]u8 };
 
 const max_file = 100 * 1_048_576; //100MB
@@ -20,20 +23,21 @@ const DLL_PROCESS_DETACH: windows.DWORD = 0;
 const DLL_THREAD_ATTACH: windows.DWORD = 2;
 const DLL_THREAD_DETACH: windows.DWORD = 3;
 
-pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: ?windows.LPVOID) callconv(std.builtin.CallingConvention.winapi) windows.BOOL {
+pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) windows.BOOL {
     _ = hinstDLL;
+    _ = lpReserved;
     switch (dwReason) {
         DLL_PROCESS_ATTACH => {
             if (!has_sess) {
                 freefn = xml.xmlFree orelse null;
                 threaded = .init(global_allocator, .{ .environ = std.process.Environ.empty });
-                sess = Session.init(threaded.io(), global_allocator) catch return windows.FALSE;
+                sess = Session.init(threaded.io(), global_allocator) catch return .FALSE;
                 has_sess = true;
                 xml.exsltCommonRegister();
             }
         },
         DLL_PROCESS_DETACH => {
-            if (lpReserved != null and has_sess) {
+            if (has_sess) {
                 has_sess = false;
                 sess.deinit();
                 threaded.deinit();
@@ -42,7 +46,7 @@ pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved:
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH => {},
         else => {},
     }
-    return windows.TRUE;
+    return .TRUE;
 }
 
 export fn unload(idx: u8) void {

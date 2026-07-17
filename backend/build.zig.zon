@@ -2,7 +2,7 @@
     .name = .authority,
     .version = "0.0.0",
     .fingerprint = 0x4af96afcfa76c2a7,
-    .minimum_zig_version = "0.17.0-dev.1415+64dfaa568",
+    .minimum_zig_version = "0.17.0-dev.1415+64dfaa568", 
     .dependencies = .{
         .libxml2 = .{
             .url = "https://gitlab.gnome.org/GNOME/libxml2/-/archive/v2.13.5/libxml2-v2.13.5.tar.gz",
