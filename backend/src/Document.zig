@@ -46,11 +46,15 @@ fn wrapDoc(session: *Session, d: xml.xmlDocPtr) !*Document {
     return ptr;
 }
 
-pub fn empty(
-    session: *Session,
-) !*Document {
-    const d = xml.xmlReadMemory(srnsw_blank.ptr, @intCast(srnsw_blank.len), null, "utf-8", xml.XML_PARSE_NOBLANKS | xml.XML_PARSE_RECOVER | xml.XML_PARSE_NOERROR | xml.XML_PARSE_NOWARNING);
+fn read(session: *Session, str: []const u8) !*Document {
+    const d = xml.xmlReadMemory(str.ptr, @intCast(str.len), null, "utf-8", xml.XML_PARSE_NOBLANKS | xml.XML_PARSE_RECOVER | xml.XML_PARSE_NOERROR | xml.XML_PARSE_NOWARNING);
     return wrapDoc(session, d);
+}
+
+pub fn empty(session: *Session) !*Document {
+    return read(session, srnsw_blank);
+    // const d = xml.xmlReadMemory(srnsw_blank.ptr, @intCast(srnsw_blank.len), null, "utf-8", xml.XML_PARSE_NOBLANKS | xml.XML_PARSE_RECOVER | xml.XML_PARSE_NOERROR | xml.XML_PARSE_NOWARNING);
+    // return wrapDoc(session, d);
 }
 
 pub fn load(session: *Session, path: []const u8) !*Document {
@@ -152,7 +156,7 @@ fn duplicate(self: *Document, copyNode: xml.xmlNodePtr, newNode: xml.xmlNodePtr)
     var child = copyNode.*.children;
     while (child != null) : (child = child.*.next) {
         if (child.*.type == xml.XML_TEXT_NODE) {
-            _ = xml.xmlNodeSetContent(newNode, xml.xmlNodeGetContent(child));
+            _ = xml.xmlNodeAddContent(newNode, xml.xmlNodeGetContent(child));
         }
         if (child.*.type == xml.XML_ELEMENT_NODE) {
             var cn = xml.xmlNewDocNode(self.doc, self.session.ns, child.*.name, null);
@@ -818,6 +822,54 @@ test "paste sibling" {
     try testing.expect(doc.valid());
 }
 
+test "paste w markup" {
+    const doc =
+        \\<?xml version="1.0" encoding="UTF-8"?>
+        \\<Authority xmlns="http://www.records.nsw.gov.au/schemas/RDA">
+        \\  <Term itemno="1.0.0" type="function">
+        \\    <Term itemno="1.1.0" type="activity">
+        \\      <Class itemno="1.1.1">
+        \\        <ClassDescription>
+        \\          <Paragraph>Records relating to the investigation of <Emphasis>dangerous, negligent or culpable driving</Emphasis> and the driver is over the limit.</Paragraph>
+        \\        </ClassDescription>
+        \\        <Disposal/>
+        \\      </Class>
+        \\    </Term>
+        \\  </Term>
+        \\</Authority>
+    ;
+    const doc_expect =
+        \\<?xml version="1.0" encoding="UTF-8"?>
+        \\<Authority xmlns="http://www.records.nsw.gov.au/schemas/RDA">
+        \\  <Term itemno="1.0.0" type="function">
+        \\    <Term itemno="1.1.0" type="activity">
+        \\      <Class itemno="1.1.1">
+        \\        <ClassDescription>
+        \\          <Paragraph>Records relating to the investigation of <Emphasis>dangerous, negligent or culpable driving</Emphasis> and the driver is over the limit.</Paragraph>
+        \\        </ClassDescription>
+        \\        <Disposal/>
+        \\      </Class>
+        \\      <Class itemno="1.1.1">
+        \\        <ClassDescription>
+        \\          <Paragraph>Records relating to the investigation of <Emphasis>dangerous, negligent or culpable driving</Emphasis> and the driver is over the limit.</Paragraph>
+        \\        </ClassDescription>
+        \\        <Disposal/>
+        \\      </Class>
+        \\    </Term>
+        \\  </Term>
+        \\</Authority>
+        \\
+    ; // the trailing new line in this string is needed for a match
+    const session = try Session.init(testing.io, testing.allocator);
+    defer session.deinit();
+    const d = try Document.read(session, doc);
+    defer d.deinit();
+    d.copy(.Class, 2);
+    d.pasteSibling(.Class, 2);
+    try testing.expectEqualStrings(doc_expect, std.mem.span(d.toStr()));
+    try testing.expect(d.valid());
+}
+
 test "add child" {
     const session = try Session.init(testing.io, testing.allocator);
     defer session.deinit();
@@ -1000,24 +1052,7 @@ test "multi set and get" {
     doc.multiSet("Status", 1, "Agency", "Wild dog");
     doc.multiSet("Status", 1, "version", "2.0");
     doc.multiSet("Status", 1, "Date", "2025-11-04");
-    doc.multiSetParagraphs("Status", 1, "AmendmentNote", &[_]u8{
-        1,
-        1,
-        0,
-        11,
-        0,
-        'S',
-        'u',
-        'p',
-        'e',
-        'r',
-        's',
-        'e',
-        'd',
-        'e',
-        'd',
-        0,
-    });
+    doc.multiSetParagraphs("Status", 1, "AmendmentNote", &[_]u8{ 1, 1, 0, 11, 0, 'S', 'u', 'p', 'e', 'r', 's', 'e', 'd', 'e', 'd', 0 });
     result = doc.multiGet("Status", 1, "agencyno");
     try testing.expectEqualStrings("294", std.mem.span(result));
     tree.freeStr(result);
@@ -1025,24 +1060,7 @@ test "multi set and get" {
     try testing.expectEqualStrings("2.0", std.mem.span(result));
     tree.freeStr(result);
     const para = doc.multiGetParagraphs("Status", 1, "AmendmentNote").?;
-    try testing.expectEqualStrings(&[_]u8{
-        1,
-        1,
-        0,
-        11,
-        0,
-        'S',
-        'u',
-        'p',
-        'e',
-        'r',
-        's',
-        'e',
-        'd',
-        'e',
-        'd',
-        0,
-    }, para);
+    try testing.expectEqualStrings(&[_]u8{ 1, 1, 0, 11, 0, 'S', 'u', 'p', 'e', 'r', 's', 'e', 'd', 'e', 'd', 0 }, para);
     testing.allocator.free(para);
     try testing.expect(doc.valid());
 }
