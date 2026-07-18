@@ -12,8 +12,7 @@ void main() {
   final rda = Session();
   final examplePath = path.join(
     Directory.current.path,
-    '..',
-    'data',
+    'assets',
     'SRNSW_example.xml',
   );
   final doc = rda.load(
@@ -30,7 +29,7 @@ void main() {
   });
   test('print the doc', () {
     final str = rda.asString(doc, true);
-    expect(str.length, 11906);
+    expect(str.length, 8011);
   });
   test('tree', () {
     final tree = rda.tree(doc, Counter());

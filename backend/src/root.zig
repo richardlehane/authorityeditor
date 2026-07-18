@@ -25,7 +25,8 @@ const DLL_PROCESS_DETACH: windows.DWORD = 0;
 const DLL_THREAD_ATTACH: windows.DWORD = 2;
 const DLL_THREAD_DETACH: windows.DWORD = 3;
 
-pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) windows.BOOL {
+//pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) windows.BOOL { // 0.16.0
+pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) callconv(std.builtin.CallingConvention.winapi) windows.BOOL { // 0.15.2
     _ = hinstDLL;
     _ = lpReserved;
     switch (dwReason) {

@@ -85,9 +85,9 @@ pub fn build(b: *std.Build) void {
         .HAVE_SYS_TIMEB_H = true,
         .HAVE_SYS_TIME_H = true,
         .HAVE_UNISTD_H = true,
-        // .HAVE_VA_COPY = true, // need to del for 0.17
+        .HAVE_VA_COPY = true, // need to del for 0.17
         .HAVE_ZLIB_H = false,
-        // .HAVE___VA_COPY = true, // need to del for 0.17
+        .HAVE___VA_COPY = true, // need to del for 0.17
         .SUPPORT_IP6 = false,
         .VERSION = LIBXML2_VERSION,
         .XML_SOCKLEN_T = "socklen_t",
@@ -184,7 +184,7 @@ pub fn build(b: *std.Build) void {
         .LIBXSLT_VERSION_NUMBER = 10142,
         .LIBXSLT_VERSION_EXTRA = "",
         .WITH_XSLT_DEBUG = false,
-        //.WITH_MEM_DEBUG = false, // need to del for 0.17
+        .WITH_MEM_DEBUG = false, // need to del for 0.17
         .WITH_TRIO = false,
         .WITH_DEBUGGER = false,
         .WITH_PROFILER = false,
