@@ -43,21 +43,21 @@ const docxType = enum(u8) {
 };
 
 // 0.15.2
-fn copyTemplate(doc: *Document, stylesheet_dir: []const u8, stylesheet_name: []const u8, output_dir: []const u8, output_name: []const u8) !void {
-    _ = doc;
-    const indir = try std.fs.openDirAbsolute(stylesheet_dir, .{});
-    const templ_dir = try indir.openDir("docx", .{});
-    const outdir = try std.fs.openDirAbsolute(output_dir, .{});
-    return templ_dir.copyFile(stylesheet_name, outdir, output_name, .{});
-}
+//fn copyTemplate(doc: *Document, stylesheet_dir: []const u8, stylesheet_name: []const u8, output_dir: []const u8, output_name: []const u8) !void {
+//    _ = doc;
+//    const indir = try std.fs.openDirAbsolute(stylesheet_dir, .{});
+//    const templ_dir = try indir.openDir("docx", .{});
+//    const outdir = try std.fs.openDirAbsolute(output_dir, .{});
+//    return templ_dir.copyFile(stylesheet_name, outdir, output_name, .{});
+//}
 
 // 0.16.0 +
-// fn copyTemplate(doc: *Document, stylesheet_dir: []const u8, stylesheet_name: []const u8, output_dir: []const u8, output_name: []const u8) !void {
-//     const indir = try std.Io.Dir.openDirAbsolute(doc.session.io, stylesheet_dir, .{});
-//     const templ_dir = try indir.openDir(doc.session.io, "docx", .{});
-//     const outdir = try std.Io.Dir.openDirAbsolute(doc.session.io, output_dir, .{});
-//     return templ_dir.copyFile(stylesheet_name, outdir, output_name, doc.session.io, .{});
-// }
+fn copyTemplate(doc: *Document, stylesheet_dir: []const u8, stylesheet_name: []const u8, output_dir: []const u8, output_name: []const u8) !void {
+    const indir = try std.Io.Dir.openDirAbsolute(doc.session.io, stylesheet_dir, .{});
+    const templ_dir = try indir.openDir(doc.session.io, "docx", .{});
+    const outdir = try std.Io.Dir.openDirAbsolute(doc.session.io, output_dir, .{});
+    return templ_dir.copyFile(stylesheet_name, outdir, output_name, doc.session.io, .{});
+}
 
 pub fn transform(doc: *Document, typ: u8, stylesheet_dir: []const u8, output_dir: []const u8, output_name: []const u8) !void {
     const t: docxType = @enumFromInt(typ);

@@ -747,22 +747,22 @@ test "tree" {
 }
 
 // 0.15.2
-fn getSzAndDel(path: []const u8) !u64 {
-    const dir = std.fs.cwd();
-    const stat = try dir.statFile(path);
-    const sz = stat.size;
-    try dir.deleteFile(path);
-    return sz;
-}
+//fn getSzAndDel(path: []const u8) !u64 {
+//    const dir = std.fs.cwd();
+//    const stat = try dir.statFile(path);
+//    const sz = stat.size;
+//    try dir.deleteFile(path);
+//    return sz;
+//}
 
 // 0.16.0+
-// fn getSzAndDel(path: []const u8) !u64 {
-//     const dir = std.Io.Dir.cwd();
-//     const stat = try dir.statFile(testing.io, path, .{});
-//     const sz = stat.size;
-//     try dir.deleteFile(testing.io, path);
-//     return sz;
-// }
+fn getSzAndDel(path: []const u8) !u64 {
+    const dir = std.Io.Dir.cwd();
+    const stat = try dir.statFile(testing.io, path, .{});
+    const sz = stat.size;
+    try dir.deleteFile(testing.io, path);
+    return sz;
+}
 
 test "transform" {
     const session = try Session.initTesting();

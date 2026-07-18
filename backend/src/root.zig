@@ -15,7 +15,7 @@ const max_file = 100 * 1_048_576; //100MB
 const global_allocator = std.heap.c_allocator;
 
 // 0.16.0 +
-//var threaded: std.Io.Threaded = undefined; // trim for 0.15.2
+var threaded: std.Io.Threaded = undefined; // trim for 0.15.2
 var sess: *Session = undefined;
 var has_sess: bool = false;
 var freefn: ?*const fn (?*anyopaque) callconv(.c) void = null;
@@ -25,8 +25,8 @@ const DLL_PROCESS_DETACH: windows.DWORD = 0;
 const DLL_THREAD_ATTACH: windows.DWORD = 2;
 const DLL_THREAD_DETACH: windows.DWORD = 3;
 
-//pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) windows.BOOL { // 0.16.0
-pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) callconv(std.builtin.CallingConvention.winapi) windows.BOOL { // 0.15.2
+//pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) callconv(std.builtin.CallingConvention.winapi) windows.BOOL { // 0.15.2
+pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved: windows.LPVOID) windows.BOOL { // 0.16.0
     _ = hinstDLL;
     _ = lpReserved;
     switch (dwReason) {
@@ -34,9 +34,9 @@ pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved:
             if (!has_sess) {
                 freefn = xml.xmlFree orelse null;
                 // 0.16.0 +
-                //threaded = .init(global_allocator, .{ .environ = std.process.Environ.empty }); // 0.15.2 trim
-                //sess = Session.init(threaded.io(), global_allocator) catch return .FALSE; // 0.16.0
-                sess = Session.init(global_allocator) catch return windows.FALSE; // 0.15.2
+                threaded = .init(global_allocator, .{ .environ = std.process.Environ.empty }); // 0.15.2 trim
+                sess = Session.init(threaded.io(), global_allocator) catch return .FALSE; // 0.16.0
+                //sess = Session.init(global_allocator) catch return windows.FALSE; // 0.15.2
                 has_sess = true;
                 xml.exsltCommonRegister();
             }
@@ -45,14 +45,14 @@ pub fn DllMain(hinstDLL: windows.HINSTANCE, dwReason: windows.DWORD, lpReserved:
             if (has_sess) {
                 has_sess = false;
                 sess.deinit();
-                // threaded.deinit(); 0.15.2 trim
+                threaded.deinit(); //0.15.2 trim
             }
         },
         DLL_THREAD_ATTACH, DLL_THREAD_DETACH => {},
         else => {},
     }
-    //return .TRUE; // 0.16.0
-    return windows.TRUE;
+    return .TRUE; // 0.16.0
+    //return windows.TRUE; // 0.15.2
 }
 
 export fn unload(idx: u8) void {

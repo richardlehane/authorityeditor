@@ -58,3 +58,5 @@ Uses riverpod for state management. Run `dart run build_runner build` to regener
 From backend folder, run `zig build test`
 
 From frontend folder, run `flutter test`
+
+// Testing note: if DLL is updated, make sure it is in the flutter cache directory: .flutter\flutter\bin\cache\artifacts\engine\windows-x64\data\flutter_assets\assets
