@@ -702,7 +702,7 @@ fn isAttr(nm: []const u8) bool {
 const example = "../frontend/assets/SRNSW_example.xml";
 
 test "validate" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const idx = try session.load(example);
     const doc = session.get(idx);
@@ -710,7 +710,7 @@ test "validate" {
 }
 
 test "empty" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -719,7 +719,7 @@ test "empty" {
 }
 
 test "load" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
@@ -728,7 +728,7 @@ test "load" {
 }
 
 test "toStr" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -738,7 +738,7 @@ test "toStr" {
 }
 
 test "tree" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
@@ -746,20 +746,36 @@ test "tree" {
     try testing.expectEqual(doc.tree_menu.items.len, 153);
 }
 
+// 0.15.2
+fn getSzAndDel(path: []const u8) !u64 {
+    const dir = std.fs.cwd();
+    const stat = try dir.statFile(path);
+    const sz = stat.size;
+    try dir.deleteFile(path);
+    return sz;
+}
+
+// 0.16.0+
+// fn getSzAndDel(path: []const u8) !u64 {
+//     const dir = std.Io.Dir.cwd();
+//     const stat = try dir.statFile(testing.io, path, .{});
+//     const sz = stat.size;
+//     try dir.deleteFile(testing.io, path);
+//     return sz;
+// }
+
 test "transform" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
     doc.transform("../frontend/assets/stylesheets/preview_authority.xsl", "preview.html");
-    const dir = std.Io.Dir.cwd();
-    const stat = try dir.statFile(testing.io, "preview.html", .{});
-    try testing.expect(stat.size == 4998);
-    try dir.deleteFile(testing.io, "preview.html");
+    const sz = try getSzAndDel("preview.html");
+    try testing.expect(sz == 4998);
 }
 
 test "edit" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
@@ -770,7 +786,7 @@ test "edit" {
 }
 
 test "current" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.load(session, example);
     defer doc.deinit();
@@ -783,7 +799,7 @@ test "current" {
 }
 
 test "drop" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -795,7 +811,7 @@ test "drop" {
 }
 
 test "paste child" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     const doc2 = try Document.empty(session);
@@ -812,7 +828,7 @@ test "paste child" {
 }
 
 test "paste sibling" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -860,7 +876,7 @@ test "paste w markup" {
         \\</Authority>
         \\
     ; // the trailing new line in this string is needed for a match
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const d = try Document.read(session, doc);
     defer d.deinit();
@@ -871,7 +887,7 @@ test "paste w markup" {
 }
 
 test "add child" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -884,7 +900,7 @@ test "add child" {
 }
 
 test "add sibling" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -899,7 +915,7 @@ test "add sibling" {
 }
 
 test "move" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -911,7 +927,7 @@ test "move" {
 }
 
 test "get type" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -921,7 +937,7 @@ test "get type" {
 }
 
 test "get and set" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -955,7 +971,7 @@ test "get and set" {
 }
 
 test "dates" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -983,7 +999,7 @@ test "dates" {
 }
 
 test "multi" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
@@ -1011,7 +1027,7 @@ test "multi" {
 }
 
 test "multi set and get" {
-    const session = try Session.init(testing.io, testing.allocator);
+    const session = try Session.initTesting();
     defer session.deinit();
     const doc = try Document.empty(session);
     defer doc.deinit();
